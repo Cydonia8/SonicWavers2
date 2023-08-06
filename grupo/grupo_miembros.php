@@ -95,6 +95,19 @@
                 ?>
             </div>
         </div>
+        <?php
+            if($miembros != 0){
+                echo "<div>
+                <h2 class=\"text-center mb-4 mt-4\">Enviar mensaje a miembros</h2>
+            </div>
+            <form>
+                
+            </form>";
+            }
+        ?>
+        <!-- <div>
+            <h2 class="text-center mb-4 mt-4">Enviar mensaje a miembros</h2>
+        </div> -->
     </section>
 </body>
 </html>
