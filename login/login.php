@@ -23,8 +23,9 @@
                 $_SESSION["user-type"] = "standard";
                 $jwt = generateToken($_POST["usuario"], false);
                 echo $jwt;
+                $_SESSION["token"] = $jwt;
                 keepSessionOpen();
-                // header('location:../reproductor/reproductor.php');
+                header('location:../reproductor/reproductor.php');
                 // echo "<meta http-equiv='refresh' content='0;url=../usuario/usuario.php'>";
             }
             

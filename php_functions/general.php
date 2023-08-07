@@ -100,7 +100,7 @@ function printMainMenu($location = "noindex"){
                 <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                     <nav>
                         <ul class=\"links-header\"> 
-                            <li><a href=\"reproductor/reproductor.php\">Reproductor</a></li>
+                            <li><a href=\"reproductor/user_controller.php\">Reproductor</a></li>
                             <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                             <li class=\"li-foto\">
                                 <div class=\"dropdown\">
@@ -161,8 +161,7 @@ function printMainMenu($location = "noindex"){
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                     <nav>
                         <ul class=\"links-header\"> 
-                            <li><a href=\"reproductor/reproductor_simplificado.php\">Reproductor simplificado</a></li>
-                            <li><a href=\"reproductor/reproductor.php\">Reproductor</a></li>
+                            <li><a href=\"reproductor/user_controller.php\">Reproductor</a></li>
                             <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                             <li><a href=\"login/login.php\">Iniciar sesión</a></li>
                         </ul>
@@ -272,10 +271,12 @@ function closeSession($POST, $seccion = "noindex"){
                 setcookie("sesion","", time()-3600, '/');
                 unset($_SESSION['user']);
                 unset($_SESSION["user-type"]);
+                unset($_SESSION["token"]);
                 header("location:../index.php");
             }else{
                 unset($_SESSION['user']);
                 unset($_SESSION["user-type"]);
+                unset($_SESSION["token"]);
                 header("location:../index.php");
             }
             
@@ -285,11 +286,13 @@ function closeSession($POST, $seccion = "noindex"){
             if(isset($_COOKIE['sesion'])){
                 unset($_SESSION['user']);
                 unset($_SESSION["user-type"]);
+                unset($_SESSION["token"]);
                 setcookie("sesion","", time()-3600, '/');              
                 echo "<meta http-equiv='refresh' content='0;url=index.php'>";
             }else{
                 unset($_SESSION['user']);
                 unset($_SESSION["user-type"]);
+                unset($_SESSION["token"]);
                 header("location:index.php");
             }
         }

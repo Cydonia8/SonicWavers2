@@ -19,6 +19,12 @@
         $id = $_POST["usuario"];
         $eliminado = removeMember($id);
     }
+
+    if(isset($_POST["send-message"])){
+        $msg = strip_tags($_POST["message"]);
+        sendMessage($msg);
+        linkMessageToUsers();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,8 +106,9 @@
                 echo "<div>
                 <h2 class=\"text-center mb-4 mt-4\">Enviar mensaje a miembros</h2>
             </div>
-            <form>
-                
+            <form action='#' method='post'>
+                <textarea name='message'></textarea>
+                <button style='--clr:#27b82b' class='btn-danger-own' type='submit' name='send-message'><span>Enviar mensaje</span><i></i></button>
             </form>";
             }
         ?>

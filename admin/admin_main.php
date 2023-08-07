@@ -3,8 +3,15 @@
     // echo $_SESSION["user"]
     require_once "../php_functions/admin_functions.php";
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("admin");
     closeSession($_POST);
+    $decoded = decodeToken($_SESSION["token"]);
+    $array = (array) $decoded;
+    print_r($array);
+    echo "<br>";
+    $arr = (array) $array["data"];
+    echo $arr["user"];
 ?>
 <!DOCTYPE html>
 <html lang="en">

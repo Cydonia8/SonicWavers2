@@ -123,10 +123,17 @@
         // echo $jwt;
         return $jwt;
     }
+    function decodeToken($token){
+        try{
+            $jwt_dec = JWT::decode($token, new Key($_ENV["SECRET_KEY"], "HS256")); 
+            return $jwt_dec;        
+        } catch (UnexpectedValueException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
 
-    // function decodeToken($token){
-    //     $
-    // }
+  
 
     function loginGroupDisc($mail, $pass, $tabla){
         $accede = false;

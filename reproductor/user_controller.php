@@ -1,6 +1,8 @@
 <?php
     session_start();
     if(!isset($_SESSION["token"])){
-        header('reproductor_simplificado.php');
+        header('location:reproductor_simplificado.php');
+    }else{
+        header('location:reproductor.php');
     }
 ?>

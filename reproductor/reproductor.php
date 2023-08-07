@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     // echo $_SESSION["user"];
     if(!isset($_SESSION["user-type"])){
         header("location:../login/login.php");
@@ -8,6 +9,8 @@
         forbidAccess("standard");
     }
     $user = $_SESSION["user"];
+    
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +29,7 @@
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32"/>
     <title>Sonic Waves | Reproductor Web</title>
 </head>
+
 <body id="reproductor">
     <div class="alert alert-success position-fixed d-none" id="alert-song-added" role="alert">
         Canción añadida

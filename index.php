@@ -119,7 +119,7 @@
         <div class="d-flex container-samples-index gap-5 flex-column flex-md-row text-black bg-white p-3" data-aos="fade-up" data-aos-duration="1200">
         <?php
           $con = new mysqli('localhost', 'root', '', 'sonicwaves');
-          $consulta = $con->query("select c.titulo titulo, g.nombre grup, archivo, a.foto portada, c.times_played times from cancion c, album a, grupo g, incluye i where a.grupo = g.id and i.album = a.id and i.cancion = c.id and a.activo = 1 order by times_played desc limit 3");
+          $consulta = $con->query("select c.titulo titulo, g.nombre grup, archivo, a.foto portada, c.times_played times from cancion c, album a, grupo g, incluye i where a.grupo = g.id and i.album = a.id and i.cancion = c.id and a.activo = 1 group by c.id order by times_played desc limit 3");
           $cont = 1;
           while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
             $titulo = $fila["titulo"];
