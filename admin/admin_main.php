@@ -7,11 +7,12 @@
     forbidAccess("admin");
     closeSession($_POST);
     $decoded = decodeToken($_SESSION["token"]);
-    $array = (array) $decoded;
-    print_r($array);
-    echo "<br>";
-    $arr = (array) $array["data"];
-    echo $arr["user"];
+    $decoded = json_decode(json_encode($decoded), true);
+    // $array = (array) $decoded;
+    // print_r($array);
+    // echo "<br>";
+    // $arr = (array) $array["data"];
+    // echo $arr["user"];
 ?>
 <!DOCTYPE html>
 <html lang="en">

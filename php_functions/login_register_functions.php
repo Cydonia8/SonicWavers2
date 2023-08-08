@@ -1,7 +1,9 @@
 <?php
     require_once "general.php";
     require_once "../vendor/autoload.php";
-    use Firebase\JWT\JWT;
+
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
     use Firebase\JWT\Key;
     $dotenv = Dotenv\Dotenv::createImmutable('../');
     $dotenv->load();
@@ -129,6 +131,11 @@
             return $jwt_dec;        
         } catch (UnexpectedValueException $e) {
             echo $e->getMessage();
+            echo "No se ha podido validar su sesión";
+            return false;
+        }catch(ExpiredException $e){
+            echo $e->getMessage();
+            echo "Su sesión ha expirado";
             return false;
         }
     }
