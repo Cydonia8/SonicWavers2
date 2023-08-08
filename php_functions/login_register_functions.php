@@ -127,14 +127,12 @@ use Firebase\JWT\JWT;
     }
     function decodeToken($token){
         try{
-            $jwt_dec = JWT::decode($token, new Key($_ENV["SECRET_KEY"], "HS256")); 
+            $jwt_dec = JWT::decode($token, new Key("aa", "HS256")); 
             return $jwt_dec;        
         } catch (UnexpectedValueException $e) {
-            echo $e->getMessage();
             echo "No se ha podido validar su sesión";
             return false;
         }catch(ExpiredException $e){
-            echo $e->getMessage();
             echo "Su sesión ha expirado";
             return false;
         }

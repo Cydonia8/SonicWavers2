@@ -32,7 +32,7 @@ session_start();
             <div class="form-option-picker d-flex justify-content-between flex-wrap mb-3 align-content-center">
                 <h3 class="active text-center flex-grow-1" data-form-title="user">Usuario</h3>
                 <h3 class="text-center flex-grow-1" data-form-title="group">Grupo</h3>
-                <h3 class="text-center flex-grow-1" data-form-title="disc">Discográfica</h3>
+                <h3 class="text-center flex-grow-1" data-form-title="disc">Mecenas</h3>
             </div>
             <div class="forms-container border border-secondary d-flex flex-column align-items-center p-2">
                 <form action="#" method="post" class="active-form" data-form="user">
@@ -114,10 +114,10 @@ session_start();
                 </form>
 
                 <form action="#" data-form="disc" method="post">
-                    <h2 class="text-center mb-5 mt-3">Registro para discográficas</h2>
+                    <h2 class="text-center mb-5 mt-3">Registro para mecenas</h2>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
-                            <label for="nombre">Nombre de la discográfica</label>
+                            <label for="nombre">Usuario</label>
                             <ion-icon name="radio-outline"></ion-icon>
                         </div>
                         <input name="nombre" type="text" required>                        

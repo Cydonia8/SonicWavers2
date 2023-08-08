@@ -38,6 +38,9 @@
         if($accede){
             $_SESSION["user"] = $_POST["mail"];
             $_SESSION["user-type"] = "group";
+            $jwt = generateToken($_POST["usuario"], false);
+                echo $jwt;
+                $_SESSION["token"] = $jwt;
             keepSessionOpen();
             echo "<meta http-equiv='refresh' content='0;url=../grupo/grupo_main.php'>";
         }else{
@@ -52,6 +55,9 @@
         if($accede){
             $_SESSION["user"] = $_POST["mail"];
             $_SESSION["user-type"] = "disc";
+            $jwt = generateToken($_POST["usuario"], false);
+                echo $jwt;
+                $_SESSION["token"] = $jwt;
             keepSessionOpen();
             echo "<meta http-equiv='refresh' content='0;url=../discografica/discografica_main.php'>";
         }else{
@@ -86,7 +92,7 @@
             <div class="form-option-picker d-flex justify-content-between flex-wrap mb-3 align-content-center">
                 <h3 class="active text-center flex-grow-1" data-form-title="user">Usuario</h3>
                 <h3 class="text-center flex-grow-1" data-form-title="group">Grupo</h3>
-                <h3 class="text-center flex-grow-1" data-form-title="disc">Discográfica</h3>
+                <h3 class="text-center flex-grow-1" data-form-title="disc">Mecenas</h3>
             </div>
             <div class="forms-container border border-secondary d-flex flex-column align-items-center p-2">
                 <form action="#" method="post" class="active-form" data-form="user">
@@ -146,7 +152,7 @@
                 </form>
 
                 <form action="#" method="post" data-form="disc">
-                    <h2 class="text-center mb-5 mt-3">Acceso para discográficas</h2>
+                    <h2 class="text-center mb-5 mt-3">Acceso para mecenas</h2>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
                             <label for="mail">Correo electrónico</label>
