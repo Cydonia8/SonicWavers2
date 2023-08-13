@@ -1,10 +1,15 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
-    $usuario = $_SESSION["user"];
+    
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
     $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    // sleep(1.5);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+    
     $id = $_GET["id"];
     $sentencia_datos_album = $conexion->query("select titulo, a.foto foto, nombre autor, lanzamiento, g.foto_avatar avatar, g.id id_grupo from album a, grupo g where a.grupo = g.id and a.id = $id");
     $datos_album = [];
@@ -14,7 +19,7 @@
     }
     $datos['datos_album'] = $datos_album;
 
-    $usuario_reseña_escrita = $conexion->query("SELECT count(*) comprobante from reseña r, usuario u where r.usuario = u.id and u.usuario = '$usuario' and r.album = $id");
+    $usuario_reseña_escrita = $conexion->query("SELECT count(*) comprobante from reseña r, usuario u where r.usuario = u.id and u.usuario = '$user' and r.album = $id");
     $fila = $usuario_reseña_escrita->fetch_array(MYSQLI_ASSOC);
     $reseña_usuario[] = $fila;
     $datos["reseña_escrita"] = $reseña_usuario;

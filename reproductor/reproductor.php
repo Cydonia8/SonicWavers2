@@ -3,12 +3,14 @@
     require_once "../php_functions/general.php";
     require_once "../php_functions/login_register_functions.php";
     // echo $_SESSION["user"];
-    if(!isset($_SESSION["user-type"])){
+    if(!isset($_SESSION["token"])){
         header("location:../login/login.php");
     }else{
-        forbidAccess("standard");
+        forbidAccess("user");
     }
-    $user = $_SESSION["user"];
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
     
     
 ?>

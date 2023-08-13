@@ -1,8 +1,13 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
-    $usuario = $_SESSION["user"];
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin:*");
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $usuario = $decoded["data"]["user"];
     $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
     $perfil_completo = $conexion->prepare("SELECT estilo from usuario where id <> 0 and usuario = ?");
     $perfil_completo->bind_param('s', $usuario);

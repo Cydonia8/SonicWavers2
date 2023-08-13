@@ -1,9 +1,16 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
+
     session_start();
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
+
     $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    sleep(1.5);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     $id = $_GET["id"];
     $sentencia = $conexion->query("select titulo, a.foto foto, g.nombre autor, lanzamiento, g.foto_avatar avatar, g.id id_grupo, d.nombre discografica, d.foto_avatar foto_discografica from album a, grupo g, discografica d where g.discografica = d.id and a.grupo = g.id and a.id = $id");
     $datos_album = [];
@@ -14,7 +21,7 @@
     $datos['datos_album'] = $datos_album;
 
     $sentencia_usuario = $conexion->prepare("SELECT id from usuario where usuario = ?");
-    $sentencia_usuario->bind_param('s', $_SESSION["user"]);
+    $sentencia_usuario->bind_param('s', $user);
     $sentencia_usuario->bind_result($id_usuario);
     $sentencia_usuario->execute();
     $sentencia_usuario->fetch();

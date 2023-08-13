@@ -1,8 +1,14 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
-    $usuario = $_SESSION["user"];
+    
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     if(isset($_POST["f_nac"]) && isset($_POST["estilo"])){
         $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
         $f_nac = $_REQUEST["f_nac"];

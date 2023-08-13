@@ -1,11 +1,16 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
     $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
 
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     $consulta_estilo = $conexion->prepare("SELECT estilo from usuario where usuario = ?");
-    $consulta_estilo->bind_param('s', $_SESSION["user"]);
+    $consulta_estilo->bind_param('s', $user);
     $consulta_estilo->bind_result($estilo);
     $consulta_estilo->execute();
     $consulta_estilo->fetch();

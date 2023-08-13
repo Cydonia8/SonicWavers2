@@ -2,7 +2,13 @@
     session_start();
     require_once "../php_functions/group_functions.php";
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     closeSession($_POST);
     $miembros = groupHasMembers($_SESSION["user"]);
 
@@ -12,7 +18,7 @@
         $es_miembro = userIsMember($usuario);
         $existe = userExists($usuario);
         if($existe == 1 and $es_miembro == 0){
-            addNewMember($usuario, $_SESSION["user"]);
+            addNewMember($usuario, $user);
         }
     }
     elseif(isset($_POST["eliminar-miembro"])){

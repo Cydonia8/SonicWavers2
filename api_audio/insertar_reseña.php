@@ -1,26 +1,30 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
-    $usuario = $_SESSION["user"];
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
 
-    if(isset($_REQUEST["contenido"]) and isset($_REQUEST["titulo"]) and isset($_REQUEST["id-album"])){
-        $titulo = $_REQUEST["titulo"];
-        $contenido = $_REQUEST["contenido"];
-        $album = $_REQUEST["id-album"];
-        $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-        $id_user = $conexion->prepare("SELECT id from usuario where usuario = ?");
-        $id_user->bind_param('s', $usuario);
-        $id_user->bind_result($id_usuario);
-        $id_user->execute();
-        $id_user->fetch();
-        $id_user->close();
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
 
-        $fecha = date('Y-m-d');
-        $insert = $conexion->prepare("INSERT INTO reseña (titulo, contenido, usuario, album, fecha) values (?,?,?,?,?)");
-        $insert->bind_param('ssiis', $titulo, $contenido, $id_usuario, $album, $fecha);
+    if(isset($_REQUEST["contenido"]) and isset($_REQUEST["titulo"]) and isset($_REQUEST["id-album"])){
+        $title = $_REQUEST["titulo"];
+        $content = $_REQUEST["contenido"];
+        $album = $_REQUEST["id-album"];
+        $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+        $query = $con->prepare("SELECT id from usuario where usuario = ?");
+        $query->bind_param('s', $user);
+        $query->bind_result($user_id);
+        $query->execute();
+        $query->fetch();
+        $query->close();
+
+        $date = date('Y-m-d');
+        $insert = $con->prepare("INSERT INTO reseña (titulo, contenido, usuario, album, fecha) values (?,?,?,?,?)");
+        $insert->bind_param('ssiis', $title, $content, $user_id, $album, $date);
         $insert->execute();
         $insert->close();
-        $conexion->close();
+        $con->close();
     }
     

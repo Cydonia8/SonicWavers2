@@ -1,11 +1,16 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $usuario = $_SESSION["user"];
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
     $id_user = $conexion->prepare("SELECT id from usuario where usuario = ?");
-    $id_user->bind_param('s', $usuario);
+    $id_user->bind_param('s', $user);
     $id_user->bind_result($id);
     $id_user->execute();
     $id_user->fetch();

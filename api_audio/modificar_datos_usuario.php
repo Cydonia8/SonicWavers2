@@ -1,10 +1,17 @@
 <?php
+    require_once "../php_functions/login_register_functions.php";
+
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin:*");
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+    $user = $decoded["data"]["user"];
+
     $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     $consulta_correo_actual = $con->prepare("SELECT correo from usuario where usuario = ?");
-    $consulta_correo_actual->bind_param('s', $_SESSION["user"]);
+    $consulta_correo_actual->bind_param('s', $user);
     $consulta_correo_actual->bind_result($correo_actual);
     $consulta_correo_actual->execute();
     $consulta_correo_actual->fetch();
@@ -26,7 +33,7 @@
 
         if($repetido == 0){
             $update = $con->prepare("UPDATE usuario set nombre = ?, apellidos = ?, correo = ?, pass = ?, estilo = ? where usuario = ?");
-            $update->bind_param('ssssis', $nombre, $apellidos, $correo, $pass, $estilo, $_SESSION["user"]);
+            $update->bind_param('ssssis', $nombre, $apellidos, $correo, $pass, $estilo, $user);
             $update->execute();
             $update->close();
         }else{

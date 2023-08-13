@@ -70,7 +70,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "user"){
-                    $foto = imageUser($_SESSION["user"], "usuario", "usuario");
+                    $foto = imageUser($token_decoded["data"]["user"], "usuario", "usuario");
                     $foto = imageIndex($foto);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
@@ -91,7 +91,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "group"){
-                    $foto = imageUser($_SESSION["user"], "grupo", "correo");
+                    $foto = imageUser($token_decoded["data"]["user"], "grupo", "correo");
                     $foto = imageIndex($foto);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
