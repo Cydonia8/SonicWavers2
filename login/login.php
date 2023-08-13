@@ -38,7 +38,7 @@
         if($access){
             // $_SESSION["user"] = $_POST["mail"];
             // $_SESSION["user-type"] = "group";
-            $jwt = generateToken($_POST["usuario"], false, "group");
+            $jwt = generateToken($_POST["mail"], false, "group");
             echo $jwt;
             $_SESSION["token"] = $jwt;
             keepSessionOpen();

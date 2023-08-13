@@ -5,7 +5,13 @@
     require_once "../php_functions/group_functions.php";
     require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
-    $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+    $nombre_grupo = getGroupNameByMail($user);
+
     if(isset($_POST["completar"])){
         $foto_correcta = checkPhoto("foto");
         $foto_avatar_correcta = checkPhoto("foto-avatar");
@@ -122,7 +128,7 @@
 </head>
 <body id="grupo-main">
     <?php
-        $completo = checkInformationCompleted($_SESSION["user"]);
+        $completo = checkInformationCompleted($user);
         if(!$completo){
             echo "<section class=\"form-group-completition gap-5\">
                     <img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\">
@@ -144,7 +150,7 @@
                 </section>";
         }else{
             menuGrupoDropdown();
-            getGroupInfo($_SESSION["user"]);
+            getGroupInfo($user);
             echo "<h2 class='text-center text-decoration-underline mb-4 mt-5'>Fotos de grupo</h2>";
             echo "<section class='container-fluid d-flex flex-column flex-lg-row mb-5'>
             <form class='form-fotos-extra-group' action='#' method='post' enctype='multipart/form-data'>
@@ -159,7 +165,7 @@
                 <button name='añadir-fotos' style='--clr:#c49c23' class='btn-danger-own d-block mx-auto mt-4 mb-3'><span>Añadir fotos</span><i></i></button>
             </form>
             <div class='grid-fotos-group'>";
-                getGroupExtraPhotos($_SESSION["user"]);
+                getGroupExtraPhotos($user);
             echo "</div>";
             echo "</section>";
             if(isset($limite_alcanzado)){

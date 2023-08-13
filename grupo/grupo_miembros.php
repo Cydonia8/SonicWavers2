@@ -10,7 +10,7 @@
     $user = $decoded["data"]["user"];
 
     closeSession($_POST);
-    $miembros = groupHasMembers($_SESSION["user"]);
+    $miembros = groupHasMembers($user);
 
     if(isset($_POST["agregar"])){
         $usuario = $_POST["usuario"];
@@ -28,8 +28,8 @@
 
     if(isset($_POST["send-message"])){
         $msg = strip_tags($_POST["message"]);
-        sendMessage($msg);
-        linkMessageToUsers();
+        sendMessage($msg, $user);
+        // linkMessageToMembers();
     }
 ?>
 <!DOCTYPE html>
@@ -97,7 +97,7 @@
                     if($miembros == 0){
                         echo "<h3 class='text-center'>No hay miembros actualmente</h3>";
                     }else{
-                        getGroupMembers($_SESSION["user"]);
+                        getGroupMembers($user);
                     }
                     if(isset($eliminado) and $eliminado){
                         echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">

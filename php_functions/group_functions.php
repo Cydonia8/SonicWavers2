@@ -822,4 +822,46 @@
         $consulta->close();
         $con->close();
     }
+
+    function getGroupMembersIDs($id){
+        $con = createConnection();
+        $ids = [];
+        $query = $con->prepare("SELECT id from usuario where grupo = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($id_member);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows > 0){
+            $index = 0;
+            while($query->fetch()){           
+                $ids[$index] = $id_member;
+                $index++;
+            }
+        }
+       
+        $query->close();
+        $con->close();
+        return $ids;
+    }
+
+    function sendMessage($msg, $mail){
+        $id_group = getGroupID($mail);
+        $date = date('Y-m-d');
+        $con = createConnection();
+        $query = $con->prepare("INSERT INTO group_messages values ('', ?,?,?)");
+        $query->bind_param('ssi', $msg, $date, $id_group);
+        if($query->execute()){
+            $queryid = $con->query("SELECT id from group_messages order by id desc");
+            $row = $queryid->fetch_array(MYSQLI_ASSOC);
+            $id = $row["id"];
+            $query->close();
+            $members = getGroupMembersIDs($id_group);
+            foreach($members as $member){
+                $link_message = $con->query("INSERT INTO member_receives_message (usuario, mensaje) values ($member, $id)");
+            }
+        }
+        $con->close();    
+    }
+
+ 
 ?>
