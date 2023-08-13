@@ -1,4 +1,6 @@
 <?php
+require_once "login_register_functions.php";
+// require_once "../vendor/autoload.php";
 
 function mostStreamedSongs(){
     
@@ -27,11 +29,7 @@ function imageUser($user, $table, $identificador){
     return $foto;
 }
 
-function forbidAccess($tipo_usuario){
-    if(!isset($_SESSION["user"]) or $_SESSION["user-type"] != $tipo_usuario){
-        header("Location:../prohibido/forbidden.php");
-    }
-}
+
 
 function formatDate($date){
     $marcatiempo = strtotime($date);
@@ -72,8 +70,10 @@ function decodeCookie(){
 function printMainMenu($location = "noindex"){
 
     if($location == "index"){
-        if(isset($_SESSION["user-type"])){
-            if($_SESSION["user-type"] == "admin"){
+        if(isset($_SESSION["token"])){
+            $token_decoded = decodeToken($_SESSION["token"]);
+            $token_decoded = json_decode(json_encode($token_decoded), true);
+            if($token_decoded["data"]["admin"]){
                 $foto = imageUser("admin", "usuario", "usuario");
                 $foto = imageIndex($foto);
                 echo "<header class=\"header-index\">
@@ -93,7 +93,7 @@ function printMainMenu($location = "noindex"){
                         </ul>
                     </nav>
                 </header>";
-            }elseif($_SESSION["user-type"] == "standard"){
+            }elseif($token_decoded["data"]["role"] == "user"){
                 $foto = imageUser($_SESSION["user"], "usuario", "usuario");
                 $foto = imageIndex($foto);
                 echo "<header class=\"header-index\">
@@ -114,7 +114,7 @@ function printMainMenu($location = "noindex"){
                         </ul>
                     </nav>
                 </header>";
-            }elseif($_SESSION["user-type"] == "group"){
+            }elseif($token_decoded["data"]["role"] == "group"){
                 $foto = imageUser($_SESSION["user"], "grupo", "correo");
                 $foto = imageIndex($foto);
                 echo "<header class=\"header-index\">
@@ -170,8 +170,8 @@ function printMainMenu($location = "noindex"){
         }
         
     }else{
-        if(isset($_SESSION["user-type"])){
-            if($_SESSION["user-type"] == "admin"){
+        if(isset($_SESSION["token"])){
+            if($token_decoded["data"]["admin"]){
                 $foto = imageUser("admin", "usuario", "usuario");
                 echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
@@ -189,7 +189,7 @@ function printMainMenu($location = "noindex"){
                         </ul>
                     </nav>
                 </header>";
-            }elseif($_SESSION["user-type"] == "standard"){
+            }elseif($token_decoded["data"]["role"] == "user"){
                 $foto = imageUser($_SESSION["user"], "usuario", "usuario");
                 echo "<header class=\"header-index\">
                 <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
@@ -209,7 +209,7 @@ function printMainMenu($location = "noindex"){
                         </ul>
                     </nav>
                 </header>";
-            }elseif($_SESSION["user-type"] == "group"){
+            }elseif($token_decoded["data"]["role"] == "group"){
                 $foto = imageUser($_SESSION["user"], "grupo", "correo");
                 echo "<header class=\"header-index\">
                 <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>

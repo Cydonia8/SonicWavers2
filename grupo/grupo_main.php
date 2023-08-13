@@ -3,6 +3,7 @@
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
     require_once "../php_functions/group_functions.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
     $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
     if(isset($_POST["completar"])){

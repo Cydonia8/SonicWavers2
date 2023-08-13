@@ -1,7 +1,9 @@
 <?php
   session_start();
-  require_once "php_functions/general.php";
+  // require_once "php_functions/general.php";
   require_once "square_image_creator/create_square_image.php";
+  require_once "vendor/autoload.php";
+  require_once "php_functions/index_functions.php";
   decodeCookie();
   closeSession($_POST, "index");
 ?>

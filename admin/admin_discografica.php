@@ -3,6 +3,7 @@
     // echo $_SESSION["user"]
     require_once "../php_functions/admin_functions.php";
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("admin");
     if(isset($_POST["activar"])){
         activateDiscographic($_POST["id"]);
@@ -37,20 +38,20 @@
     <?php
         menuAdminDropdown();
     ?>
-    <h1 class="text-center mt-5 mb-4">Discográficas de Sonic Waves</h1>
+    <h1 class="text-center mt-5 mb-4">Mecenas de Sonic Waves</h1>
     <section class="filter-abc-admin">
         <?php
-            printFilterForm("por nombre de discográfica");
+            printFilterForm("por nombre de mecenas");
         ?>
     </section>
     <section class="admin-resumen-disc container-fluid mx-auto row gap-3">
         <?php
-            if(isset($_POST["filtro"])){
+            if(isset($_POST["filter"])){
                 echo "<div class=\"d-flex justify-content-center align-items-center gap-3 mb-4\">
                         <label>Búsqueda dinámica</label>
                         <input type=\"text\" class=\"busqueda-dinamica-admin\">
                     </div>";
-                getRecordLabelsFiltered($_POST["filtro"]);
+                getPatrons($_POST["filter"]);
             }
         ?>
     </section>

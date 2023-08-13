@@ -42,21 +42,21 @@ session_start();
                             <label for="usuario">Usuario</label>
                             <ion-icon name="person-outline"></ion-icon>
                         </div>
-                        <input name="usuario" type="text" required>                        
+                        <input name="user" type="text" required>                        
                     </div>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
                             <label for="nombre">Nombre</label>
                             <ion-icon name="person-outline"></ion-icon>
                         </div>
-                        <input name="nombre" type="text" required>                        
+                        <input name="name" type="text" required>                        
                     </div>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
                             <label for="apellidos">Apellidos</label>
                             <ion-icon name="person-outline"></ion-icon>
                         </div>
-                        <input name="apellidos" type="text" required>                        
+                        <input name="surname" type="text" required>                        
                     </div>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
@@ -75,7 +75,7 @@ session_start();
                     </div>
                         <input class="w-100" name="mail" type="email" required>
                     </div>
-                    <input type="submit" name="registro-user" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input type="submit" name="register-user" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿Ya tienes cuenta? <a class="text-white" href="login.php">Accede aquí</a></p>
                     </div>
@@ -88,7 +88,7 @@ session_start();
                             <label for="nombre">Nombre del grupo</label>
                             <ion-icon name="radio-outline"></ion-icon>
                         </div>
-                        <input name="nombre" type="text" required>                        
+                        <input name="name" type="text" required>                        
                     </div>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
@@ -107,7 +107,7 @@ session_start();
                             <ion-icon class="position-absolute end-0 view-pass" name="eye-outline"></ion-icon>
                         </div>
                     </div>
-                    <input data-form="group" id="boton-registro-grupo" type="submit" name="registro-grupo" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input data-form="group" id="boton-registro-grupo" type="submit" name="register-group" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿Ya tienes cuenta? <a class="text-white" href="login.php">Accede aquí</a></p>
                     </div>
@@ -117,10 +117,10 @@ session_start();
                     <h2 class="text-center mb-5 mt-3">Registro para mecenas</h2>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
-                            <label for="nombre">Usuario</label>
+                            <label for="name">Usuario</label>
                             <ion-icon name="radio-outline"></ion-icon>
                         </div>
-                        <input name="nombre" type="text" required>                        
+                        <input name="name" type="text" required>                        
                     </div>
                     <div class="input-field d-flex flex-column mb-3">
                         <div class="input-visuals d-flex justify-content-between">
@@ -139,50 +139,52 @@ session_start();
                             <ion-icon class="position-absolute end-0 view-pass" name="eye-outline"></ion-icon>
                         </div>
                     </div>
-                    <input type="submit" name="registro-disc" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input type="submit" name="register-patron" value="Crear cuenta" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿Ya tienes cuenta? <a class="text-white" href="login.php">Accede aquí</a></p>
                     </div>
                 </form>
             </div>
             <?php
-                if(isset($_POST["registro-user"])){
-                    $user = $_POST["usuario"];
-                    $nombre = $_POST["nombre"];
-                    $apellidos = $_POST["apellidos"];
+                if(isset($_POST["register-user"])){
+                    $user = $_POST["user"];
+                    $name = $_POST["name"];
+                    $surname = $_POST["surname"];
                     $pass = $_POST["pass"];
                     $mail = $_POST["mail"];
-                    $user_exists = userNameRepeated($_POST["usuario"]);
+                    $user_exists = userNameRepeated($_POST["user"]);
                     $mail_exists = mailRepeated($mail, "usuario");
                     // echo "<meta http-equiv='refresh' content='0;url=../index.php'>";
                     if(!$user_exists and !$mail_exists){
-                        insertNewUser($user, $nombre, $apellidos, $pass, $mail, 0, 0);
+                        $pass = md5(md5($pass));
+                        insertNewUser($user, $name, $surname, $pass, $mail, 0, 0);
                         echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Usuario creado correctamente.</div>";
                     }else{
                         echo "<div class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Usuario o correo ya registrados</div>";
                     }
-                }elseif(isset($_POST["registro-grupo"])){
-                    $nombre_grupo = $_POST["nombre"];
+                }elseif(isset($_POST["register-group"])){
+                    $name = $_POST["name"];
                     $pass = $_POST["pass"];
                     $mail = $_POST["mail"];
                     // echo "<meta http-equiv='refresh' content='0;url=../index.php'>";
                     $mail_exists = mailRepeated($mail, "grupo");
 
                     if(!$mail_exists){
-                        insertNewGroup($nombre_grupo, $pass, $mail, 0);
+                        $pass = md5(md5($pass));
+                        insertNewGroup($name, $pass, $mail, 0);
                         echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Solicitud de grupo registrada y a la espera de ser aprobada.</div>";
                     }else{
                         echo "<div class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Correo ya registrado</div>";
                     }
-                }elseif(isset($_POST["registro-disc"])){
-                    $nombre_discografica = $_POST["nombre"];
+                }elseif(isset($_POST["register-patron"])){
+                    $name = $_POST["name"];
                     $pass = $_POST["pass"];
                     $mail = $_POST["mail"];
-                    $mail_exists = mailRepeated($mail, "discografica");
+                    $mail_exists = mailRepeated($mail, "patrons");
 
                     if(!$mail_exists){
-                        insertNewDiscographic($nombre_discografica, $pass, $mail);
-                        echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Solicitud de discográfica registrada y a la espera de ser aprobada.</div>";
+                        insertNewPatron($name, $pass, $mail);
+                        echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Solicitud de mecenas registrada y a la espera de ser aprobada.</div>";
                     }else{
                         echo "<div class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Correo ya registrado</div>";
                     }

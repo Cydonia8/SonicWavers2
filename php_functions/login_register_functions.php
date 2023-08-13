@@ -13,17 +13,6 @@ use Firebase\JWT\JWT;
     // }
     // printKey();
 
-    function getStyles(){
-        $con = createConnection();
-        $consulta = $con->prepare("SELECT nombre, id FROM estilo");
-        $consulta->bind_result($nombre, $id);
-        $consulta->execute();
-        while($consulta->fetch()) {
-            echo "<option class=\"p-2\" value=\"$id\">$nombre</option>";
-        }
-        $consulta->close();
-        $con->close();
-    }
 
     function userNameRepeated($user){
         $exists = true;
@@ -42,15 +31,15 @@ use Firebase\JWT\JWT;
         return $exists;
     }
 
-    function mailRepeated($mail, $tabla){
+    function mailRepeated($mail, $table){
         $exists = true;
         $con = createConnection();
-        $consulta = $con->prepare("SELECT COUNT(*) from $tabla where correo = ?");
-        $consulta->bind_param("s", $mail);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT COUNT(*) from $table where mail = ?");
+        $query->bind_param("s", $mail);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
 
         if($count == 0){
@@ -88,6 +77,17 @@ use Firebase\JWT\JWT;
         $con->close();
     }
 
+    function insertNewPatron($name, $pass, $mail){
+        $con = createConnection();
+        $pass = md5(md5($pass));
+        $query = $con->prepare("INSERT INTO patrons (name, pass, mail) VALUES (?,?,?)");
+        $query->bind_param("sss", $name, $pass, $mail);
+        $query->execute();
+        $query->close();
+        $con->close();
+    }
+    
+
     function loginUser($user, $pass){
         $accede = false;
         $con = createConnection();
@@ -106,7 +106,7 @@ use Firebase\JWT\JWT;
         return $accede;
     }
 
-    function generateToken($mail, $is_admin){
+    function generateToken($mail, $is_admin, $role){
 
         $time = time();
         $token = array(
@@ -114,7 +114,8 @@ use Firebase\JWT\JWT;
             "exp" => $time + 3600, //Expiration date of the token
             "data" => [
                 "user" => $mail,
-                "admin" => $is_admin
+                "admin" => $is_admin, 
+                "role" => $role
             ]
         );
     
@@ -127,18 +128,33 @@ use Firebase\JWT\JWT;
     }
     function decodeToken($token){
         try{
-            $jwt_dec = JWT::decode($token, new Key("aa", "HS256")); 
+            $jwt_dec = JWT::decode($token, new Key($_ENV["SECRET_KEY"], "HS256")); 
             return $jwt_dec;        
         } catch (UnexpectedValueException $e) {
             echo "No se ha podido validar su sesión";
+            unset($_SESSION["token"]);
             return false;
         }catch(ExpiredException $e){
             echo "Su sesión ha expirado";
+            unset($_SESSION["token"]);
             return false;
         }
     }
 
-  
+    function forbidAccess($user_type){
+        if(isset($_SESSION["token"])){
+            $token_decoded = decodeToken($_SESSION["token"]);
+            $token_decoded = json_decode(json_encode($token_decoded), true);
+            if($token_decoded["data"]["role"] != $user_type){
+                header("Location:../prohibido/forbidden.php");
+            }
+        }else{
+            header("Location:../prohibido/forbidden.php");
+        }
+        // if(!isset($_SESSION["user"]) or $_SESSION["user-type"] != $tipo_usuario){
+        //     header("Location:../prohibido/forbidden.php");
+        // }
+    }
 
     function loginGroupDisc($mail, $pass, $tabla){
         $accede = false;
@@ -158,14 +174,32 @@ use Firebase\JWT\JWT;
         return $accede;
     }
 
-    function petitionStatus($mail, $tabla){
+    function loginPatrons($mail, $pass, $table){
+        $access = false;
         $con = createConnection();
-        $consulta = $con->prepare("SELECT activo from $tabla where correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($estado);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $pass = md5(md5($pass));
+        $query = $con->prepare("SELECT count(*) FROM $table WHERE mail = ? and pass = ? and active = 1");
+        $query->bind_param("ss", $mail, $pass);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $estado;
+        if($count == 1){
+            $access = true;
+        }
+
+        return $access;
+    }
+
+    function petitionStatus($mail, $table){
+        $con = createConnection();
+        $query = $con->prepare("SELECT active from $table where mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($state);
+        $query->execute();
+        $query->fetch();
+        $query->close();
+        $con->close();
+        return $state;
     }

@@ -4,24 +4,24 @@
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
 
-    if(isset($_SESSION["user"]) and isset($_SESSION["user-type"])){
+    if(isset($_SESSION["token"])){
         header("Location:../index.php");
     }
-    if(isset($_POST["acceder-user"])){
-        $accede = loginUser($_POST["usuario"], $_POST["pass"]);
+    if(isset($_POST["access-user"])){
+        $access = loginUser($_POST["usuario"], $_POST["pass"]);
 
-        if($accede){
-            $_SESSION["user"] = $_POST["usuario"];
+        if($access){
+            // $_SESSION["user"] = $_POST["usuario"];
             if($_POST["usuario"] == "admin"){
-                $_SESSION["user-type"] = "admin";
-                $jwt = generateToken($_POST["usuario"], true);
+                // $_SESSION["user-type"] = "admin";
+                $jwt = generateToken($_POST["usuario"], true, "admin");
                 $_SESSION["token"] = $jwt;
                 echo $jwt;
                 keepSessionOpen();
                 // echo "<meta http-equiv='refresh' content='0;url=../admin/admin_main.php'>";
             }else{
-                $_SESSION["user-type"] = "standard";
-                $jwt = generateToken($_POST["usuario"], false);
+                // $_SESSION["user-type"] = "standard";
+                $jwt = generateToken($_POST["usuario"], false, "user");
                 echo $jwt;
                 $_SESSION["token"] = $jwt;
                 keepSessionOpen();
@@ -30,38 +30,39 @@
             }
             
         }
-    }elseif(isset($_POST["acceder-group"])){
-        $accede = loginGroupDisc($_POST["mail"], $_POST["pass"], "grupo");
+    }elseif(isset($_POST["access-group"])){
+        $access = loginGroupDisc($_POST["mail"], $_POST["pass"], "grupo");
 
         // if(!$accede){
         //     echo "<div data-mdb-delay=\"3000\" class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Credenciales incorrectas</div>";
-        if($accede){
-            $_SESSION["user"] = $_POST["mail"];
-            $_SESSION["user-type"] = "group";
-            $jwt = generateToken($_POST["usuario"], false);
-                echo $jwt;
-                $_SESSION["token"] = $jwt;
+        if($access){
+            // $_SESSION["user"] = $_POST["mail"];
+            // $_SESSION["user-type"] = "group";
+            $jwt = generateToken($_POST["usuario"], false, "group");
+            echo $jwt;
+            $_SESSION["token"] = $jwt;
             keepSessionOpen();
             echo "<meta http-equiv='refresh' content='0;url=../grupo/grupo_main.php'>";
         }else{
-            $estado = petitionStatus($_POST["mail"], "grupo");
+            $state = petitionStatus($_POST["mail"], "grupo");
         }
 
-    }elseif(isset($_POST["acceder-disc"])){
-        $accede = loginGroupDisc($_POST["mail"], $_POST["pass"], "discografica");
+    }elseif(isset($_POST["access-patrons"])){
+        $access = loginPatrons($_POST["mail"], $_POST["pass"], "patrons");
 
         // if(!$accede){
         //     echo "<div data-mdb-delay=\"3000\" class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Credenciales incorrectas</div>";
-        if($accede){
-            $_SESSION["user"] = $_POST["mail"];
-            $_SESSION["user-type"] = "disc";
-            $jwt = generateToken($_POST["usuario"], false);
-                echo $jwt;
-                $_SESSION["token"] = $jwt;
+        if($access){
+            
+            // $_SESSION["user"] = $_POST["mail"];
+            // $_SESSION["user-type"] = "disc";
+            $jwt = generateToken($_POST["usuario"], false, "patron");
+            echo $jwt;
+            $_SESSION["token"] = $jwt;
             keepSessionOpen();
-            echo "<meta http-equiv='refresh' content='0;url=../discografica/discografica_main.php'>";
+            echo "<meta http-equiv='refresh' content='0;url=../patrons/patrons_main.php'>";
         }else{
-            $estado = petitionStatus($_POST["mail"], "discografica");
+            $state = petitionStatus($_POST["mail"], "patrons");
         }
     }
 ?>
@@ -117,7 +118,7 @@
                     <div class="mantener-sesion text-center x gap-1 justify-content-center align-items-center mb-3">
                         <label class="d-flex justify-content-center align-items-center gap-2" for="sesion"> <input value="1" name="sesion" type="checkbox">Mantener sesión abierta</label>
                     </div>
-                    <input type="submit" name="acceder-user" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input type="submit" name="access-user" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿No tienes cuenta? <a class="text-white" href="registro.php">Crea una aquí</a></p>
                     </div>
@@ -145,7 +146,7 @@
                     <div class="mantener-sesion text-center x gap-1 justify-content-center align-items-center mb-3">
                         <label for="sesion"> <input value="1" name="sesion" type="checkbox">Mantener sesión abierta</label>
                     </div>
-                    <input type="submit" name="acceder-group" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input type="submit" name="access-group" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿No tienes cuenta? <a class="text-white" href="registro.php">Crea una aquí</a></p>
                     </div>
@@ -173,18 +174,18 @@
                     <div class="mantener-sesion text-center x gap-1 justify-content-center align-items-center mb-3">
                         <label for="sesion"> <input value="1" name="sesion" type="checkbox">Mantener sesión abierta</label>
                     </div>
-                    <input type="submit" name="acceder-disc" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
+                    <input type="submit" name="access-patrons" value="Iniciar sesión" class="w-100 rounded-pill border-0 mb-3 p-2">
                     <div class="register">
                         <p class="text-center">¿No tienes cuenta? <a class="text-white" href="registro.php">Crea una aquí</a></p>
                     </div>
                 </form>
             </div>
             <?php
-                if(isset($accede)){
-                    if(isset($estado) and $estado == 2){
+                if(isset($access)){
+                    if(isset($state) and $state == 2){
                         echo "<div data-mdb-delay=\"3000\" class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Petición denegada. Contacte con los administradores del sitio.</div>";
                     }
-                    elseif(!$accede){
+                    elseif(!$access){
                         echo "<div data-mdb-delay=\"3000\" class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Credenciales incorrectas</div>";
                     }
                 }

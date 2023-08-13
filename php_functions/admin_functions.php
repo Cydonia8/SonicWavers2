@@ -349,26 +349,26 @@
         $con->close();
     }
 
-    function getRecordLabelsFiltered($filter){
+    function getPatrons($filter){
         $con = createConnection();
-        $filtro = $filter.'%';
-        $consulta = $con->prepare("SELECT id, nombre, correo, foto_avatar, activo, pendiente_aprobacion aprob FROM discografica where id <> 0 and nombre like ? order by nombre asc");
-        $consulta->bind_param('s', $filtro);
-        $consulta->bind_result($id, $nombre, $correo, $foto_avatar, $activo, $aprob);
-        $consulta->execute();
-        $consulta->store_result();
-        if($consulta->num_rows() > 0){
-            while($consulta->fetch()){
-                $total_grupos = groupsPerRecordLabel($id);
-                echo "<div data-name=\"$nombre\" class=\"rounded border grupo-detalle p-3 gap-2 col-12 col-md-3 d-flex flex-column flex-xl-row align-items-center\">
+        $filter = $filter.'%';
+        $query = $con->prepare("SELECT id, name, mail, active, awaiting_activation await FROM patrons where id <> 0 and name like ? order by name asc");
+        $query->bind_param('s', $filter);
+        $query->bind_result($id, $name, $mail, $active, $await);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows() > 0){
+            while($query->fetch()){
+                // $total_grupos = groupsPerRecordLabel($id);
+                echo "<div data-name=\"$name\" class=\"rounded border grupo-detalle p-3 gap-2 col-12 col-md-3 d-flex flex-column flex-xl-row align-items-center\">
                         <div class=\"w-50\">
-                            <img class=\"img-fluid rounded-circle\" src=\"$foto_avatar\">
+                            <img class=\"img-fluid rounded-circle\" src=\"\">
                         </div>
                         <div class=\"d-flex flex-column justify-content-between\">
-                            <p>Nombre: <span class='admin-emphasis-span'>$nombre</span></p>
-                            <p>Correo: <span class='admin-emphasis-span'>$correo</span></p>
-                            <p>Número de grupos gestionados: <span class='admin-emphasis-span'>$total_grupos</span></p>";
-                        if($aprob == 1){
+                            <p>Nombre: <span class='admin-emphasis-span'>$name</span></p>
+                            <p>Correo: <span class='admin-emphasis-span'>$mail</span></p>
+                            <p>Número de grupos gestionados: <span class='admin-emphasis-span'></span></p>";
+                        if($await == 1){
                             echo "<div class=\"d-flex gap-3\"><form method=\"post\" action=\"#\">
                             <input hidden name=\"id\" value=\"$id\">
                             <button style='--clr:#09eb3a' class='btn-danger-own' name='aprobar'><span>Aprobar</span><i></i></button>
@@ -378,12 +378,12 @@
                                 <button style='--clr:#e80c0c' class='btn-danger-own' name='denegar'><span>Denegar</span><i></i></button>
                             </form></div>";
                         }else{
-                            if($activo == 0){
+                            if($active == 0){
                                 echo "<form method=\"post\" action=\"#\">
                                 <input hidden name=\"id\" value=\"$id\">
                                 <button style='--clr:#09eb3a' class='btn-danger-own' name='activar'><span>Activar</span><i></i></button>
                                 </form>";
-                            }elseif($activo == 1){
+                            }elseif($active == 1){
                                 echo "<form method=\"post\" action=\"#\">
                                 <input hidden name=\"id\" value=\"$id\">
                                 <button style='--clr:#e80c0c' class='btn-danger-own' name='desactivar'><span>Desactivar</span><i></i></button>
@@ -404,7 +404,7 @@
         }else{
             echo "<h2 class=\"text-center\">No hay coincidencias</h2>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
@@ -711,34 +711,34 @@
         echo "<h3 class=\"text-center mt-4\">Filtro alfabético $tipo_filtro</h3>
         <form action=\"#\" method=\"post\">
             <ul class=\"filter-alphabetic d-flex list-style-none justify-content-center gap-3 flex-wrap mb-3 pe-2 ps-2\">
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"a\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"b\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"c\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"d\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"e\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"f\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"g\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"h\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"i\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"j\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"k\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"l\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"m\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"n\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"ñ\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"o\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"p\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"q\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"r\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"s\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"t\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"u\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"v\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"w\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"x\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"y\"></li>
-                <li><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"z\"></li>
-                <li class='position-relative'><input class=\"btn btn-outline-light\" name=\"filtro\" type=\"submit\" value=\"\"><ion-icon class=\"position-absolute top-50 start-50 translate-middle\" name=\"refresh-outline\"></ion-icon></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"a\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"b\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"c\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"d\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"e\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"f\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"g\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"h\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"i\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"j\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"k\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"l\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"m\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"n\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"ñ\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"o\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"p\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"q\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"r\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"s\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"t\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"u\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"v\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"w\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"x\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"y\"></li>
+                <li><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"z\"></li>
+                <li class='position-relative'><input class=\"btn btn-outline-light\" name=\"filter\" type=\"submit\" value=\"\"><ion-icon class=\"position-absolute top-50 start-50 translate-middle\" name=\"refresh-outline\"></ion-icon></li>
             </ul>
         </form>";
     }
