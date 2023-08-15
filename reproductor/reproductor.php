@@ -112,7 +112,7 @@
                 <img data-bs-toggle="dropdown" aria-expanded="false" class=" profile-menu-avatar rounded-circle dropdown-toggle" src="">
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" id="link-profile" href="">Perfil</a></li>
-                    <li><a class="dropdown-item" id="link-eq" href="">Ecualizador</a></li>
+                    <li><a class="dropdown-item" id="link-eq" href="">Mensajes</a></li>
                     <li><a class="dropdown-item" id="link-close-session" href="">Cerrar sesión</a></li>
                 </ul>
             </div>

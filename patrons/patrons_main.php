@@ -2,12 +2,17 @@
     session_start();
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
-    require_once "../php_functions/discografica_functions.php";
+    require_once "../php_functions/patrons_functions.php";
     require_once "../php_functions/group_functions.php";
     require_once "../php_functions/login_register_functions.php";
     forbidAccess("patron");
     closeSession($_POST);
-    echo $_SESSION["token"];
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
 
     if(isset($_POST["actualizar-avatar"])){
         $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
@@ -50,6 +55,9 @@
     <title><?php echo $nombre;?> | Perfil</title>
 </head>
 <body id="discografica-main">
+    <?php
+        menuPatronDropdown();
+    ?>
     <h1 class="mt-3 text-center">Patron</h1>
     <section>
 
