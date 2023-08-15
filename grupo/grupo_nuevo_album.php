@@ -2,12 +2,18 @@
     session_start();
     require_once "../php_functions/group_functions.php";
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
     closeSession($_POST);
-    $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
+    $nombre_grupo = getGroupNameByMail($user);
     $nuevo_id = getAutoID("album");
     $_SESSION["id_album"] = $nuevo_id;
-    $id_grupo = getGroupID($_SESSION["user"]);
+    $id_grupo = getGroupID($user);
     $total = checkEnoughAlbumsGroup($id_grupo);
 
     if(isset($_POST["crear"])){

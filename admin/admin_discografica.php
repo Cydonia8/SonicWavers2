@@ -5,17 +5,17 @@
     require_once "../php_functions/general.php";
     require_once "../php_functions/login_register_functions.php";
     forbidAccess("admin");
-    if(isset($_POST["activar"])){
-        activateDiscographic($_POST["id"]);
+    if(isset($_POST["activate"])){
+        activatePatron($_POST["id"]);
         // echo "<meta http-equiv='refresh' content='0;url=admin_discografica.php'>";
-    }elseif(isset($_POST["desactivar"])){
-        deactivateDiscographic($_POST["id"]);
+    }elseif(isset($_POST["deactivate"])){
+        deactivatePatron($_POST["id"]);
         // echo "<meta http-equiv='refresh' content='0;url=admin_discografica.php'>";
     }
-    if(isset($_POST["aprobar"])){
-        approveDiscCreation($_POST["id"]);
-    }elseif(isset($_POST["denegar"])){
-        denyDiscCreation($_POST["id"]);
+    if(isset($_POST["approve"])){
+        approvePatronCreation($_POST["id"]);
+    }elseif(isset($_POST["deny"])){
+        denyPatronCreation($_POST["id"]);
     }
     closeSession($_POST);
 ?>

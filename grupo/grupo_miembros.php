@@ -28,8 +28,7 @@
 
     if(isset($_POST["send-message"])){
         $msg = strip_tags($_POST["message"]);
-        sendMessage($msg, $user);
-        // linkMessageToMembers();
+        $message_sent = sendMessage($msg, $user);
     }
 ?>
 <!DOCTYPE html>
@@ -47,7 +46,7 @@
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <script src="../scripts/grupo_miembros.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title>Document</title>
+    <title>Miembros</title>
 </head>
 <body id="grupo-miembros">
     <?php
@@ -84,7 +83,7 @@
                                 echo "<div class=\"alert alert-success text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Usuario agregado como miembro de grupo
                             </div>";
-                            header("Refresh:0; url=grupo_miembros.php");
+                            header("Refresh:2; url=grupo_miembros.php");
                             }
                         }
                         
@@ -103,6 +102,7 @@
                         echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Usuario eliminado correctamente.
                             </div>";
+                            echo "<meta http-equiv='refresh' content='2;url=grupo_miembros.php'>";
                     }
                 ?>
             </div>
@@ -116,6 +116,17 @@
                 <textarea name='message'></textarea>
                 <button style='--clr:#27b82b' class='btn-danger-own' type='submit' name='send-message'><span>Enviar mensaje</span><i></i></button>
             </form>";
+            }
+            if(isset($_POST["send-message"])){
+                if($message_sent){
+                    echo "<div class=\"alert alert-success text-center mt-3 w-50 mx-auto\" role=\"alert\">
+                                Mensaje enviado a todos los miembros del grupo.
+                            </div>";
+                }else{
+                    echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
+                                Se ha producido un error, no se ha podido enviar el mensaje.
+                            </div>";
+                }
             }
         ?>
         <!-- <div>

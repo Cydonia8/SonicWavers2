@@ -111,8 +111,8 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    $foto = imageUser($_SESSION["user"], "discografica", "correo");
-                    $foto = imageIndex($foto);
+                    // $foto = imageUser($token_decoded["data"]["user"], "patrons", "correo");
+                    // $foto = imageIndex($foto);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -166,7 +166,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "user"){
-                    $foto = imageUser($_SESSION["user"], "usuario", "usuario");
+                    $foto = imageUser($token_decoded["data"]["user"], "usuario", "usuario");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -186,7 +186,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "group"){
-                    $foto = imageUser($_SESSION["user"], "grupo", "correo");
+                    $foto = imageUser($token_decoded["data"]["user"], "grupo", "correo");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -205,7 +205,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    $foto = imageUser($_SESSION["user"], "discografica", "correo");
+                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "correo");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>

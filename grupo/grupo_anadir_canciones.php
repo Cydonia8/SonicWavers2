@@ -2,19 +2,25 @@
     session_start();
     require_once "../php_functions/group_functions.php";
     require_once "../php_functions/general.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
     closeSession($_POST);
-    $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+    $nombre_grupo = getGroupNameByMail($user);
     
     if(isset($_POST["cargar"])){
-        $id_grupo = getGroupID($_SESSION["user"]);
+        $id_grupo = getGroupID($user);
         addAlbum($id_grupo, $_SESSION["titulo_album"], $_SESSION["foto_album"], $_SESSION["lanzamiento"], 1);
         for($i = 1; $i <= $_SESSION["num_canciones"]; $i++){
             if($_SESSION["recopilatorio"] == "no" or $_SESSION["recopilatorio"] == NULL){
                 $titulo = $_POST["titulo".$i];
                 $minutos = getDuration($_FILES["archivo".$i]["tmp_name"]);
                 $estilo = $_POST["estilo".$i];
-                $ruta = moveUploadedSong("archivo".$i, $_SESSION["user"], $_SESSION["titulo_album"]);
+                $ruta = moveUploadedSong("archivo".$i, $user, $_SESSION["titulo_album"]);
                 $filas_afectadas = addSong($titulo, $ruta, $minutos, $estilo);
                 $id_cancion = getLastSongID();
                 linkSongToAlbum($_SESSION["id_album"], $id_cancion);
@@ -74,7 +80,7 @@
                     echo "<form class='d-flex flex-column align-items-center gap-3' action=\"#\" method=\"post\" enctype=\"multipart/form-data\">";
                     generateInputs($_SESSION["num_canciones"]);
                 }else{
-                    $id_grupo = getGroupID($_SESSION["user"]);
+                    $id_grupo = getGroupID($user);
                     echo "<script src=\"../scripts/anadir_canciones_recopilatorios.js\" defer></script>";
                     echo "<button style='--clr:#0A90DD' class='btn-danger-own reset-form-recopilatorio'><span>Reiniciar selección</span><i></i></button>";
                     echo "<form class='d-flex flex-column align-items-center gap-3' action=\"#\" method=\"post\">";

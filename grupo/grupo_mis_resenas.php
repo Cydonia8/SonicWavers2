@@ -3,9 +3,17 @@
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
     require_once "../php_functions/group_functions.php";
+    require_once "../php_functions/login_register_functions.php";
+
     forbidAccess("group");
     closeSession($_POST);
-    $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
+    $nombre_grupo = getGroupNameByMail($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +38,7 @@
     <h1 class="text-center">Reseñas de mis álbumes</h1>
     <section class="container-xl d-flex flex-column gap-5 mt-5">
         <?php
-            getAlbumsWithReviews($_SESSION["user"]);
+            getAlbumsWithReviews($user);
         ?>
     </section>
     

@@ -19,7 +19,7 @@
         if($foto_correcta and $foto_avatar_correcta){
             $foto_avatar = newPhotoPath("foto-avatar", "avatar");
             $foto = newPhotoPath("foto", "");
-            completeInformation($_SESSION["user"], $_POST["bio"], $foto, $foto_avatar);
+            completeInformation($user, $_POST["bio"], $foto, $foto_avatar);
         }
         
     }
@@ -27,7 +27,7 @@
         $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
         if($foto_avatar_correcta){
             $foto_avatar = newPhotoPath("foto-avatar-nueva", "avatar");
-            updateAvatarPhoto($_SESSION["user"], $foto_avatar);
+            updateAvatarPhoto($user, $foto_avatar);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía de avatar actualizada correctamente
                 </div>";
@@ -40,7 +40,7 @@
         $foto_correcta = checkPhoto("foto-nueva");
         if($foto_correcta){
             $foto = newPhotoPath("foto-nueva", "");
-            updateMainPhoto($_SESSION["user"], $foto);
+            updateMainPhoto($user, $foto);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía principal actualizada correctamente
                 </div>";
@@ -52,26 +52,19 @@
 
         if($bio != NULL){
             $bio = strip_tags($bio);
-            updateBio($_SESSION["user"], $bio);
+            updateBio($user, $bio);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Biografía actualizada correctamente
                 </div>";
         }
     }elseif(isset($_POST["actualizar-datos"])){
-        $mail = $_POST["mail"];
         $pass = $_POST["pass"] != '' ? $_POST["pass"] : $_POST["pass-original"];
-        $mail_repetido = emailRepeatedAtUpdate($mail, $_SESSION["user"]);
-        if($mail_repetido == 1){
-            updateGroupData($_SESSION["user"], $mail, $pass);
-            $_SESSION["user"] = $mail;
-            echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
-                    Datos actualizados correctamente
-                </div>";
-        }else{
-            echo "<div class=\"alert alert-danger position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
-                    Este email ya está registrado en Sonic Waves
-                </div>";
-        }
+
+        updateGroupData($user, $pass);
+        echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
+                Datos actualizados correctamente
+            </div>";
+
     }
     if(isset($_POST["añadir-fotos"])){
         if(is_array($_FILES["fotos"])){

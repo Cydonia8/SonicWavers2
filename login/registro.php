@@ -1,7 +1,7 @@
 <?php
 session_start();
     require_once "../php_functions/login_register_functions.php";
-    if(isset($_SESSION["user"])){
+    if(isset($_SESSION["token"])){
         header("Location:../index.php");
     }
 ?>

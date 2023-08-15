@@ -130,10 +130,10 @@
                             </div>
                             <div class=\"input-field d-flex flex-column mb-3\">
                                 <div class=\"input-visuals d-flex justify-content-between\">
-                                    <label for=\"mail\">Correo electrónico</label>
+                                    <label for=\"mail\">Correo electrónico (para cambiar su correo contacte con los administradores)</label>
                                     <ion-icon name=\"mail-outline\"></ion-icon>
                                 </div>
-                                <input disabled value='$correo' name=\"mail\" type=\"email\">                        
+                                <input disabled readonly value='$correo' name=\"mail\" type=\"email\">                        
                             </div>
                             <div class=\"input-field d-flex flex-column mb-3\">
                                 <div class=\"input-visuals d-flex justify-content-between\">
@@ -180,7 +180,7 @@
             <section class='container-fluid'>
                 <h2 class='text-center text-decoration-underline mb-4'>Discos publicados</h2>
                 <section class='d-flex flex-column flex-xl-row container-fluid gap-5 flex-wrap justify-content-center'>";
-                getGroupAlbums($_SESSION["user"]);
+                getGroupAlbums($mail);
             echo "</section>
                 </section>";
         $consulta->close();
@@ -489,10 +489,10 @@
         return $count;
     }
 
-    function updateGroupData($user, $mail, $pass){
+    function updateGroupData($user, $pass){
         $con = createConnection();
-        $update = $con->prepare("UPDATE grupo set correo = ?, pass = ? where correo = ?");
-        $update->bind_param('sss', $mail, $pass, $user);
+        $update = $con->prepare("UPDATE grupo set pass = ? where correo = ?");
+        $update->bind_param('ss', $pass, $user);
         $update->execute();
         $update->close();
         $con->close();
@@ -617,12 +617,12 @@
     function checkPhotoLimit($user){
         $con = createConnection();
         $id = getGroupID($user);
-        $consulta = $con->prepare("SELECT count(*) from foto_grupo where grupo = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) from foto_grupo where grupo = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
         return $count;
     }
@@ -630,13 +630,13 @@
     function getGroupExtraPhotos($user){
         $con = createConnection();
         $id = getGroupID($user);
-        $consulta = $con->prepare("SELECT id, enlace from foto_grupo where grupo = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($id, $enlace);
-        $consulta->execute();
-        $consulta->store_result();
-        if($consulta->num_rows > 0){
-            while($consulta->fetch()){
+        $query = $con->prepare("SELECT id, enlace from foto_grupo where grupo = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($id, $enlace);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows > 0){
+            while($query->fetch()){
                 echo "<form action='#' method='post' class='position-relative'>
                         <img src='$enlace' class='img-fluid object-fit-cover'>
                         <input hidden value='$id' name='id-foto'>
@@ -646,31 +646,31 @@
         }else{
             echo "<div class=\"alert no-f alert-warning mt-3\" role=\"alert\">Sin fotos extra</div>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function getPhotoLink($id){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT enlace from foto_grupo where id = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($enlace);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT enlace from foto_grupo where id = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($link);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $enlace;
+        return $link;
     }
 
     function deletePhoto($id){
-        $enlace = getPhotoLink($id);
+        $link = getPhotoLink($id);
         $con = createConnection();
         $delete = $con->prepare("DELETE FROM foto_grupo where id = ?");
         $delete->bind_param('i', $id);
         $delete->execute();
         $delete->close();
         $con->close();
-        unlink($enlace);
+        unlink($link);
     }
 
     function checkEnoughAlbumsGroup($id_grupo){
@@ -845,6 +845,7 @@
     }
 
     function sendMessage($msg, $mail){
+        $message_sent = false;
         $id_group = getGroupID($mail);
         $date = date('Y-m-d');
         $con = createConnection();
@@ -859,8 +860,10 @@
             foreach($members as $member){
                 $link_message = $con->query("INSERT INTO member_receives_message (usuario, mensaje) values ($member, $id)");
             }
+            $message_sent = true;
         }
         $con->close();    
+        return $message_sent;
     }
 
  

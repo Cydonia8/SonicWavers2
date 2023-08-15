@@ -7,7 +7,7 @@
                     <ul class=\"p-0\">
                         <li><a href=>Usuarios</a></li>
                         <li><a href=>Grupos</a></li>
-                        <li><a href=>Discográficas</a></li>
+                        <li><a href=>Mecenas</a></li>
                         <li class=\"li-foto\"><a href=\"../index.php\"><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\"></a></li>
                         <li><a href=>Álbumes</a></li>
                         <li><a href=>Reseñas</a></li>
@@ -28,7 +28,7 @@
                         <li><a class=\"dropdown-item\" href=\"admin_main.php\">Resumen general</a></li>
                         <li><a class=\"dropdown-item\" href=\"admin_usuarios.php\">Usuarios</a></li>
                         <li><a class=\"dropdown-item\" href=\"admin_grupos.php\">Grupos</a></li>
-                        <li><a class=\"dropdown-item\" href=\"admin_discografica.php\">Discográficas</a></li>
+                        <li><a class=\"dropdown-item\" href=\"admin_discografica.php\">Mecenas</a></li>
                         <li><a class=\"dropdown-item\" href=\"admin_albumes.php\">Álbumes</a></li>
                         <li><a class=\"dropdown-item\" href=\"admin_resenas.php\">Reseñas</a></li>
                         <li><a class=\"dropdown-item\" href=\"admin_estilos.php\">Estilos</a></li>
@@ -295,18 +295,18 @@
         return $total;
     }
 
-    function activateDiscographic($id){
+    function activatePatron($id){
         $con = createConnection();
-        $update = $con->prepare("UPDATE discografica SET activo = 1 WHERE id = ?");
+        $update = $con->prepare("UPDATE patrons SET active = 1 WHERE id = ?");
         $update->bind_param("i", $id);
         $update->execute();
         $update->close();
         $con->close();
     }
 
-    function deactivateDiscographic($id){
+    function deactivatePatron($id){
         $con = createConnection();
-        $update = $con->prepare("UPDATE discografica SET activo = 0 WHERE id = ?");
+        $update = $con->prepare("UPDATE patrons SET active = 0 WHERE id = ?");
         $update->bind_param("i", $id);
         $update->execute();
         $update->close();
@@ -371,22 +371,22 @@
                         if($await == 1){
                             echo "<div class=\"d-flex gap-3\"><form method=\"post\" action=\"#\">
                             <input hidden name=\"id\" value=\"$id\">
-                            <button style='--clr:#09eb3a' class='btn-danger-own' name='aprobar'><span>Aprobar</span><i></i></button>
+                            <button style='--clr:#09eb3a' class='btn-danger-own' name='approve'><span>Aprobar</span><i></i></button>
                             </form>
                             <form method=\"post\" action=\"#\">
                                 <input hidden name=\"id\" value=\"$id\">
-                                <button style='--clr:#e80c0c' class='btn-danger-own' name='denegar'><span>Denegar</span><i></i></button>
+                                <button style='--clr:#e80c0c' class='btn-danger-own' name='deny'><span>Denegar</span><i></i></button>
                             </form></div>";
                         }else{
                             if($active == 0){
                                 echo "<form method=\"post\" action=\"#\">
                                 <input hidden name=\"id\" value=\"$id\">
-                                <button style='--clr:#09eb3a' class='btn-danger-own' name='activar'><span>Activar</span><i></i></button>
+                                <button style='--clr:#09eb3a' class='btn-danger-own' name='activate'><span>Activar</span><i></i></button>
                                 </form>";
                             }elseif($active == 1){
                                 echo "<form method=\"post\" action=\"#\">
                                 <input hidden name=\"id\" value=\"$id\">
-                                <button style='--clr:#e80c0c' class='btn-danger-own' name='desactivar'><span>Desactivar</span><i></i></button>
+                                <button style='--clr:#e80c0c' class='btn-danger-own' name='deactivate'><span>Desactivar</span><i></i></button>
                                 </form>";
                             }else{
                                 echo "<div class=\"alert alert-danger\" role=\"alert\">
@@ -689,18 +689,18 @@
         $con->close();
     }
 
-    function approveDiscCreation($id){
+    function approvePatronCreation($id){
         $con = createConnection();
-        $update = $con->prepare("UPDATE discografica set activo = 1, pendiente_aprobacion = 0 where id = ?");
+        $update = $con->prepare("UPDATE patrons set active = 1, awaiting_activation = 0 where id = ?");
         $update->bind_param('i', $id);
         $update->execute();
         $update->close();
         $con->close();
     }
 
-    function denyDiscCreation($id){
+    function denyPatronCreation($id){
         $con = createConnection();
-        $update = $con->prepare("UPDATE discografica set activo = 2, pendiente_aprobacion = 0 where id = ?");
+        $update = $con->prepare("UPDATE patrons set active = 2, awaiting_activation = 0 where id = ?");
         $update->bind_param('i', $id);
         $update->execute();
         $update->close();

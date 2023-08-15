@@ -2,9 +2,17 @@
     session_start();
     require_once "../php_functions/general.php";
     require_once "../php_functions/group_functions.php";
+    require_once "../php_functions/login_register_functions.php";
     forbidAccess("group");
     closeSession($_POST);
-    $nombre_grupo = getGroupNameByMail($_SESSION["user"]);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
+    $nombre_grupo = getGroupNameByMail($user);
+
     if(isset($_POST["subir"])){
       $titulo = strip_tags($_POST["titulo"]);  
       $contenido = strip_tags($_POST["contenido"]);
@@ -14,7 +22,7 @@
     
       if($foto_correcta){
         $ruta_princ = newMainPhotoPathPost($nuevo_id);
-        addPost($_SESSION["user"], $titulo, $contenido, $ruta_princ, $fecha);
+        addPost($user, $titulo, $contenido, $ruta_princ, $fecha);
         if(is_array($_FILES["fotos"])){
             $total = 0;       
             $cont = 0;

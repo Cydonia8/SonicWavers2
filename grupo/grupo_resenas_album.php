@@ -3,8 +3,16 @@
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
     require_once "../php_functions/group_functions.php";
+    require_once "../php_functions/login_register_functions.php";
+
     forbidAccess("group");
     closeSession($_POST);
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,16 +34,16 @@
         menuGrupoDropdown("position-static");
         echo "<section class='container-xxl d-flex flex-column gap-4'>";
         if(isset($_GET["ver-reseñas"])){
-            $titulo_album = getAlbumName($_GET["id"], $_SESSION["user"]);
+            $titulo_album = getAlbumName($_GET["id"], $user);
             echo "<h1 class=\"text-center\">Reseñas de $titulo_album</h1>";
             getAllReviewsOfAlbum($_GET["id"]);
         }elseif(isset($_GET["id"])){
-            $titulo_album = getAlbumName($_GET["id"], $_SESSION["user"]);
+            $titulo_album = getAlbumName($_GET["id"], $user);
             if($titulo_album != ""){
                 echo "<h1 class=\"text-center\">Reseñas de $titulo_album</h1>";
                 getAllReviewsOfAlbum($_GET["id"]);
             }else{
-                echo "<h2>Lo sentimos, no encontramos ese álbum para el usuario $_SESSION[user]</h2>";
+                echo "<h2>Lo sentimos, no encontramos ese álbum para el usuario $user</h2>";
             }
         }else{
             echo "<div class=\"alert-post-missing-info text-center alert alert-warning position-absolute\" role=\"alert\">
