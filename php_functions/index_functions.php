@@ -111,8 +111,8 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    // $foto = imageUser($token_decoded["data"]["user"], "patrons", "correo");
-                    // $foto = imageIndex($foto);
+                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "mail");
+                    $foto = imageIndex($foto);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -122,7 +122,7 @@ use Firebase\JWT\JWT;
                                     <div class=\"dropdown\">
                                         <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
                                         <ul class=\"dropdown-menu\">
-                                            <li><a class=\"dropdown-item\" href=\"discografica/discografica_main.php\">Perfil</a></li>
+                                            <li><a class=\"dropdown-item\" href=\"patrons/patrons_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
                                         </ul>
                                     </div>
@@ -205,7 +205,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "correo");
+                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "mail");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -215,7 +215,7 @@ use Firebase\JWT\JWT;
                                     <div class=\"dropdown\">
                                         <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
                                         <ul class=\"dropdown-menu\">
-                                            <li><a class=\"dropdown-item\" href=\"../discografica/discografica_main.php\">Perfil</a></li>
+                                            <li><a class=\"dropdown-item\" href=\"../patrons/patrons_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
                                         </ul>
                                     </div>

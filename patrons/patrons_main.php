@@ -17,24 +17,16 @@
     if(isset($_POST["actualizar-avatar"])){
         $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
         if($foto_avatar_correcta){
-            $foto_avatar = newPhotoPathAvatarDiscographic("foto-avatar-nueva", "avatar", $_SESSION["user"]);
-            updateDiscographicAvatarPhoto($_SESSION["user"], $foto_avatar);
+            $foto_avatar = newPhotoPathAvatarPatron("foto-avatar-nueva", "avatar", $user);
+            updatePatronAvatarPhoto($user, $foto_avatar);
             $foto_actualizada = true;
         }else{
             $foto_actualizada = false;
         }
     }
     if(isset($_POST["modificar-datos"])){
-        $mail = $_POST["mail"] != '' ? $_POST["mail"] : $_SESSION["user"];
         $pass = $_POST["pass"] != '' ? $_POST["pass"] : $_POST["pass-original"];
-        $mail_repetido = discographicEmailRepeatedAtUpdate($mail, $_SESSION["user"]);
-        if($mail_repetido == 0){
-            updateDiscographicData($_SESSION["user"], $mail, $pass);
-            $_SESSION["user"] = $mail;
-            // echo $mail;
-            // echo $pass;
-            // echo $_SESSION["user"];
-        }
+        updatePatronData($user, $pass);
     }
 ?>
 <!DOCTYPE html>
@@ -52,15 +44,18 @@
     <script src="../scripts/discografica_main.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js"></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $nombre;?> | Perfil</title>
+    <title>Mecenas | Perfil</title>
 </head>
 <body id="discografica-main">
     <?php
         menuPatronDropdown();
     ?>
-    <h1 class="mt-3 text-center">Patron</h1>
+    <h1 class="mt-3 text-center">Mecenas</h1>
     <section>
-
+        
+        <?php
+            getPatronInformation($user);
+        ?>
     </section>
 </body>
 </html>

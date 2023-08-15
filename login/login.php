@@ -56,7 +56,7 @@
             
             // $_SESSION["user"] = $_POST["mail"];
             // $_SESSION["user-type"] = "disc";
-            $jwt = generateToken($_POST["usuario"], false, "patron");
+            $jwt = generateToken($_POST["mail"], false, "patron");
             echo $jwt;
             $_SESSION["token"] = $jwt;
             keepSessionOpen();
