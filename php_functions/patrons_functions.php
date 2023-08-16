@@ -9,8 +9,8 @@
                     </button>
                     <ul class=\"dropdown-menu\">
                         <li><a class=\"dropdown-item\" href=\"patrons_main.php\">Resumen de mecenas</a></li>
-                        <li><a class=\"dropdown-item\" href=\"discografica_grupos.php\">Enviar mensaje a grupo</a></li>
-                        <li><a class=\"dropdown-item\" href=\"discografica_anadir_grupo.php\">Mis mensajes</a></li>
+                        <li><a class=\"dropdown-item\" href=\"patrons_new_message.php\">Enviar mensaje a grupo</a></li>
+                        <li><a class=\"dropdown-item\" href=\"patrons_messages.php\">Mis mensajes</a></li>
                         <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
                     </ul>
                 </div>
@@ -53,7 +53,7 @@
                         <input name=\"pass\" type=\"password\">
                         <input class='pass-original' hidden value='$pass' name='pass-original'>                        
                     </div>
-                    <button style='--clr:#0A90DD' class='btn-danger-own' name='modificar-datos'><span>Modificar</span><i></i></button>
+                    <button style='--clr:#0A90DD' class='btn-danger-own' name='update-data'><span>Modificar</span><i></i></button>
                 </form>
               </div>
               <section class=\"update-avatar-photo d-none flex-column justify-content-center align-items-center\">
@@ -67,7 +67,7 @@
                                 <input type=\"file\" class=\"custom-file-input\" name=\"foto-avatar-nueva\">
                             </div>
                         </div>
-                        <button style='--clr:#0A90DD' class='btn-danger-own' name='actualizar-avatar'><span>Actualizar foto de avatar</span><i></i></button>
+                        <button style='--clr:#0A90DD' class='btn-danger-own' name='update-avatar'><span>Actualizar foto de avatar</span><i></i></button>
                     </form>
                 </section>";
         $query->close();
@@ -108,11 +108,93 @@
     }
 
     function updatePatronData($user, $pass){
+        $updated = false;
         $con = createConnection();
         $update = $con->prepare("UPDATE patrons set pass = ? where mail = ?");
+        $pass = md5(md5($pass));
         $update->bind_param('ss', $pass, $user);
-        $update->execute();
+        if($update->execute()){
+            $updated = true;
+        }
         $update->close();
         $con->close();
+        return $updated;
+    }
+
+    function checkPreviousMessages($user, $artist_id){
+        $con = createConnection();
+        $query = $con->prepare("SELECT COUNT(*) FROM artist_receives_message a, patrons_messages pm, patrons p WHERE a.message = pm.id and p.id = pm.patron and p.mail = ? and a.artist = ?");
+        $query->bind_param('si', $user, $artist_id);
+        $query->bind_result($check);
+        $query->execute();
+        $query->fetch();
+        $query->close();
+        $con->close();
+        return $check;
+    }
+
+    function getPatronsGroupsFiltered($filter, $user){
+        $con = createConnection();
+        $filtro = $filter."%";
+        $query = $con->prepare("SELECT id, nombre, foto_avatar from grupo where activo = 1 and nombre like ? order by nombre asc");
+        $query->bind_param('s', $filtro);
+        $query->bind_result($id, $nombre, $foto_avatar);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows > 0){
+            while($query->fetch()){
+                $previous_messages = checkPreviousMessages($user, $id);
+                echo "<div data-name=\"$nombre\" class=\"disc-grupo-detalle border rounded d-flex justify-content-around p-3 gap-3 col-12 col-lg-3\">
+                        <div class='w-50 justify-content-center d-flex flex-column'>
+                            <img class=\"img-fluid rounded-circle mb-2\" src=\"$foto_avatar\" alt=\"\">
+                            <p class=\"text-center font-weight-bold\">$nombre</p>";
+                            if($previous_messages == 0){
+                                echo "<button data-id-group='$id' style='--clr:#2ce329' class='btn-danger-own open-message-modal'><span>Enviar mensaje</span><i></i></button>";
+                            }else{
+                                echo "<a href='patrons_messages.php?artist=$id'><button style='--clr:#0A90DD' class='btn-danger-own w-100'><span>Ver mensajes</span><i></i></button></a>";
+                            }
+                            
+                       echo "</div>";
+                        
+                      echo "</div>";
+            }
+        }else{
+            echo "<h2 class='text-center'>No hay coincidencias</h2>";
+        }   
+        $query->close();
+        $con->close();
+    }
+
+    function getPatronID($mail){
+        $con = createConnection();
+        $query = $con->prepare("SELECT id from patrons where mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($id);
+        $query->execute();
+        $query->fetch();
+        $query->close();
+        $con->close();
+        return $id;
+    }
+    
+
+    function sendPatronMessage($msg, $mail, $group_id){
+        $message_sent = false;
+        $msg = strip_tags($msg);
+        $id_patron = getPatronID($mail);
+        $date = date('Y-m-d');
+        $con = createConnection();
+        $query = $con->prepare("INSERT INTO patrons_messages values ('', ?,?,?)");
+        $query->bind_param('ssi', $msg, $date, $id_patron);
+        if($query->execute()){
+            $queryid = $con->query("SELECT id from patrons_messages order by id desc");
+            $row = $queryid->fetch_array(MYSQLI_ASSOC);
+            $id = $row["id"];
+            $query->close();
+            $link_message = $con->query("INSERT INTO artist_receives_message (artist, message) values ($group_id, $id)");
+            $message_sent = true;
+        }
+        $con->close();    
+        return $message_sent;
     }
 ?>

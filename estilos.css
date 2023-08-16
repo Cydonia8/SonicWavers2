@@ -195,6 +195,14 @@ header.header-index ul.dropdown-menu input{
 #index .index-sound-waves-container{
     margin-bottom: 7rem;
 }
+.patrons-new-message-modal{
+    backdrop-filter: blur(3px);
+    z-index: 100000;
+}
+.patrons-new-message-modal ion-icon{
+    font-size: 3rem;
+    cursor: pointer;
+}
 #index .index-sound-waves-container > div{
     width: 33.33%;
     padding: .6rem .8rem .6rem .8rem;

@@ -14,19 +14,19 @@
     $user = $decoded["data"]["user"];
 
 
-    if(isset($_POST["actualizar-avatar"])){
-        $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
-        if($foto_avatar_correcta){
-            $foto_avatar = newPhotoPathAvatarPatron("foto-avatar-nueva", "avatar", $user);
-            updatePatronAvatarPhoto($user, $foto_avatar);
-            $foto_actualizada = true;
+    if(isset($_POST["update-avatar"])){
+        $avatar_ok = checkPhoto("foto-avatar-nueva");
+        if($avatar_ok){
+            $avatar = newPhotoPathAvatarPatron("foto-avatar-nueva", "avatar", $user);
+            updatePatronAvatarPhoto($user, $avatar);
+            $avatar_updated = true;
         }else{
-            $foto_actualizada = false;
+            $avatar_updated = false;
         }
     }
-    if(isset($_POST["modificar-datos"])){
+    if(isset($_POST["update-data"])){
         $pass = $_POST["pass"] != '' ? $_POST["pass"] : $_POST["pass-original"];
-        updatePatronData($user, $pass);
+        $updated = updatePatronData($user, $pass);
     }
 ?>
 <!DOCTYPE html>
@@ -57,5 +57,24 @@
             getPatronInformation($user);
         ?>
     </section>
+    <?php
+        if(isset($updated) and $updated){
+            echo "<div class=\"alert alert-success text-center mx-auto w-50 mt-5\" role=\"alert\">
+            Datos modificados correctamente
+          </div>";
+        }
+
+        if(isset($avatar_updated)){
+            if($avatar_updated){
+                echo "<div class=\"alert alert-success text-center mx-auto w-50 mt-5\" role=\"alert\">
+            Foto de avatar actualizada
+          </div>";
+            }else{
+                echo "<div class=\"alert alert-danger text-center mx-auto w-50 mt-5\" role=\"alert\">
+            Formato incorrecto, foto no actualizada
+          </div>";
+            }
+        }
+    ?>
 </body>
 </html>
