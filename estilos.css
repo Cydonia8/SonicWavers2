@@ -494,6 +494,9 @@ main{
 #reproductor select.input-field option{
     background-color: #090f1f;
 }
+#reproductor .message-not-readed{
+    background-color: #f1070777;
+}
 #login .input-field input:focus, #grupo-nuevo-album .input-field input:focus, #grupo-añadir-publi .input-field input:focus{
     outline: none;
 }

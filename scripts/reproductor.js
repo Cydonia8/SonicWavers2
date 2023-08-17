@@ -1139,9 +1139,25 @@ async function initializeUser(){
         const link_messages = li.querySelector("a")
         link_messages.addEventListener("click", async (evt)=>{
             evt.preventDefault()
+            main_content.innerHTML=""
+            main_content.innerHTML="<h1 class='text-center mb-4'>Mensajes recibidos</h1>"
             const response = await fetch('../api_audio/get_user_messages.php')
             const data = await response.json()
-            console.log(data)
+            const section_msgs = document.createElement("section")
+            section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
+            data.messages.forEach(msg=>{
+                const div_msg = document.createElement("div")
+                if(msg.estado == 0){
+                    div_msg.classList.add("message-not-readed")
+                }else{
+                    div_msg.classList.add("message-readed")
+                }
+                div_msg.classList.add("container-message", 'p-3', "rounded")
+                div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${msg.m_date}</h3>
+                                    <p>${msg.content}</p>`
+                section_msgs.appendChild(div_msg)
+            })
+            main_content.appendChild(section_msgs)
         })
     }
 }

@@ -10,8 +10,8 @@
     $user = $decoded["data"]["user"];
 
     $con = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $query = $con->prepare("SELECT content, m_date, g.nombre nombre from grupo g, group_messages gm, member_receives_message mrm, usuario u where g.id = gm.group
-    and gm.id = mrm.mensaje and mrm.usuario = u.id and u.usuario = ?");
+    $query = $con->prepare("SELECT content, m_date, estado, g.nombre name_group from grupo g, group_messages gm, member_receives_message mrm, usuario u where g.id = gm.group
+    and gm.id = mrm.mensaje and mrm.usuario = u.id and u.usuario = ? order by m_date desc");
     $query->bind_param('s', $user);
     $query->execute();
     $row_messages = $query->get_result();
