@@ -33,10 +33,10 @@
     <?php
         menuPatronDropdown();
     ?>
-    <h1 class="text-center">Reseñas de mis álbumes</h1>
+    <h1 class="text-center">Mis mensajes</h1>
     <section class="container-xl d-flex flex-column gap-5 mt-5">
         <?php
-            getAlbumsWithReviews($user);
+            getMessagesWithArtists($user);
         ?>
     </section>
     

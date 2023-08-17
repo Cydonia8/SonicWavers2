@@ -10,7 +10,7 @@
                     <ul class=\"dropdown-menu\">
                         <li><a class=\"dropdown-item\" href=\"patrons_main.php\">Resumen de mecenas</a></li>
                         <li><a class=\"dropdown-item\" href=\"patrons_new_message.php\">Enviar mensaje a grupo</a></li>
-                        <li><a class=\"dropdown-item\" href=\"patrons_messages.php\">Mis mensajes</a></li>
+                        <li><a class=\"dropdown-item\" href=\"patrons_my_messages.php\">Mis mensajes</a></li>
                         <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
                     </ul>
                 </div>
@@ -151,7 +151,7 @@
                             if($previous_messages == 0){
                                 echo "<button data-id-group='$id' style='--clr:#2ce329' class='btn-danger-own open-message-modal'><span>Enviar mensaje</span><i></i></button>";
                             }else{
-                                echo "<a href='patrons_messages.php?artist=$id'><button style='--clr:#0A90DD' class='btn-danger-own w-100'><span>Ver mensajes</span><i></i></button></a>";
+                                echo "<a href='patrons_message.php?artist=$id'><button style='--clr:#0A90DD' class='btn-danger-own w-100'><span>Ver mensajes</span><i></i></button></a>";
                             }
                             
                        echo "</div>";
@@ -196,5 +196,32 @@
         }
         $con->close();    
         return $message_sent;
+    }
+
+    function getMessagesWithArtists($mail){
+        $con = createConnection();
+        $query = $con->prepare("SELECT g.foto_avatar foto, g.nombre nombre, g.id id from grupo g, patrons_messages pm, patrons p, artist_receives_message arm where g.id = arm.artist and 
+        p.mail = ? and pm.patron = p.id and pm.id = arm.message");
+        $query->bind_param('s', $mail);
+        $query->bind_result($foto, $nombre, $id);
+        $query->execute();
+        while($query->fetch()){
+            echo "<div class='d-flex gap-3 align-items-center rounded album-review-group-container'>
+                    <div class='album-review-container-img'>
+                        <img src='$foto' class='img-fluid'>
+                        <canvas></canvas>
+                    </div>
+                    <div class='d-flex flex-column gap-1'>
+                        <h4 class='mt-0'>$nombre</h4>
+                    ";
+                echo "<form action='patrons_message.php' method='get'>
+                        <input hidden name='id' value='$id'>
+                        <button style='--clr:#e80c0c' class='btn-danger-own' name='ver-reseñas'><span>Abrir mensajes</span><i></i></button></div></div>
+                    </form>";
+            
+                
+        }
+        $query->close();
+        $con->close();
     }
 ?>

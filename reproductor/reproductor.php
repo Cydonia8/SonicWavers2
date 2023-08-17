@@ -110,9 +110,8 @@
             <input type="text" placeholder="Búsqueda..." id="search-bar">
             <div class="dropdown">
                 <img data-bs-toggle="dropdown" aria-expanded="false" class=" profile-menu-avatar rounded-circle dropdown-toggle" src="">
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu dropdown-menu-user">
                     <li><a class="dropdown-item" id="link-profile" href="">Perfil</a></li>
-                    <li><a class="dropdown-item" id="link-eq" href="">Mensajes</a></li>
                     <li><a class="dropdown-item" id="link-close-session" href="">Cerrar sesión</a></li>
                 </ul>
             </div>

@@ -4,7 +4,7 @@ const loader = document.querySelector("#loader")
 const link_inicio = document.getElementById("home-link")
 const profile_top_menu = document.querySelector(".profile-menu")
 const profile_menu_avatar = document.querySelector(".profile-menu #link-profile")
-const eq_link = document.querySelector(".profile-menu #link-eq")
+const msgs_link = document.querySelector(".profile-menu #link-msgs")
 const close_session = document.querySelector(".profile-menu #link-close-session")
 const arrow_show_aside = document.getElementById("arrow-show-aside")
 const header_aside = document.getElementById("side-menu")
@@ -18,6 +18,7 @@ const crear_lista = document.getElementById("crear-lista")
 const search_bar = document.getElementById("search-bar")
 const albums_esenciales = document.getElementById("albums-esenciales")
 const lista_recomendada = document.getElementById("lista-recomendada")
+const dropdown_menu_user = document.querySelector("ul.dropdown-menu-user")
 
 //Modales y actualizaciones de datos
 const close_modal_new_list = document.getElementById("close-modal-new-list")
@@ -112,87 +113,87 @@ function activateShuffle(){
 }
 
 //Listener que muestra el ecualizador
-eq_link.addEventListener("click", async (evt)=>{
-    evt.preventDefault()
-    const respuesta = await fetch('../api_audio/valores_eq.php')
-    const datos = await respuesta.json()
-    const datos_eq = datos["valores_eq"]
+// eq_link.addEventListener("click", async (evt)=>{
+//     evt.preventDefault()
+//     const respuesta = await fetch('../api_audio/valores_eq.php')
+//     const datos = await respuesta.json()
+//     const datos_eq = datos["valores_eq"]
 
-    let val = Object.values(datos_eq[0])
+//     let val = Object.values(datos_eq[0])
 
-    main_content.innerHTML='<h1 class="text-center">Ecualizador</h1>'
-    main_content.innerHTML+=`<div class='d-flex justify-content-between pe-5 ps-5'>
-                                <button style='--clr:#04AA6D' class='btn-danger-own'><span>Activar ecualización</span><i></i></button>
-                                <button style='--clr:#04AA6D' class='btn-danger-own d-none save'><span>Guardar parámetros</span><i></i></button>
-                            </div>`
-    const btn_eq = main_content.querySelector("button")
-    const btn_guardar = main_content.querySelector(".save")
-    btn_eq.addEventListener("click", ()=>{
-        activateAudioFilters(btn_guardar) //Activar los filtros de ecualización
-    })
+//     main_content.innerHTML='<h1 class="text-center">Ecualizador</h1>'
+//     main_content.innerHTML+=`<div class='d-flex justify-content-between pe-5 ps-5'>
+//                                 <button style='--clr:#04AA6D' class='btn-danger-own'><span>Activar ecualización</span><i></i></button>
+//                                 <button style='--clr:#04AA6D' class='btn-danger-own d-none save'><span>Guardar parámetros</span><i></i></button>
+//                             </div>`
+//     const btn_eq = main_content.querySelector("button")
+//     const btn_guardar = main_content.querySelector(".save")
+//     btn_eq.addEventListener("click", ()=>{
+//         activateAudioFilters(btn_guardar) //Activar los filtros de ecualización
+//     })
 
-    const div_ecualizador = document.createElement("div")
-    div_ecualizador.classList.add("d-flex", "flex-column", "w-50", "gap-4", "mx-auto")
-    div_ecualizador.innerHTML=`<div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>Low filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='lows'>40db</div></div>
-                                <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>LowMid Filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mid-lows'>40db</div></div>
-                                <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>Mid filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mids'>40db</div></div>
-                                <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>MidHigh filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mid-high'>40db</div></div>
-                                <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>High filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='highs'>40db</div></div>`
+//     const div_ecualizador = document.createElement("div")
+//     div_ecualizador.classList.add("d-flex", "flex-column", "w-50", "gap-4", "mx-auto")
+//     div_ecualizador.innerHTML=`<div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>Low filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='lows'>40db</div></div>
+//                                 <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>LowMid Filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mid-lows'>40db</div></div>
+//                                 <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>Mid filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mids'>40db</div></div>
+//                                 <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>MidHigh filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='mid-high'>40db</div></div>
+//                                 <div class='d-flex w-100 gap-2 flex-column'><h4 class='text-center'>High filter</h4><div class='d-flex gap-2'>-40db<input class='w-100 slider-eq' type='range' min='-40' max='40' step='0.01' id='highs'>40db</div></div>`
 
-    const lows_i = div_ecualizador.querySelector("#lows")
-    const midlows_i  = div_ecualizador.querySelector("#mid-lows")
-    const mids_i  = div_ecualizador.querySelector("#mids")
-    const midhighs_i = div_ecualizador.querySelector("#mid-high")
-    const highs_i = div_ecualizador.querySelector("#highs")
+//     const lows_i = div_ecualizador.querySelector("#lows")
+//     const midlows_i  = div_ecualizador.querySelector("#mid-lows")
+//     const mids_i  = div_ecualizador.querySelector("#mids")
+//     const midhighs_i = div_ecualizador.querySelector("#mid-high")
+//     const highs_i = div_ecualizador.querySelector("#highs")
 
-    if(!val.includes(null)){
-        lowFilter.gain.value=datos_eq[0].low_eq
-        midLowFilter.gain.value=datos_eq[0].midlows_eq
-        midFilter.gain.value=datos_eq[0].mids_eq
-        midHighFilter.gain.value=datos_eq[0].midhighs_eq
-        highFilter.gain.value=datos_eq[0].high_eq
+//     if(!val.includes(null)){
+//         lowFilter.gain.value=datos_eq[0].low_eq
+//         midLowFilter.gain.value=datos_eq[0].midlows_eq
+//         midFilter.gain.value=datos_eq[0].mids_eq
+//         midHighFilter.gain.value=datos_eq[0].midhighs_eq
+//         highFilter.gain.value=datos_eq[0].high_eq
 
-        lows_i.value=datos_eq[0].low_eq
-        midlows_i.value=datos_eq[0].midlows_eq
-        mids_i.value=datos_eq[0].mids_eq
-        midhighs_i.value=datos_eq[0].midhighs_eq
-        highs_i.value=datos_eq[0].highs_eq
-    }
+//         lows_i.value=datos_eq[0].low_eq
+//         midlows_i.value=datos_eq[0].midlows_eq
+//         mids_i.value=datos_eq[0].mids_eq
+//         midhighs_i.value=datos_eq[0].midhighs_eq
+//         highs_i.value=datos_eq[0].highs_eq
+//     }
 
-    lows_i.addEventListener("input", ()=>{
-        lowFilter.gain.value=lows_i.value
-    })
-    midlows_i.addEventListener("input", ()=>{
-        midLowFilter.gain.value=midlows_i.value
-    })
-    mids_i.addEventListener("input", ()=>{
-        midFilter.gain.value=mids_i.value
-    })
-    midhighs_i.addEventListener("input", ()=>{
-        midHighFilter.gain.value=midhighs_i.value
-    })
-    highs_i.addEventListener("input", ()=>{
-        highFilter.gain.value=highs_i.value
-    })
+//     lows_i.addEventListener("input", ()=>{
+//         lowFilter.gain.value=lows_i.value
+//     })
+//     midlows_i.addEventListener("input", ()=>{
+//         midLowFilter.gain.value=midlows_i.value
+//     })
+//     mids_i.addEventListener("input", ()=>{
+//         midFilter.gain.value=mids_i.value
+//     })
+//     midhighs_i.addEventListener("input", ()=>{
+//         midHighFilter.gain.value=midhighs_i.value
+//     })
+//     highs_i.addEventListener("input", ()=>{
+//         highFilter.gain.value=highs_i.value
+//     })
 
-    //Guardar los parámetros de ecualización
-    btn_guardar.addEventListener("click", async ()=>{
-        let lows = lows_i.value
-        let midlows = midlows_i.value
-        let mids = mids_i.value
-        let midhighs = midhighs_i.value
-        let highs = highs_i.value
+//     //Guardar los parámetros de ecualización
+//     btn_guardar.addEventListener("click", async ()=>{
+//         let lows = lows_i.value
+//         let midlows = midlows_i.value
+//         let mids = mids_i.value
+//         let midhighs = midhighs_i.value
+//         let highs = highs_i.value
 
-        await fetch(`../api_audio/guardar_eq.php?lows=${lows}&midlows=${midlows}&mids=${mids}&midhighs=${midhighs}&highs=${highs}`)
+//         await fetch(`../api_audio/guardar_eq.php?lows=${lows}&midlows=${midlows}&mids=${mids}&midhighs=${midhighs}&highs=${highs}`)
 
-        lows_i.value=lows
-        midlows_i.value=midlows
-        mids_i.value=mids
-        midhighs_i.value=midhighs
-        highs_i.value=highs
-    })
-    main_content.appendChild(div_ecualizador)
-})
+//         lows_i.value=lows
+//         midlows_i.value=midlows
+//         mids_i.value=mids
+//         midhighs_i.value=midhighs
+//         highs_i.value=highs
+//     })
+//     main_content.appendChild(div_ecualizador)
+// })
 
 
 //Listener para visualizar la letra de la canción actual
@@ -258,6 +259,7 @@ profile_menu_avatar.addEventListener("click", async (evt)=>{
     const respuesta = await fetch(`../api_audio/info_user.php`)
     const datos = await respuesta.json()
     const datos_usuario = datos["datos"]
+    console.l
     main_content.classList.add("position-absolute", "w-100", "top-0")
     const section_profile_head = document.createElement("section")
     section_profile_head.classList.add("container-fluid", "d-flex","flex-column", "flex-lg-row", "lista-page-header", "gap-3", "align-items-center", "p-3")
@@ -1068,6 +1070,7 @@ async function initializeUser(){
     const respuesta = await fetch(`../api_audio/info_user.php`)
     const datos = await respuesta.json()
     let usuario_datos = datos["datos"]
+    console.log(usuario_datos)
     let completado = datos["perfil_completado"]
     if(completado == 0){
         const respuesta_est = await fetch('../api_audio/estilos.php');
@@ -1128,8 +1131,25 @@ async function initializeUser(){
         
     }
     profile_menu_avatar.parentElement.parentElement.previousElementSibling.src=usuario_datos[0].foto_avatar
+    console.log(usuario_datos[0])
+    if(usuario_datos[0].grupo != "sin grupo"){
+        const li = document.createElement("li")
+        li.innerHTML='<a class="dropdown-item" id="link-msgs" href="">Mensajes</a>'
+        dropdown_menu_user.appendChild(li)
+        const link_messages = li.querySelector("a")
+        link_messages.addEventListener("click", async (evt)=>{
+            evt.preventDefault()
+            const response = await fetch('../api_audio/get_user_messages.php')
+            const data = await response.json()
+            console.log(data)
+        })
+    }
 }
 
+
+function loadUserMessages(){
+
+}
 
 function createSelect(estilos){
     const select = document.createElement("select")

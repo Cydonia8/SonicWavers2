@@ -16,13 +16,11 @@
                 // $_SESSION["user-type"] = "admin";
                 $jwt = generateToken($_POST["usuario"], true, "admin");
                 $_SESSION["token"] = $jwt;
-                echo $jwt;
                 keepSessionOpen();
                 // echo "<meta http-equiv='refresh' content='0;url=../admin/admin_main.php'>";
             }else{
                 // $_SESSION["user-type"] = "standard";
                 $jwt = generateToken($_POST["usuario"], false, "user");
-                echo $jwt;
                 $_SESSION["token"] = $jwt;
                 keepSessionOpen();
                 header('location:../reproductor/reproductor.php');
@@ -39,7 +37,6 @@
             // $_SESSION["user"] = $_POST["mail"];
             // $_SESSION["user-type"] = "group";
             $jwt = generateToken($_POST["mail"], false, "group");
-            echo $jwt;
             $_SESSION["token"] = $jwt;
             keepSessionOpen();
             echo "<meta http-equiv='refresh' content='0;url=../grupo/grupo_main.php'>";
@@ -57,7 +54,6 @@
             // $_SESSION["user"] = $_POST["mail"];
             // $_SESSION["user-type"] = "disc";
             $jwt = generateToken($_POST["mail"], false, "patron");
-            echo $jwt;
             $_SESSION["token"] = $jwt;
             keepSessionOpen();
             echo "<meta http-equiv='refresh' content='0;url=../patrons/patrons_main.php'>";
