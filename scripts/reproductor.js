@@ -1135,36 +1135,71 @@ async function initializeUser(){
     if(usuario_datos[0].grupo != "sin grupo"){
         const li = document.createElement("li")
         li.innerHTML='<a class="dropdown-item" id="link-msgs" href="">Mensajes</a>'
-        dropdown_menu_user.appendChild(li)
+
+        dropdown_menu_user.insertBefore(li, dropdown_menu_user.lastElementChild)
         const link_messages = li.querySelector("a")
         link_messages.addEventListener("click", async (evt)=>{
             evt.preventDefault()
-            main_content.innerHTML=""
-            main_content.innerHTML="<h1 class='text-center mb-4'>Mensajes recibidos</h1>"
-            const response = await fetch('../api_audio/get_user_messages.php')
-            const data = await response.json()
-            const section_msgs = document.createElement("section")
-            section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
-            data.messages.forEach(msg=>{
-                const div_msg = document.createElement("div")
-                if(msg.estado == 0){
-                    div_msg.classList.add("message-not-readed")
-                }else{
-                    div_msg.classList.add("message-readed")
-                }
-                div_msg.classList.add("container-message", 'p-3', "rounded")
-                div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${msg.m_date}</h3>
-                                    <p>${msg.content}</p>`
-                section_msgs.appendChild(div_msg)
-            })
-            main_content.appendChild(section_msgs)
+            loadUserMessages()
+            // main_content.innerHTML=""
+            // main_content.innerHTML="<h1 class='text-center mb-4'>Mensajes recibidos</h1>"
+            // const response = await fetch('../api_audio/get_user_messages.php')
+            // const data = await response.json()
+            // const section_msgs = document.createElement("section")
+            // section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
+            // data.messages.forEach(msg=>{
+            //     const div_msg = document.createElement("div")
+            //     if(msg.estado == 0){
+            //         div_msg.classList.add("message-not-readed")
+            //     }else{
+            //         div_msg.classList.add("message-readed")
+            //     }
+            //     div_msg.classList.add("container-message", 'p-3', "rounded")
+            //     div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${msg.m_date}</h3>
+            //                         <p>${msg.content}</p>`
+            //     if(msg.estado == 0){
+            //         div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`
+            //         const mark_msg = div_msg.querySelector(".mark-msg-as-readed")
+            //         mark_msg.addEventListener("click", async ()=>{
+            //             await fetch(`../api_audio/mark_message_as_read.php?id=${msg.id_msg}`)
+            //         })
+            //     }
+            //     section_msgs.appendChild(div_msg)
+            // })
+            // main_content.appendChild(section_msgs)
         })
     }
 }
 
 
-function loadUserMessages(){
-
+async function loadUserMessages(){
+    main_content.innerHTML=""
+    main_content.innerHTML="<h1 class='text-center mb-4'>Mensajes recibidos</h1>"
+    const response = await fetch('../api_audio/get_user_messages.php')
+    const data = await response.json()
+    const section_msgs = document.createElement("section")
+    section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
+    data.messages.forEach(msg=>{
+        const div_msg = document.createElement("div")
+        if(msg.estado == 0){
+            div_msg.classList.add("message-not-readed")
+        }else{
+            div_msg.classList.add("message-readed")
+        }
+        div_msg.classList.add("container-message", 'p-3', "rounded")
+        div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${msg.m_date}</h3>
+                            <p>${msg.content}</p>`
+        if(msg.estado == 0){
+            div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`
+            const mark_msg = div_msg.querySelector(".mark-msg-as-readed")
+            mark_msg.addEventListener("click", async ()=>{
+                await fetch(`../api_audio/mark_message_as_read.php?id=${msg.id_msg}`)
+                loadUserMessages()
+            })
+        }
+        section_msgs.appendChild(div_msg)
+    })
+    main_content.appendChild(section_msgs)
 }
 
 function createSelect(estilos){

@@ -495,7 +495,30 @@ main{
     background-color: #090f1f;
 }
 #reproductor .message-not-readed{
-    background-color: #f1070777;
+    background-color: #f107072f;
+    border: 2px solid #f10707;
+}
+#reproductor .message-readed{
+    background-color: #07f1072f;
+    border: 2px solid #07f107;
+}
+#reproductor .mark-msg-as-readed{
+    display: flex;
+    align-items: center;
+    gap:.5rem;
+    width: fit-content;
+    border: 1.5px solid;
+    border-radius: 10px;
+    padding: .4rem;
+    cursor: pointer;
+    transition: .6s;
+}
+#reproductor .mark-msg-as-readed:hover{
+    background-color: rgba(133, 127, 127, 0.507);
+    transition: .6s;
+}
+#reproductor .mark-msg-as-readed ion-icon{
+    font-size: 1.5rem
 }
 #login .input-field input:focus, #grupo-nuevo-album .input-field input:focus, #grupo-añadir-publi .input-field input:focus{
     outline: none;

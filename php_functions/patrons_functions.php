@@ -215,11 +215,9 @@
                         <h4 class='mt-0'>$nombre</h4>
                     ";
                 echo "<form action='patrons_message.php' method='get'>
-                        <input hidden name='id' value='$id'>
+                        <input hidden name='artist' value='$id'>
                         <button style='--clr:#e80c0c' class='btn-danger-own' name='ver-reseñas'><span>Abrir mensajes</span><i></i></button></div></div>
-                    </form>";
-            
-                
+                    </form>";          
         }
         $query->close();
         $con->close();
