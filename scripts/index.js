@@ -10,9 +10,9 @@ play_index.forEach(play=>{
     play.addEventListener("click", (evt)=>{
         const id = evt.target.getAttribute("data-audio")
         audio_index.forEach(audio=>{
-            let limite = (audio.duration/2) + 15
+            let limit = (audio.duration/2) + 15
             inputs.forEach(input=>{
-                input.setAttribute("max", limite)
+                input.setAttribute("max", limit)
                 input.setAttribute("min", audio.duration/2)
             })
             const id_audio = audio.getAttribute("data-audio")
@@ -27,11 +27,11 @@ play_index.forEach(play=>{
                     play.setAttribute("name", "play-circle-outline")
                 }
                 const inp = document.querySelector(`div.bar2.${id_audio}`)
-                console.log(inp)
+
                 let width=0
                 audio.addEventListener("timeupdate", ()=>{
                     inp.style.width=`${width}%`
-                    if(audio.currentTime >= limite){
+                    if(audio.currentTime >= limit){
                         audio.pause()
                         play.setAttribute("name", "play-circle-outline")
                         inp.style.width='0'
@@ -44,10 +44,10 @@ play_index.forEach(play=>{
     })
 })
 // audio_index.forEach(audio=>{
-//     let limite = (audio.duration/2) + 15
+//     let limit = (audio.duration/2) + 15
 //     audio.addEventListener("timeupdate", ()=>{
 //         console.log(audio.currentTime)
-//         if(audio.currentTime >= limite){
+//         if(audio.currentTime >= limit){
 //             audio.pause()
 //         }
 //     })

@@ -121,22 +121,22 @@
         <div class="d-flex container-samples-index gap-5 flex-column flex-md-row text-black bg-white p-3" data-aos="fade-up" data-aos-duration="1200">
         <?php
           $con = new mysqli('localhost', 'root', '', 'sonicwaves');
-          $consulta = $con->query("select c.titulo titulo, g.nombre grup, archivo, a.foto portada, c.times_played times from cancion c, album a, grupo g, incluye i where a.grupo = g.id and i.album = a.id and i.cancion = c.id and a.activo = 1 group by c.id order by times_played desc limit 3");
+          $query = $con->query("select c.titulo titulo, g.nombre grup, archivo, a.foto portada, c.times_played times from cancion c, album a, grupo g, incluye i where a.grupo = g.id and i.album = a.id and i.cancion = c.id and a.activo = 1 group by c.id order by times_played desc limit 3");
           $cont = 1;
-          while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
-            $titulo = $fila["titulo"];
-            $audio = $fila["archivo"];
-            $foto = $fila["portada"];
-            $times = $fila["times"];
-            $foto = imageIndex($foto);
+          while($row = $query->fetch_array(MYSQLI_ASSOC)){
+          $title = $row["titulo"];
+            $audio = $row["archivo"];
+            $img = $row["portada"];
+            $times = $row["times"];
+            $img = imageIndex($img);
             $audio = imageIndex($audio);
-            $artista = $fila["grup"];
+            $artist = $row["grup"];
             
             echo "<div class=\"cancion-prev d-flex align-items-center flex-column gap-3 justify-content-between\">
                     <div class=\"text-center d-flex flex-column gap-3\">
-                      <img class=\"img-fluid\" src=\"$foto\">
-                      <h2>$titulo</h2>
-                      <h3>$artista</h3>
+                      <img class=\"img-fluid\" src=\"$img\">
+                      <h2>$title</h2>
+                      <h3>$artist</h3>
                       <h4>$times reproducciones totales</h4>
                     </div>
                       
@@ -158,12 +158,12 @@
       <h2 class="text-center mt-5">Nuestros artistas</h2>
       <div class="d-flex container-samples-index gap-5 justify-content-center flex-column flex-md-row p-5 mt-4 artists-global-container" data-aos="fade-up" data-aos-duration="1200">
           <?php
-            $consulta = $con->query("SELECT foto_avatar, nombre from grupo where id <> 0 and activo = 1 order by rand() limit 9");
-            while($fila = $consulta->fetch_array(MYSQLI_ASSOC)){
-              $foto_avatar = imageIndex($fila["foto_avatar"]);
+            $query = $con->query("SELECT foto_avatar, nombre from grupo where id <> 0 and activo = 1 order by rand() limit 9");
+            while($row = $query->fetch_array(MYSQLI_ASSOC)){
+              $avatar = imageIndex($row["foto_avatar"]);
               echo "<div class='d-flex flex-column index-artists-container align-items-center gap-3'>
-                      <img src='$foto_avatar' class='rounded-circle img-fluid border'>
-                      <h6 class='text-center'>$fila[nombre]</h6>
+                      <img src='$avatar' class='rounded-circle img-fluid border'>
+                      <h6 class='text-center'>$row[nombre]</h6>
                   </div>";
             }
           ?>

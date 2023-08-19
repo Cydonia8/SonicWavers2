@@ -2,25 +2,25 @@
 
 const new_msg_modal = document.querySelector(".patrons-new-message-modal")
 const btns_open_modal = document.querySelectorAll("button.open-message-modal")
-const containers_grupos = document.querySelectorAll(".disc-grupo-detalle");
-const busqueda = document.querySelector(".busqueda-dinamica-disc")
+const containers_artist = document.querySelectorAll(".disc-artist-detalle");
+const search = document.querySelector(".busqueda-dinamica-disc")
 const close_modal = document.querySelector(".close-message-patron-modal")
 
-let array = Array.from(containers_grupos)
-busqueda.addEventListener("keyup", ()=>{
-    let valor = busqueda.value.toLowerCase()
-    // let result = array.filter(div=>div.dataset.name.includes(valor))
+let array = Array.from(containers_artist)
+search.addEventListener("keyup", ()=>{
+    let value = search.value.toLowerCase()
+    // let result = array.filter(div=>div.dataset.name.includes(value))
     // console.log(result)
-    containers_grupos.forEach(grupo=>{
-        let atributo = grupo.getAttribute("data-name").toLowerCase()
-        if(!atributo.includes(valor)){
-            // grupo.style.visibility="hidden"
-            grupo.classList.remove("d-flex")
-            grupo.classList.add("d-none")
+    containers_artist.forEach(artist=>{
+        let attribute = artist.getAttribute("data-name").toLowerCase()
+        if(!attribute.includes(value)){
+            // artist.style.visibility="hidden"
+            artist.classList.remove("d-flex")
+            artist.classList.add("d-none")
         }else{
-            // grupo.style.visibility="visible"
-            grupo.classList.add("d-flex")
-            grupo.classList.remove("d-none")
+            // artist.style.visibility="visible"
+            artist.classList.add("d-flex")
+            artist.classList.remove("d-none")
         }
     })
 })

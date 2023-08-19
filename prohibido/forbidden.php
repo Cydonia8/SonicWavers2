@@ -13,9 +13,9 @@
 </head>
 <body id="prohibido">
     <img src="../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png" alt="">
-    <h1>No tienes permisos para acceder aquí. Ve con la música a otra parte.</h1>
+    <h1>Su sesión ha expirado.</h1>
     <?php
-        echo "<meta http-equiv='refresh' content='3;url=../index.php'>";
+        echo "<meta http-equiv='refresh' content='3;url=../login/login.php'>";
     ?>
     <div class="container">
     <div class="equalizer"></div>

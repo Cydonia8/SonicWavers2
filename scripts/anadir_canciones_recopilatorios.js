@@ -3,28 +3,28 @@ const selects_container = document.querySelectorAll(".selects-container li")
 const reset = document.querySelector(".reset-form-recopilatorio")
 const submit = document.querySelector("ul~button")
 const alert_repeated = document.querySelector(".repeated")
-console.log(alert_repeated)
+
 
 // console.log(selects_container.length)
-let canciones_escogidas = []
+let chosen_songs = []
 let clickEvent = new Event('click');
 let arr = Array.from(selects)
-let actual = 1
-let longitud = selects_container.length
+let current = 1
+let length = selects_container.length
 // console.log(arr[0])
 
 selects.forEach((select, index)=>{
     select.addEventListener("change", (event)=>{
-        const pulsado = event.target
-        let valor = select.value
-        canciones_escogidas.push(valor)
-        for(i = index+1; i < longitud; i++){
+        const clicked = event.target
+        let value = select.value
+        chosen_songs.push(value)
+        for(i = index+1; i < length; i++){
             let array = Array.from(selects[i])
-            let indice = array.find(cancion=>cancion.value==valor)
-            indice.style.display="none"
-            console.log(indice)
+            let index = array.find(cancion=>cancion.value==value)
+            index.style.display="none"
+
         }
-        if(!canciones_escogidas.every(esPrimero)){
+        if(!chosen_songs.every(isFirst)){
             submit.setAttribute("disabled", true)
             setTimeout(()=>{
                 location.reload()
@@ -37,11 +37,11 @@ selects.forEach((select, index)=>{
         }
         
         // console.log(array)
-        // let indice = array.find(cancion=>cancion.value==valor)
-        // indice.style.display="none"
-        // if(canciones_escogidas.includes)
+        // let index = array.find(cancion=>cancion.value==value)
+        // index.style.display="none"
+        // if(chosen_songs.includes)
         // mov.forEach(cancion=>{
-        //     if(canciones_escogidas.includes(cancion.getAttribute("value"))){
+        //     if(chosen_songs.includes(cancion.getAttribute("value"))){
         //         cancion.remove()
         //     }
         // })
@@ -60,15 +60,15 @@ reset.addEventListener("click", ()=>{
     location.reload()
 })
 
-submit.addEventListener("click", (evento)=>{
-    if(!canciones_escogidas.every(esPrimero)){
-        evento.preventDefault()
+submit.addEventListener("click", (event)=>{
+    if(!chosen_songs.every(isFirst)){
+        event.preventDefault()
         window.alert("canciones repetidas")
-        canciones_escogidas.length=0
+        chosen_songs.length=0
         location.reload()
     }
 })
 
-function esPrimero(valor, indice, lista) {
-    return (lista.indexOf(valor) === indice);
+function isFirst(value, index, list) {
+    return (list.indexOf(value) === index);
 }

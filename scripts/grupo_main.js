@@ -1,6 +1,6 @@
 "use strict"
 const section_form = document.querySelector(".form-group-completition")
-const btn_completar_info = document.querySelector(".btn-completar-info-inicial")
+const btn_complete_data = document.querySelector(".btn-completar-info-inicial")
 const section_group = document.querySelector(".banner-group-main")
 const edit_avatar  = document.querySelector(".icon-edit-avatar-group")
 const avatar_group = document.querySelector(".banner-group-main-avatar-link")
@@ -9,37 +9,37 @@ const section_update_avatar = document.querySelector(".update-avatar-photo")
 const edit_photo = document.querySelector(".banner-group-main-photo-link")
 const section_update_photo = document.querySelector(".update-main-photo")
 const close_modal_update_photo = document.querySelector(".close-modal-update-main-photo")
-const editar_bio = document.getElementById("edit-biografia-grupo")
-const biografia = document.querySelector("textarea")
-const editar_datos = document.getElementById("edit-datos-grupo")
+const edit_bio = document.getElementById("edit-biografia-grupo")
+const bio = document.querySelector("textarea")
+const edit_data = document.getElementById("edit-datos-grupo")
 const submit_bio = document.getElementsByName("actualizar-bio")
-const submit_datos = document.querySelector(".actualizar-datos-submit")
-const input_datos = document.querySelectorAll(".form-edit-datos-grupo input:not([type=submit]):not(.pass-original)")
-console.log(input_datos)
+const submit_data = document.querySelector(".actualizar-datos-submit")
+const input_data = document.querySelectorAll(".form-edit-datos-grupo input:not([type=submit]):not(.pass-original)")
 
-editar_bio.addEventListener("click", ()=>{
-    if(biografia.hasAttribute("disabled")){
-        biografia.removeAttribute("disabled")
+
+edit_bio.addEventListener("click", ()=>{
+    if(bio.hasAttribute("disabled")){
+        bio.removeAttribute("disabled")
         submit_bio.forEach(sub=>sub.removeAttribute("hidden"))
     }else{
-        biografia.setAttribute("disabled", true)
+        bio.setAttribute("disabled", true)
         submit_bio.forEach(sub=>sub.setAttribute("hidden", true))
     }
     
 })
 
-editar_datos.addEventListener("click", ()=>{
-    input_datos.forEach(input=>{
+edit_data.addEventListener("click", ()=>{
+    input_data.forEach(input=>{
         if(input.hasAttribute("disabled")){
             input.removeAttribute("disabled")
         }else{
             input.setAttribute("disabled", true)
         }
     })
-    if(submit_datos.hasAttribute("hidden")){
-        submit_datos.removeAttribute("hidden")
+    if(submit_data.hasAttribute("hidden")){
+        submit_data.removeAttribute("hidden")
     }else{
-        submit_datos.setAttribute("hidden", true)
+        submit_data.setAttribute("hidden", true)
     }
 })
 
@@ -48,7 +48,7 @@ let bg = section_group.getAttribute("data-bg")
 // section_group.style.height="70vh"
 section_group.style.backgroundImage=`url('${bg}')`
 section_group.style.backgroundSize="cover"
-// btn_completar_info.addEventListener("click", () => {
+// btn_complete_data.addEventListener("click", () => {
 //     section_form.classList.add("hide")
 // })
 

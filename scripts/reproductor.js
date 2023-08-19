@@ -525,6 +525,8 @@ async function playSearchedSong(cancion){
                                 <span class='track-info-title'>${cancion.titulo}</span>
                                 <span class='track-info-artist'>${cancion.autor}</span>
                             </div>`
+                            
+    await fetch(`../api_audio/update_times_played.php?id=${cancion.id}`)
 }
 async function initialSong(){
     const respuesta = await fetch('../api_audio/canciones.php')
@@ -536,7 +538,8 @@ async function initialSong(){
                                 <span class='track-info-title'>${cancion[0].titulo}</span>
                                 <span class='track-info-artist'>${cancion[0].grupo}</span>
                             </div>`
-    
+                            console.log(cancion[0].cancion_id)
+    await fetch(`../api_audio/update_times_played.php?id=${cancion[0].cancion_id}`)
 }
 
 add_new_playlist.addEventListener("click", ()=>{

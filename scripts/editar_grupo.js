@@ -1,5 +1,5 @@
 const section = document.querySelector("section")
-let foto = section.getAttribute("data-foto")
+let img = section.getAttribute("data-foto")
 // section.style.backgroundImage=`url('${foto}')`
 // section.style.height='50vh'
 // section.style.backgroundPosition="top"

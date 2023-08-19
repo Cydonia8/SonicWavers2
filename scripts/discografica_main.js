@@ -1,14 +1,14 @@
 "use strict"
 const section_update_avatar = document.querySelector(".update-avatar-photo")
 const avatar_group = document.querySelector(".avatar-discografica-editable")
-const editar_avatar = document.querySelector(".icon-edit-avatar-discografica")
+const edit_avatar = document.querySelector(".icon-edit-avatar-discografica")
 const close_modal = document.querySelector(".close-modal-update-avatar")
 
 avatar_group.addEventListener("mouseenter", ()=>{
-    editar_avatar.classList.remove("d-none")
+    edit_avatar.classList.remove("d-none")
 })
 avatar_group.addEventListener("mouseleave", ()=>{
-    editar_avatar.classList.add("d-none")
+    edit_avatar.classList.add("d-none")
 })
 
 avatar_group.addEventListener("click", (evt)=>{

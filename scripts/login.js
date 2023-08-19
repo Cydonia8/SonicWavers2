@@ -9,10 +9,10 @@ if(last_form.length != 0){
     rememberFormContext()
 }
 
-login_picker.forEach(titulo =>{
-    titulo.addEventListener("click", changeFormContext)
-        // const pulsado = evento.target
-        // let data_form = pulsado.getAttribute("data-form-title")
+login_picker.forEach(title =>{
+    title.addEventListener("click", changeFormContext)
+        // const pressed = event.target
+        // let data_form = pressed.getAttribute("data-form-title")
         // switch(data_form){
         //     case "group":
         //         document.body.style.backgroundImage = "url('../media/assets/login_bg2.jpg')"
@@ -24,9 +24,9 @@ login_picker.forEach(titulo =>{
         //         document.body.style.backgroundImage = "url('../media/assets/login_bg3.jpg')"
         //         break
         // }
-        // if(!pulsado.classList.contains("active")){
-        //     login_picker.forEach(titulo => titulo.classList.remove("active"))
-        //     pulsado.classList.add("active")
+        // if(!pressed.classList.contains("active")){
+        //     login_picker.forEach(title => title.classList.remove("active"))
+        //     pressed.classList.add("active")
         // }
         // forms.forEach(form => {
         //     if(form.getAttribute("data-form") == data_form){
@@ -40,20 +40,20 @@ view_pass.forEach(element =>{
     element.addEventListener("click", changePasswordInput)
 })
 
-function changePasswordInput(evento){
-    const pulsado = evento.target
-        if(pulsado.getAttribute("name") == "eye-outline"){
-            pulsado.setAttribute("name", "eye-off-outline")
-            pulsado.previousElementSibling.type = "text"
+function changePasswordInput(event){
+    const pressed = event.target
+        if(pressed.getAttribute("name") == "eye-outline"){
+            pressed.setAttribute("name", "eye-off-outline")
+            pressed.previousElementSibling.type = "text"
         }else{
-            pulsado.setAttribute("name", "eye-outline")
-            pulsado.previousElementSibling.type = "password"
+            pressed.setAttribute("name", "eye-outline")
+            pressed.previousElementSibling.type = "password"
         }
 }
 
-function changeFormContext(eventos){
-    const pulsado = eventos.target
-        let data_form = pulsado.getAttribute("data-form-title")
+function changeFormContext(event){
+    const pressed = event.target
+        let data_form = pressed.getAttribute("data-form-title")
         let load_form = {load_form: data_form}
         localStorage.setItem("user_data", JSON.stringify(load_form))
         switch(data_form){
@@ -67,9 +67,9 @@ function changeFormContext(eventos){
                 document.body.style.backgroundImage = "url('../media/assets/login_bg3.jpg')"
                 break
         }
-        if(!pulsado.classList.contains("active")){
-            login_picker.forEach(titulo => titulo.classList.remove("active"))
-            pulsado.classList.add("active")
+        if(!pressed.classList.contains("active")){
+            login_picker.forEach(title => title.classList.remove("active"))
+            pressed.classList.add("active")
         }
         forms.forEach(form => {
             if(form.getAttribute("data-form") == data_form){

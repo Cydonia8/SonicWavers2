@@ -111,7 +111,7 @@ use Firebase\JWT\JWT;
         $time = time();
         $token = array(
             "iat" => $time, //Moment when token is created
-            "exp" => $time + 3600, //Expiration date of the token
+            "exp" => $time + 10, //Expiration date of the token
             "data" => [
                 "user" => $mail,
                 "admin" => $is_admin, 
@@ -120,10 +120,6 @@ use Firebase\JWT\JWT;
         );
     
         $jwt = JWT::encode($token, $_ENV["SECRET_KEY"], "HS256");
-        // echo print_r($jwt);
-        // $jwt_dec = JWT::decode($jwt, new Key("secretkey", "HS256"));
-        // $decoded_array = (array) $jwt_dec;
-        // echo $jwt;
         return $jwt;
     }
     function decodeToken($token){
@@ -131,11 +127,9 @@ use Firebase\JWT\JWT;
             $jwt_dec = JWT::decode($token, new Key($_ENV["SECRET_KEY"], "HS256")); 
             return $jwt_dec;        
         } catch (UnexpectedValueException $e) {
-            echo "No se ha podido validar su sesión";
             unset($_SESSION["token"]);
             return false;
         }catch(ExpiredException $e){
-            echo "Su sesión ha expirado";
             unset($_SESSION["token"]);
             return false;
         }

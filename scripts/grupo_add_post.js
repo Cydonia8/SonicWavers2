@@ -4,13 +4,13 @@ const modal = document.querySelector(".modal-añadir-fotos-publi")
 const input_date = document.querySelector("input[type=date]")
 const close_modal = document.querySelector(".close-modal-photos-post")
 
-let fecha = new Date()
-let anio = fecha.getFullYear()
-let mes = cerosFecha(fecha.getMonth()+1)
-let dia = cerosFecha(fecha.getDate())
-let fecha_actual = `${anio}-${mes}-${dia}`
+let date = new Date()
+let year = date.getFullYear()
+let month = addZerosToDate(date.getMonth()+1)
+let day = addZerosToDate(date.getDate())
+let current_date = `${year}-${month}-${day}`
 
-input_date.setAttribute("min", fecha_actual)
+input_date.setAttribute("min", current_date)
 
 btn.addEventListener("click", ()=>{
     modal.classList.remove("d-none")
@@ -21,8 +21,8 @@ close_modal.addEventListener("click", ()=>{
     modal.classList.add("d-none")
 })
 
-function cerosFecha(fecha){
-    return fecha < 10 ? `0${fecha}` : fecha
+function addZerosToDate(date){
+    return date < 10 ? `0${fecha}` : date
 }
 
 setTimeout(()=> {
