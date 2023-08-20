@@ -1180,9 +1180,12 @@ async function loadUserMessages(){
     main_content.innerHTML="<h1 class='text-center mb-4'>Mensajes recibidos</h1>"
     const response = await fetch('../api_audio/get_user_messages.php')
     const data = await response.json()
+
     const section_msgs = document.createElement("section")
     section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
     data.messages.forEach(msg=>{
+        let date_split = msg.m_date.split(" ")
+
         const div_msg = document.createElement("div")
         if(msg.estado == 0){
             div_msg.classList.add("message-not-readed")
@@ -1190,7 +1193,7 @@ async function loadUserMessages(){
             div_msg.classList.add("message-readed")
         }
         div_msg.classList.add("container-message", 'p-3', "rounded")
-        div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${msg.m_date}</h3>
+        div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${formatDate(date_split[0])} a las ${date_split[1]}</h3>
                             <p>${msg.content}</p>`
         if(msg.estado == 0){
             div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`

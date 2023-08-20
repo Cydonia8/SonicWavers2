@@ -928,6 +928,20 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 5%, rgba(7,77,119,1) 55%, rgba(
     list-style-type: decimal;
     font-size: 1.2rem;
 }
+div.sender-patron{
+    background-color: #d9fdd3;
+    color: black;
+    border-radius: 10px;
+}
+div.sender-artist{
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+}
+section.messages-container-patron-artist{
+    height: 70vh;
+    overflow-x: auto;
+}
 #discografica-main .form-editar-datos-discografica{
     width: 25%;
 }

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../estilos.css">
-    <script src="../scripts/prohibido.js" defer></script>
+    <script src="../scripts/forbidden.js" defer></script>
     <title>Document</title>
 </head>
 <body id="prohibido">

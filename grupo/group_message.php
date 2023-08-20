@@ -2,10 +2,10 @@
     session_start();
     require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
-    require_once "../php_functions/patrons_functions.php";
+    require_once "../php_functions/group_functions.php";
     require_once "../php_functions/login_register_functions.php";
 
-    forbidAccess("patron");
+    forbidAccess("group");
     closeSession($_POST);
 
     $decoded = decodeToken($_SESSION["token"]);
@@ -14,9 +14,9 @@
     $user = $decoded["data"]["user"];
 
     if(isset($_POST["send-answer"])){
-        $id_artist = $_POST["id-artist"];
+        $id_patron = $_POST["id-patron"];
         $msg = strip_tags($_POST["msg"]);
-        $msg_sent = sendPatronMessage($msg, $user, $id_artist);
+        $msg_sent = sendMessageToPatron($msg, $user, $id_patron);
     }
 ?>
 <!DOCTYPE html>
@@ -37,16 +37,16 @@
 </head>
 <body id="grupo-mis-reseñas">
     <?php
-        menuPatronDropdown();
+        menuGrupoDropdown("position-static");
     ?>
     <h1 class="text-center">Mis mensajes</h1>
     <section class="container-xl d-flex flex-column gap-5 mt-5 p-2 messages-container-patron-artist">
         <?php
-            if(isset($_GET["artist"])){
-                $id_artist = $_GET["artist"];
+            if(isset($_GET["patron"])){
+                $id_patron = $_GET["patron"];
                 
-                retrieveMesagesWithArtist($user, $id_artist);
-
+                retrieveMesagesWithPatron($user, $id_patron);
+                
             }else{
                 echo "<div class=\"alert alert-danger text-center\" role=\"alert\">
                 Falta información para cargar esta página

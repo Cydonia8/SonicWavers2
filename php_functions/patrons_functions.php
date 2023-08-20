@@ -1,4 +1,5 @@
 <?php
+    require_once "general.php";
     function menuPatronDropdown(){
         echo "<header class=\"dropdown-header d-flex justify-content-between align-items-center pt-3 pe-3 pb-2 ps-3 border-bottom\">
                 <a class=\"dropdown-link-responsive\" href=\"../index.php\"><img src=\"../media/assets/sonic-waves-logo-simple.png\"></a>
@@ -123,7 +124,7 @@
 
     function checkPreviousMessages($user, $artist_id){
         $con = createConnection();
-        $query = $con->prepare("SELECT COUNT(*) FROM artist_receives_message a, patrons_messages pm, patrons p WHERE a.message = pm.id and p.id = pm.patron and p.mail = ? and a.artist = ?");
+        $query = $con->prepare("SELECT COUNT(*) FROM patrons_messages pm, patrons p WHERE pm.patron = p.id and p.mail = ? and pm.artist = ?");
         $query->bind_param('si', $user, $artist_id);
         $query->bind_result($check);
         $query->execute();
@@ -182,16 +183,18 @@
         $message_sent = false;
         $msg = strip_tags($msg);
         $id_patron = getPatronID($mail);
-        $date = date('Y-m-d');
+        $sender = "patron";
+        $receiver = "artist";
+        $date = date('Y-m-d H:i:s');
         $con = createConnection();
-        $query = $con->prepare("INSERT INTO patrons_messages values ('', ?,?,?)");
-        $query->bind_param('ssi', $msg, $date, $id_patron);
+        $query = $con->prepare("INSERT INTO patrons_messages values ('', ?,?,?,?,?,?)");
+        $query->bind_param('ssssii', $sender, $receiver, $msg, $date, $id_patron, $group_id);
         if($query->execute()){
-            $queryid = $con->query("SELECT id from patrons_messages order by id desc");
-            $row = $queryid->fetch_array(MYSQLI_ASSOC);
-            $id = $row["id"];
-            $query->close();
-            $link_message = $con->query("INSERT INTO artist_receives_message (artist, message) values ($group_id, $id)");
+            // $queryid = $con->query("SELECT id from patrons_messages order by id desc");
+            // $row = $queryid->fetch_array(MYSQLI_ASSOC);
+            // $id = $row["id"];
+            // $query->close();
+            // $link_message = $con->query("INSERT INTO artist_receives_message (artist, message) values ($group_id, $id)");
             $message_sent = true;
         }
         $con->close();    
@@ -200,8 +203,8 @@
 
     function getMessagesWithArtists($mail){
         $con = createConnection();
-        $query = $con->prepare("SELECT g.foto_avatar foto, g.nombre nombre, g.id id from grupo g, patrons_messages pm, patrons p, artist_receives_message arm where g.id = arm.artist and 
-        p.mail = ? and pm.patron = p.id and pm.id = arm.message");
+        $query = $con->prepare("SELECT DISTINCT g.foto_avatar foto, g.nombre nombre, g.id id from grupo g, patrons_messages pm, patrons p where g.id = pm.artist and 
+        p.mail = ? and pm.patron = p.id");
         $query->bind_param('s', $mail);
         $query->bind_result($foto, $nombre, $id);
         $query->execute();
@@ -218,6 +221,45 @@
                         <input hidden name='artist' value='$id'>
                         <button style='--clr:#e80c0c' class='btn-danger-own' name='ver-reseñas'><span>Abrir mensajes</span><i></i></button></div></div>
                     </form>";          
+        }
+        $query->close();
+        $con->close();
+    }
+
+    function retrieveMesagesWithArtist($mail, $id_artist){
+        $con = createConnection();
+        $query = $con->prepare("SELECT content, receiver, sender, m_date, p.name patron, g.nombre group_name from patrons_messages pm, patrons p, grupo g where g.id = pm.artist and 
+        pm.patron = p.id and p.mail = ? and pm.artist = ? order by m_date desc");
+        $query->bind_param('si', $mail, $id_artist);
+        $query->bind_result($content, $receiver, $sender, $date, $patron_name, $group_name);
+        $query->execute();
+        $query->store_result();
+
+        if($query->num_rows > 0){
+            // echo "<section class='container-xl'>";
+            while($query->fetch()){
+                $date_split = explode(" ", $date);
+                $date_format = formatDate($date_split[0]);
+                if($receiver == "artist"){
+                    echo "<div class='sender-patron p-3'>
+                        <p>$content</p>
+                        <span class='fst-italic'>Enviado el $date_format a las $date_split[1] por $patron_name<span>
+                    </div>";
+                }else{
+                    echo "<div class='sender-artist p-3'>
+                        <p>$content</p>
+                        <span class='fst-italic'>Enviado el $date_format a las $date_split[1] por $group_name<span>
+                    </div>";
+                }
+            }
+            echo "<form action='#' method='post' class='d-flex flex-column gap-3'>
+                    <input type='text' placeholder='Escribe tu respuesta' name='msg'>
+                    <input hidden name='id-artist' value='$id_artist'>
+                    <button style='--clr:#0fcc0c' class='btn-danger-own align-self-center' name='send-answer'><span>Enviar mensaje</span><i></i></button></div></div>
+                </form>
+            ";
+        }else{
+            echo "<h2 class='text-center'>No hay mensajes con este artista</h2>";
         }
         $query->close();
         $con->close();

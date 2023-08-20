@@ -11,6 +11,10 @@ use Firebase\JWT\JWT;
         return $con;
     }
 
+    function checkTokenIsValid(){
+        
+    }
+
      function imageIndex($ruta){
         $imagen_rutanueva = preg_replace("`^.{1}`",'',$ruta);
         return $imagen_rutanueva;
