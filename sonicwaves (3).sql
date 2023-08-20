@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-08-2023 a las 00:18:38
+-- Tiempo de generación: 21-08-2023 a las 00:14:43
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -88,6 +88,18 @@ INSERT INTO `album` (`id`, `titulo`, `foto`, `activo`, `grupo`, `lanzamiento`) V
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `artist_receives_message`
+--
+
+CREATE TABLE `artist_receives_message` (
+  `artist` int(3) NOT NULL,
+  `message` int(11) NOT NULL,
+  `state` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cancion`
 --
 
@@ -105,7 +117,7 @@ CREATE TABLE `cancion` (
 --
 
 INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_played`) VALUES
-(33, 'Battery', '05:12', '../media/audio/met@gm.com/master of puppets/battery.mp3', 2, 0),
+(33, 'Battery', '05:12', '../media/audio/met@gm.com/master of puppets/battery.mp3', 2, 1),
 (34, 'Master of Puppets', '08:36', '../media/audio/met@gm.com/master of puppets/master of puppets.mp3', 2, 0),
 (35, 'The Thing That Should Not Be', '06:36', '../media/audio/met@gm.com/master of puppets/the thing that should not be.mp3', 2, 0),
 (36, 'Welcome Home (Sanitarium)', '06:27', '../media/audio/met@gm.com/master of puppets/welcome home sanitarium.mp3', 2, 0),
@@ -114,7 +126,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (39, 'Orion', '08:27', '../media/audio/met@gm.com/master of puppets/orion.mp3', 2, 0),
 (40, 'Damage, Inc.', '05:33', '../media/audio/met@gm.com/master of puppets/damage inc.mp3', 2, 0),
 (50, 'Blackened', '06:41', '../media/audio/met@gm.com/and justice for all/blackened.mp3', 9, 0),
-(51, '...And Justice for All', '09:47', '../media/audio/met@gm.com/and justice for all/andjusticeforall.mp3', 9, 0),
+(51, '...And Justice for All', '09:47', '../media/audio/met@gm.com/and justice for all/andjusticeforall.mp3', 9, 1),
 (52, 'Eye of the Beholder', '06:26', '../media/audio/met@gm.com/and justice for all/eyeofthebeholder.mp3', 9, 0),
 (53, 'One', '07:26', '../media/audio/met@gm.com/and justice for all/one.mp3', 9, 0),
 (54, 'The Shortest Straw', '06:35', '../media/audio/met@gm.com/and justice for all/theshorteststraw.mp3', 9, 0),
@@ -130,7 +142,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (87, 'Dignity', '08:23', '../media/audio/Porcupine Tree_11/closurecontinuation/dignity.mp3', 10, 0),
 (88, 'Herd Culling', '07:04', '../media/audio/Porcupine Tree_11/closurecontinuation/herdculling.mp3', 10, 0),
 (89, 'Walk The Plank', '04:27', '../media/audio/Porcupine Tree_11/closurecontinuation/walktheplank.mp3', 10, 0),
-(90, 'Chimera\'s Wreck', '09:41', '../media/audio/Porcupine Tree_11/closurecontinuation/chimeraswreck.mp3', 10, 0),
+(90, 'Chimera\'s Wreck', '09:41', '../media/audio/Porcupine Tree_11/closurecontinuation/chimeraswreck.mp3', 10, 2),
 (91, 'Population Three', '06:52', '../media/audio/Porcupine Tree_11/closurecontinuation/populationthree.mp3', 10, 0),
 (92, 'Never Have', '05:09', '../media/audio/Porcupine Tree_11/closurecontinuation/neverhave.mp3', 10, 0),
 (93, 'Love In The Past Tense', '05:50', '../media/audio/Porcupine Tree_11/closurecontinuation/loveinthepasttense.mp3', 10, 0),
@@ -148,7 +160,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (105, 'Speed Dating An Arsonist', '05:35', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/speeddatinganarsonist.mp3', 3, 0),
 (106, 'Jig Of The Century', '04:34', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/jigofthecentury.mp3', 3, 0),
 (107, 'The Sound of an Unconditional Surrender', '05:31', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/thesoundof.mp3', 3, 0),
-(108, 'Malign Monologues', '05:01', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/malignmonologues.mp3', 3, 0),
+(108, 'Malign Monologues', '05:01', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/malignmonologues.mp3', 3, 4),
 (109, 'Out Came the Hummingbirds', '04:27', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/outcamethe.mp3', 3, 0),
 (110, 'Snake Oil Baptism', '04:42', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/snakeoilbaptism.mp3', 3, 0),
 (111, 'Les Invulnérables', '06:03', '../media/audio/dso@gmail.com/swagger and stroll down the rabbit hole/lesinvulnerables.mp3', 3, 0),
@@ -199,7 +211,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (166, 'Too Far Gone', '04:34', '../media/audio/meta@gm.com/72 seasons/10. too far gone-.mp3', 9, 0),
 (167, 'Room of Mirrors', '05:34', '../media/audio/meta@gm.com/72 seasons/11. room of mirrors.mp3', 9, 0),
 (168, 'Inamorata', '11:10', '../media/audio/meta@gm.com/72 seasons/12. inamorata.mp3', 9, 0),
-(169, 'Knucklehugs (Arm Yourself With Love)', '02:27', '../media/audio/dso@gmail.com/pacifisticuffs/knucklehugs.mp3', 3, 0),
+(169, 'Knucklehugs (Arm Yourself With Love)', '02:27', '../media/audio/dso@gmail.com/pacifisticuffs/knucklehugs.mp3', 3, 1),
 (170, 'The Age of Vulture Culture', '05:00', '../media/audio/dso@gmail.com/pacifisticuffs/ageofvulture.mp3', 3, 0),
 (171, 'Superhero Jagganath', '05:46', '../media/audio/dso@gmail.com/pacifisticuffs/jagganath.mp3', 3, 0),
 (172, 'Vision of the Purblind', '01:01', '../media/audio/dso@gmail.com/pacifisticuffs/vision.mp3', 3, 0),
@@ -245,7 +257,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (245, 'Eleanor Rigby', '02:24', '../media/audio/The Beatles_22/revolver/02. eleanor rigby (2022 mix).mp3', 4, 0),
 (246, 'I\'m Only Sleeping', '03:17', '../media/audio/The Beatles_22/revolver/03. im only sleeping (2022 mix).mp3', 4, 0),
 (247, 'Love You To', '03:17', '../media/audio/The Beatles_22/revolver/04. love you to (2022 mix).mp3', 4, 0),
-(248, 'Here, There And Everywhere', '02:42', '../media/audio/The Beatles_22/revolver/05. here, there and everywhere (2022 mix).mp3', 4, 0),
+(248, 'Here, There And Everywhere', '02:42', '../media/audio/The Beatles_22/revolver/05. here, there and everywhere (2022 mix).mp3', 4, 6),
 (249, 'Yellow Submarine', '02:56', '../media/audio/The Beatles_22/revolver/06. yellow submarine (2022 mix).mp3', 4, 0),
 (250, 'She Said She Said', '02:53', '../media/audio/The Beatles_22/revolver/07. she said she said (2022 mix).mp3', 4, 0),
 (251, 'Good Day Sunshine', '02:26', '../media/audio/The Beatles_22/revolver/08. good day sunshine (2022 mix).mp3', 4, 0),
@@ -266,17 +278,17 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (266, 'Miss The Misery', '04:31', '../media/audio/Foo Fighters_23/wasting light/09 - foo fighters - miss the misery.mp3', 12, 0),
 (267, 'I Should Have Known', '04:16', '../media/audio/Foo Fighters_23/wasting light/10 - foo fighters - i should have known.mp3', 12, 0),
 (268, 'Walk', '04:16', '../media/audio/Foo Fighters_23/wasting light/11 - foo fighters - walk.mp3', 12, 0),
-(269, 'Monarchy Of Roses', '04:12', '../media/audio/Red Hot Chili Peppers_24/im with you/01 - monarchy of roses.mp3', 4, 0),
+(269, 'Monarchy Of Roses', '04:12', '../media/audio/Red Hot Chili Peppers_24/im with you/01 - monarchy of roses.mp3', 4, 1),
 (270, 'Factory Of Faith', '04:19', '../media/audio/Red Hot Chili Peppers_24/im with you/02 - factory of faith.mp3', 13, 0),
 (271, 'Brendan\'s Death Song', '05:37', '../media/audio/Red Hot Chili Peppers_24/im with you/03 - brendans death song.mp3', 4, 0),
 (272, 'Ethiopia', '03:49', '../media/audio/Red Hot Chili Peppers_24/im with you/04 - ethiopia.mp3', 13, 0),
 (273, 'Annie Wants A Baby', '03:40', '../media/audio/Red Hot Chili Peppers_24/im with you/05 - annie wants a baby.mp3', 13, 0),
 (274, 'Look Around', '03:28', '../media/audio/Red Hot Chili Peppers_24/im with you/06 - look around.mp3', 13, 0),
-(275, 'The Adventures Of Rain Dance Maggie', '04:46', '../media/audio/Red Hot Chili Peppers_24/im with you/07 - the adventures of rain dance maggie.mp3', 13, 0),
+(275, 'The Adventures Of Rain Dance Maggie', '04:46', '../media/audio/Red Hot Chili Peppers_24/im with you/07 - the adventures of rain dance maggie.mp3', 13, 1),
 (276, 'Did I Let You Know', '04:21', '../media/audio/Red Hot Chili Peppers_24/im with you/08 - did i let you know.mp3', 4, 0),
 (277, 'Goodbye Hooray', '03:52', '../media/audio/Red Hot Chili Peppers_24/im with you/09 - goodbye hooray.mp3', 13, 0),
 (278, 'Happiness Love Company', '03:33', '../media/audio/Red Hot Chili Peppers_24/im with you/10 - happiness loves company.mp3', 13, 0),
-(279, 'Police Station', '05:35', '../media/audio/Red Hot Chili Peppers_24/im with you/11 - police station.mp3', 13, 0),
+(279, 'Police Station', '05:35', '../media/audio/Red Hot Chili Peppers_24/im with you/11 - police station.mp3', 13, 1),
 (280, 'Even You, Brutus', '04:02', '../media/audio/Red Hot Chili Peppers_24/im with you/12 - even you, brutus.mp3', 4, 0),
 (281, 'Meet Me At The Corner', '04:20', '../media/audio/Red Hot Chili Peppers_24/im with you/13 - meet me at the corner.mp3', 4, 0),
 (282, 'Dance, Dance, Dance', '03:47', '../media/audio/Red Hot Chili Peppers_24/im with you/14 - dance, dance, dance.mp3', 13, 0),
@@ -287,27 +299,27 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (335, 'Hump de Bump', '03:33', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/05. hump de bump.mp3', 13, 0),
 (336, 'She\'s Only 18', '03:25', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/06. shes only 18.mp3', 13, 0),
 (337, 'Slow Cheetah', '05:20', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/07. slow cheetah.mp3', 4, 0),
-(338, 'Torture Me', '03:45', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/08. torture me.mp3', 13, 0),
+(338, 'Torture Me', '03:45', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/08. torture me.mp3', 13, 1),
 (339, 'Strip My Mind', '04:19', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/09. strip my mind.mp3', 13, 0),
 (340, 'Especially In Michigan', '04:01', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/10. especially in michigan.mp3', 4, 0),
 (341, 'Warlocks', '03:26', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/11. warlocks.mp3', 13, 0),
 (342, 'C\'mon Girl', '03:49', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/12. cmon girl.mp3', 4, 0),
 (343, 'Wet Sand', '05:10', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/13. wet sand.mp3', 4, 0),
 (344, 'Hey', '05:39', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/14. hey.mp3', 4, 0),
-(345, 'Desecration Smile', '05:02', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/01. desecration smile.mp3', 13, 0),
+(345, 'Desecration Smile', '05:02', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/01. desecration smile.mp3', 13, 1),
 (346, 'Tell Me Baby', '04:08', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/02. tell me baby.mp3', 13, 0),
 (347, 'Hard To Concentrate', '04:02', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/03. hard to concentrate.mp3', 4, 0),
 (348, '21st Century', '04:23', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/04. 21st century.mp3', 13, 0),
 (349, 'She Looks To Me', '04:06', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/05. she looks to me.mp3', 13, 0),
 (350, 'Readymade', '04:31', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/06. readymade.mp3', 12, 0),
-(351, 'If', '02:53', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/07. if.mp3', 13, 0),
+(351, 'If', '02:53', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/07. if.mp3', 13, 1),
 (352, 'Make You Feel Better', '03:52', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/08. make you feel better.mp3', 13, 0),
 (353, 'Animal Bar', '05:25', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/09. animal bar.mp3', 4, 0),
 (354, 'So Match I', '03:45', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/10. so match i.mp3', 13, 0),
 (355, 'Storm In A Teacup', '03:45', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/11. storm in a teacup.mp3', 4, 0),
 (356, 'We Believe', '03:36', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/12. we believe.mp3', 13, 0),
 (357, 'Turn It Again', '06:06', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/13. turn it again.mp3', 4, 0),
-(358, 'Death Of A Martian', '04:25', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/14. death of a martion.mp3', 13, 0),
+(358, 'Death Of A Martian', '04:25', '../media/audio/Red Hot Chili Peppers_24/stadium arcadium/14. death of a martion.mp3', 13, 1),
 (359, 'Airbag', '04:44', '../media/audio/radiohead@gmail.com/ok computer/01 airbag.mp3', 14, 0),
 (360, 'Paranoid Android', '06:24', '../media/audio/radiohead@gmail.com/ok computer/02 paranoid android.mp3', 14, 0),
 (361, 'Subterranean Homesick Alien', '04:28', '../media/audio/radiohead@gmail.com/ok computer/03 subterranean homesick alien.mp3', 14, 0),
@@ -329,15 +341,15 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (377, 'Preludio', '00:59', '../media/audio/lasudadera@gmail.com/multipolar/la-sudadera-del-manager-cristal-07-preludio.mp3', 4, 0),
 (378, 'Sin Mirarte A La Cara', '03:50', '../media/audio/lasudadera@gmail.com/multipolar/la-sudadera-del-manager-cristal-08-sin-mirarte-a-la-cara.mp3', 10, 0),
 (379, 'La Historia Que Nunca Supimos', '04:13', '../media/audio/lasudadera@gmail.com/multipolar/la-sudadera-del-manager-cristal-09-la-historia-que-nunca-supimos.mp3', 4, 0),
-(380, 'Dos Locos', '04:03', '../media/audio/lasudadera@gmail.com/multipolar/la-sudadera-del-manager-cristal-10-dos-locos.mp3', 13, 0),
+(380, 'Dos Locos', '04:03', '../media/audio/lasudadera@gmail.com/multipolar/la-sudadera-del-manager-cristal-10-dos-locos.mp3', 13, 1),
 (381, 'Game Over', '03:49', '../media/audio/Avenged Sevenfold_29/life is but a dream.../01. game over.mp3', 16, 0),
-(382, 'Mattel', '05:32', '../media/audio/Avenged Sevenfold_29/life is but a dream.../02. mattel.mp3', 16, 0),
+(382, 'Mattel', '05:32', '../media/audio/Avenged Sevenfold_29/life is but a dream.../02. mattel.mp3', 16, 1),
 (383, 'Nobody', '05:56', '../media/audio/Avenged Sevenfold_29/life is but a dream.../03. nobody.mp3', 16, 0),
 (384, 'We Love You', '06:17', '../media/audio/Avenged Sevenfold_29/life is but a dream.../04. we love you.mp3', 16, 0),
 (385, 'Cosmic', '07:33', '../media/audio/Avenged Sevenfold_29/life is but a dream.../05. cosmic.mp3', 10, 0),
 (386, 'Beautiful Morning', '06:34', '../media/audio/Avenged Sevenfold_29/life is but a dream.../06. beautiful morning.mp3', 10, 0),
 (387, 'Easier', '03:40', '../media/audio/Avenged Sevenfold_29/life is but a dream.../07. easier.mp3', 2, 0),
-(388, 'G', '03:40', '../media/audio/Avenged Sevenfold_29/life is but a dream.../08. g.mp3', 16, 0),
+(388, 'G', '03:40', '../media/audio/Avenged Sevenfold_29/life is but a dream.../08. g.mp3', 16, 2),
 (389, '(O)rdinary', '02:54', '../media/audio/Avenged Sevenfold_29/life is but a dream.../09. (o)rdinary.mp3', 13, 0),
 (390, '(D)eath', '03:22', '../media/audio/Avenged Sevenfold_29/life is but a dream.../10. (d)eath.mp3', 3, 0),
 (391, 'Life Is But A Dream...', '04:34', '../media/audio/Avenged Sevenfold_29/life is but a dream.../11. life is but a dream.mp3', 15, 0),
@@ -351,7 +363,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (399, 'Higher', '06:29', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/08. higher.mp3', 10, 0),
 (400, 'Roman Sky', '05:00', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/09. roman sky.mp3', 10, 0),
 (401, 'Fermi Paradox', '06:31', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/10. fermi paradox.mp3', 2, 0),
-(402, 'Exist', '15:39', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/11. exist.mp3', 16, 0),
+(402, 'Exist', '15:39', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/11. exist.mp3', 16, 1),
 (403, 'Malagueña Salerosa', '04:15', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/14. malaguena salerosa.mp3', 16, 0),
 (404, 'Wish You Were Here', '05:14', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/17. wish you were here.mp3', 10, 0),
 (405, 'God Only Knows', '03:34', '../media/audio/Avenged Sevenfold_29/the stage (deluxe edition)/18. god only knows.mp3', 4, 0),
@@ -367,7 +379,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (415, 'I\'m Not Moving', '02:35', '../media/audio/Phil Collins_30/face value/1-10. im not moving (2015 remastered).mp3', 1, 0),
 (416, 'If Leaving Me Is Easy', '04:55', '../media/audio/Phil Collins_30/face value/1-11. if leaving me is easy (2015 remastered).mp3', 1, 0),
 (417, 'Tomorrow Never Knows', '04:52', '../media/audio/Phil Collins_30/face value/1-12. tomorrow never knows (2015 remastered).mp3', 1, 0),
-(526, 'The Quarantine Zone (20 Years Later)', '03:40', '../media/audio/Gustavo Santaolalla_31/the last of us original soundtrack/01-the quarantine zone (20 years later).mp3', 15, 0),
+(526, 'The Quarantine Zone (20 Years Later)', '03:40', '../media/audio/Gustavo Santaolalla_31/the last of us original soundtrack/01-the quarantine zone (20 years later).mp3', 15, 1),
 (527, 'The Hour', '01:01', '../media/audio/Gustavo Santaolalla_31/the last of us original soundtrack/02-the hour.mp3', 15, 0),
 (528, 'The Last Of Us', '03:03', '../media/audio/Gustavo Santaolalla_31/the last of us original soundtrack/03-the last of us.mp3', 15, 0),
 (529, 'Forgotten Memories', '01:07', '../media/audio/Gustavo Santaolalla_31/the last of us original soundtrack/04-forgotten memories.mp3', 15, 0),
@@ -400,7 +412,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (556, 'The West Side', '05:02', '../media/audio/Phil Collins_30/hello, i must be going!/09. the west side (2016 remastered).mp3', 1, 0),
 (557, 'Why Can\'t It Wait \'Til Morning', '03:12', '../media/audio/Phil Collins_30/hello, i must be going!/10. why cant it wait til morning (2016 remastered).mp3', 1, 0),
 (558, 'Intro', '00:23', '../media/audio/Muse_15/absolution/01 - intro.mp3', 14, 0),
-(559, 'Apocalypse Please', '04:13', '../media/audio/Muse_15/absolution/02 - apocalypse please.mp3', 14, 0),
+(559, 'Apocalypse Please', '04:13', '../media/audio/Muse_15/absolution/02 - apocalypse please.mp3', 14, 1),
 (560, 'Time Is Running Out', '03:56', '../media/audio/Muse_15/absolution/03 - time is running out.mp3', 14, 0),
 (561, 'Sing For Absolution', '04:55', '../media/audio/Muse_15/absolution/04 - sing for absolution.mp3', 4, 0),
 (562, 'Stockholm Syndrome', '04:59', '../media/audio/Muse_15/absolution/05 - stockholm syndrome.mp3', 10, 0),
@@ -424,7 +436,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (580, 'Throwdown', '02:57', '../media/audio/tenaciousd@gmail.com/rize of the fenix/09 - tenacious d - throwdown.mp3', 4, 0),
 (581, 'Rock Is Dead', '01:43', '../media/audio/tenaciousd@gmail.com/rize of the fenix/10 - tenacious d - rock is dead.mp3', 12, 0),
 (582, 'They Fucked Our Asses', '01:07', '../media/audio/tenaciousd@gmail.com/rize of the fenix/11 - tenacious d - they fucked our asses.mp3', 14, 0),
-(583, 'To Be The Best', '01:01', '../media/audio/tenaciousd@gmail.com/rize of the fenix/12 - tenacious d - to be the best.mp3', 13, 0),
+(583, 'To Be The Best', '01:01', '../media/audio/tenaciousd@gmail.com/rize of the fenix/12 - tenacious d - to be the best.mp3', 13, 1),
 (584, '39', '05:17', '../media/audio/tenaciousd@gmail.com/rize of the fenix/13 - tenacious d - 39.mp3', 4, 0),
 (585, 'Hidden Track', '01:36', '../media/audio/tenaciousd@gmail.com/rize of the fenix/14 - tenacious d - hidden track.mp3', 4, 0),
 (586, 'Kickapoo', '04:14', '../media/audio/tenaciousd@gmail.com/the pick of destiny/snapsave.io - kickapoo (320 kbps).mp3', 17, 0),
@@ -442,8 +454,8 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (598, 'Beelzeboss (The Final Showdown)', '05:36', '../media/audio/tenaciousd@gmail.com/the pick of destiny/snapsave.io - beelzeboss (the final showdown) (320 kbps).mp3', 12, 0),
 (599, 'The Pick Of Destiny', '02:32', '../media/audio/tenaciousd@gmail.com/the pick of destiny/snapsave.io - the pick of destiny (320 kbps).mp3', 17, 0),
 (600, 'The Metal', '02:46', '../media/audio/tenaciousd@gmail.com/the pick of destiny/snapsave.io - the metal (320 kbps).mp3', 2, 0),
-(617, 'Something From Nothing', '04:48', '../media/audio/Foo Fighters_23/sonic highways/01 - something from nothing.mp3', 12, 0),
-(618, 'The Feast And The Famine', '03:49', '../media/audio/Foo Fighters_23/sonic highways/02 - the feast and the famine.mp3', 12, 0),
+(617, 'Something From Nothing', '04:48', '../media/audio/Foo Fighters_23/sonic highways/01 - something from nothing.mp3', 12, 1),
+(618, 'The Feast And The Famine', '03:49', '../media/audio/Foo Fighters_23/sonic highways/02 - the feast and the famine.mp3', 12, 2),
 (619, 'Congregation', '05:11', '../media/audio/Foo Fighters_23/sonic highways/03 - congregation.mp3', 17, 0),
 (620, 'What Did I Do?/God As My Witness', '05:43', '../media/audio/Foo Fighters_23/sonic highways/04 - what did i do-god as my witness.mp3', 12, 0),
 (621, 'Outside', '05:14', '../media/audio/Foo Fighters_23/sonic highways/05 - outside.mp3', 12, 0),
@@ -482,7 +494,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (654, 'My World', '01:27', '../media/audio/Guns N\' Roses_36/use your illusion ii/14. my world (2022 remaster)(explicit).mp3', 14, 0),
 (655, 'Another Day Of Sun', '03:48', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/01 another day of sun (from _la la land_ soundtrack).mp3', 15, 0),
 (656, 'Someone In The Crowd', '04:20', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/02 someone in the crowd (from _la la land_ soundtrack).mp3', 15, 0),
-(657, 'Mia & Sebastian\'s Theme', '01:38', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/03 mia & sebastian_s theme (from _la la land_ soundtrack).mp3', 15, 0),
+(657, 'Mia & Sebastian\'s Theme', '01:38', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/03 mia & sebastian_s theme (from _la la land_ soundtrack).mp3', 15, 1),
 (658, 'A Lovely Night', '03:57', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/04 a lovely night (from _la la land_ soundtrack).mp3', 15, 0),
 (659, 'Herman\'s Habit', '01:52', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/05 herman_s habit (from _la la land_ soundtrack).mp3', 15, 0),
 (660, 'City Of Stars (Pier)', '01:51', '../media/audio/Justin Hurwitz_37/la la land (original motion picture soundtrack)/06 city of stars (pier).mp3', 15, 0),
@@ -529,15 +541,15 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (700, 'The Camera Eye', '11:03', '../media/audio/Rush_27/moving pictures 40th anniversary/05. the camera eye.mp3', 10, 0),
 (701, 'Witch Hunt', '04:50', '../media/audio/Rush_27/moving pictures 40th anniversary/06. witch hunt.mp3', 10, 0),
 (702, 'Vital Signs', '04:50', '../media/audio/Rush_27/moving pictures 40th anniversary/07. vital signs.mp3', 10, 0),
-(703, 'Invisible Touch', '03:30', '../media/audio/genesis@genesis.com/invisible touch/01. invisible touch.mp3', 1, 0),
+(703, 'Invisible Touch', '03:30', '../media/audio/genesis@genesis.com/invisible touch/01. invisible touch.mp3', 1, 2),
 (704, 'Tonight, Tonight, Tonight', '08:54', '../media/audio/genesis@genesis.com/invisible touch/02. tonight, tonight, tonight.mp3', 1, 0),
-(705, 'Land Of Confusion', '04:46', '../media/audio/genesis@genesis.com/invisible touch/03. land of confusion.mp3', 1, 0),
+(705, 'Land Of Confusion', '04:46', '../media/audio/genesis@genesis.com/invisible touch/03. land of confusion.mp3', 1, 1),
 (706, 'In Too Deep', '05:03', '../media/audio/genesis@genesis.com/invisible touch/04. in too deep.mp3', 1, 0),
 (707, 'Anything She Does', '04:21', '../media/audio/genesis@genesis.com/invisible touch/05. anything she does.mp3', 1, 0),
 (708, 'Domino', '10:45', '../media/audio/genesis@genesis.com/invisible touch/06. domino.mp3', 1, 0),
 (709, 'Throwing It All Away', '03:51', '../media/audio/genesis@genesis.com/invisible touch/07. throwing it all away.mp3', 1, 0),
 (710, 'The Brazilian', '05:04', '../media/audio/genesis@genesis.com/invisible touch/08. the brazilian.mp3', 1, 0),
-(711, 'The Root Of All Evil', '08:26', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - the root of all evil (320 kbps).mp3', 16, 0),
+(711, 'The Root Of All Evil', '08:26', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - the root of all evil (320 kbps).mp3', 16, 1),
 (712, 'The Answer Lies Within', '05:33', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - the answer lies within (320 kbps).mp3', 16, 0),
 (713, 'These Walls', '07:36', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - these walls (320 kbps).mp3', 16, 0),
 (714, 'I Walk Beside You', '04:29', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - i walk beside you (320 kbps).mp3', 16, 0),
@@ -545,7 +557,7 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (716, 'Never Enough', '06:47', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - never enough (320 kbps).mp3', 16, 0),
 (717, 'Sacrificed Sons', '10:43', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - sacrificed sons (320 kbps).mp3', 16, 0),
 (718, 'Octavarium', '24:00', '../media/audio/dreamt@gmail.com/octavarium/snapsave.io - octavarium (320 kbps).mp3', 16, 0),
-(735, 'Party', '02:26', '../media/audio/Queen_12/the miracle/01. party (remastered 2011).mp3', 17, 0),
+(735, 'Party', '02:26', '../media/audio/Queen_12/the miracle/01. party (remastered 2011).mp3', 17, 1),
 (736, 'Khashoggi\'s Ship', '02:51', '../media/audio/Queen_12/the miracle/02. khashoggis ship (remastered 2011).mp3', 12, 0),
 (737, 'The Miracle', '05:05', '../media/audio/Queen_12/the miracle/03. the miracle (remastered 2011).mp3', 4, 0),
 (738, 'I Want It All', '04:44', '../media/audio/Queen_12/the miracle/04. i want it all (remastered 2011).mp3', 17, 0),
@@ -567,8 +579,8 @@ INSERT INTO `cancion` (`id`, `titulo`, `duracion`, `archivo`, `estilo`, `times_p
 (754, 'Good Company', '03:23', '../media/audio/Queen_12/a night at the opera/queen - good company.mp3', 4, 0),
 (755, 'Bohemian Rhapsody', '05:54', '../media/audio/Queen_12/a night at the opera/queen - bohemian rhapsody.mp3', 10, 0),
 (756, 'God Save The Queen', '01:15', '../media/audio/Queen_12/a night at the opera/queen - god save the queen.mp3', 17, 0),
-(757, 'Wicked Game', '01:50', '../media/audio/tenaciousd@gmail.com/wicked game (single)/snapsave.io - wicked game (320 kbps).mp3', 1, 0),
-(769, 'Timber Hearth', '03:25', '../media/audio/Justin Hurwitz_37/outer wilds ost/snapsave.io - timber hearth 320 kbps.mp3', 15, 0),
+(757, 'Wicked Game', '01:50', '../media/audio/tenaciousd@gmail.com/wicked game (single)/snapsave.io - wicked game (320 kbps).mp3', 1, 5),
+(769, 'Timber Hearth', '03:25', '../media/audio/Justin Hurwitz_37/outer wilds ost/snapsave.io - timber hearth 320 kbps.mp3', 15, 1),
 (770, 'End Times', '01:59', '../media/audio/Justin Hurwitz_37/outer wilds ost/snapsave.io - end times 320 kbps.mp3', 15, 0),
 (771, 'Travelers', '03:30', '../media/audio/Justin Hurwitz_37/outer wilds ost/snapsave.io - travelers 320 kbps.mp3', 15, 0),
 (772, 'Outer Wilds', '02:27', '../media/audio/Justin Hurwitz_37/outer wilds ost/snapsave.io - outer wilds 320 kbps.mp3', 15, 0);
@@ -693,7 +705,6 @@ INSERT INTO `favorito` (`usuario`, `album`) VALUES
 (1, 65),
 (1, 68),
 (1, 69),
-(1, 105),
 (1, 116),
 (5, 50);
 
@@ -723,7 +734,8 @@ INSERT INTO `foto_grupo` (`id`, `enlace`, `grupo`) VALUES
 (63, '../media/img_grupos/pinkfloyd@gmail.com/pinkfloyd@gmail.comfotoextra63.jpg', 19),
 (66, '../media/img_grupos/tenaciousd@gmail.com/tenaciousd@gmail.comfotoextra66.jpg', 32),
 (67, '../media/img_grupos/tenaciousd@gmail.com/tenaciousd@gmail.comfotoextra67.jpg', 32),
-(68, '../media/img_grupos/oasis@gmail.com/oasis@gmail.comfotoextra68.jpg', 39);
+(68, '../media/img_grupos/oasis@gmail.com/oasis@gmail.comfotoextra68.jpg', 39),
+(69, '../media/img_grupos/genesis@genesis.com/genesis@genesis.comfotoextra69.jpg', NULL);
 
 -- --------------------------------------------------------
 
@@ -751,6 +763,27 @@ INSERT INTO `foto_publicacion` (`id`, `enlace`, `publicacion`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `group_messages`
+--
+
+CREATE TABLE `group_messages` (
+  `id` int(4) NOT NULL,
+  `content` varchar(500) NOT NULL,
+  `m_date` datetime DEFAULT NULL,
+  `group` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `group_messages`
+--
+
+INSERT INTO `group_messages` (`id`, `content`, `m_date`, `group`) VALUES
+(20, 'prueba hora', '2023-08-20 13:27:00', 13),
+(21, 'pruebga 2', '2023-08-20 13:29:41', 13);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `grupo`
 --
 
@@ -758,7 +791,7 @@ CREATE TABLE `grupo` (
   `id` int(4) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `biografia` varchar(5000) DEFAULT NULL,
-  `pass` varchar(20) DEFAULT NULL,
+  `pass` varchar(200) DEFAULT NULL,
   `correo` varchar(50) DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 0,
   `foto` varchar(500) DEFAULT NULL,
@@ -776,7 +809,7 @@ INSERT INTO `grupo` (`id`, `nombre`, `biografia`, `pass`, `correo`, `activo`, `f
 (7, 'Metallica', 'Metallica es un grupo estadounidense de thrash metal1​ originario de Los Ángeles, pero con base en San Francisco desde febrero de 1983. Fue fundado en 1981 en Los Ángeles por Lars Ulrich y James Hetfield, a los que se les unirían Dave Mustaine y Ron McGovney. Estos dos músicos fueron después sustituidos por el guitarrista Kirk Hammett y el bajista Cliff Burton respectivamente, Dave Mustaine fue despedido un año después de ingresar en la banda debido a su excesiva adicción al alcohol y su actitud violenta, siendo sustituido por Kirk Hammett (exguitarrista de Exodus).', NULL, NULL, 1, '../media/img_grupos/meta@gm.com/meta@gm.com.png', '../media/img_grupos/met@gm.com/met@gm.comavatar.jpg', 1, 0),
 (11, 'Porcupine Tree', 'Porcupine Tree es una banda de rock progresivo formada en Hemel Hempstead, Reino Unido. Esta banda es el proyecto más exitoso del músico Steven Wilson y han desarrollado piezas musicales que se caracterizan por su diversidad y la calidad distintiva del sonido en sus grabaciones. Wilson, un músico autodidacta amante de diversos géneros musicales, comenzó con el proyecto a fines de la década de los 80s como una aventura musical en solitario.\r\n\r\nLa música de Porcupine Tree se engloba habitualmente dentro del rock progresivo, aunque Steven Wilson ha expresado su disconformidad con esta etiqueta: \"La música de Porcupine Tree es muy muy simple. No hay nada complejo en ella. Lo complejo está en la producción. La complejidad está en que los álbumes están firmemente construidos. Todo el trabajo consiste en crear la textura y el sonido, y hacer que suene bien. No hay nada de complicado en nuestra música en absoluto. Y por eso es por lo que no me gusta que la gente nos describa como rock progresivo. No creo que seamos una banda progresiva. Creo que sólo somos una banda de rock. Creo que lo que lleva a la gente a darnos la categoría de progresiva es la manera en la que las canciones están producidas\".\r\n\r\nSin embargo, en una entrevista en ProgArchives, Wilson explicó que el término \"rock progresivo\" está cada vez más extendido: \"Se ha convertido en un término mucho más extendido que hace cinco años\".', NULL, NULL, 1, '../media/img_grupos/Porcupine Tree_11/Porcupine Tree_11_.jpg', '../media/img_grupos/Porcupine Tree_11/Porcupine Tree_11_avatar.jpg', 1, 0),
 (12, 'Queen', 'Queen es una banda británica de rock formada en 1970 en Londres, integrada por el cantante y pianista Freddie Mercury, el guitarrista Brian May, el baterista Roger Taylor y el bajista John Deacon (el cual llegaría un año después al grupo para completar la formación clásica). Sus primeros trabajos estuvieron influenciados por el rock progresivo y el hard rock, pero la banda se aventuró gradualmente en trabajos más convencionales y amigables con la radio incorporando más estilos, como arena rock y pop rock.\r\n\r\nAntes de formar Queen, May y Taylor habían tocado juntos en la banda Smile. Mercury se apegó a la banda y los animó a experimentar con técnicas escénicas y de grabación más elaboradas. Se unió en 1970 y sugirió el nombre de «Queen». Deacon fue reclutado en febrero de 1971, antes de que la banda lanzara su álbum debut homónimo en 1973. Queen apareció por primera vez en las listas de éxitos del Reino Unido con su segundo álbum, Queen II, en 1974. Sheer Heart Attack más tarde ese año y A Night at the Opera en 1975 trajeron a ellos el éxito internacional. Este último presentó «Bohemian Rhapsody», que se mantuvo en el número uno en el Reino Unido durante nueve semanas y ayudó a popularizar el formato de video musical.\r\n\r\nEl álbum de 1977 de la banda, News of the World, contenía «We Will Rock You» y «We Are the Champions», que se han convertido en himnos en los eventos deportivos. A principios de la década de 1980, Queen era una de las bandas de arena rock más importantes del mundo. «Another One Bites the Dust» de The Game (1980) se convirtió en su sencillo más vendido, mientras que su álbum recopilatorio de 1981 Greatest Hits es uno de los álbumes más vendido a nivel mundial con más de 50 millones de copias y en el Reino Unido es el álbum más vendido con más de 7 millones de copias y está certificado nueve veces platino en los EE. UU. Su actuación en el concierto Live Aid de 1985 y su concierto en Wembley Stadium en el año de 1986 están clasificadas entre las mejores de la historia del rock por varias publicaciones. En agosto de 1986, Freddie Mercury dio su última actuación con Queen en Knebworth, Inglaterra. En 1991 murió de bronconeumonía, una complicación del sida. Deacon se retiró en 1997. Desde 2004, May y Taylor han realizado giras como «Queen +», con los vocalistas Paul Rodgers y Adam Lambert.\r\n\r\n\r\nLA GENTE ES MUY PESADA CON DON\'T STOP ME NOW.', NULL, NULL, 1, '../media/img_grupos/Queen_12/Queen_12_.webp', '../media/img_grupos/Queen_12/Queen_12_foto.jpg', 3, 0),
-(13, 'Genesis', 'Genesis fue un grupo de rock (pop posteriormente) británico creado en 1967 por Tony Banks, Mike Rutherford, Peter Gabriel y Anthony Phillips.\r\n\r\nTras la partida de uno de sus principales fundadores, el guitarrista y compositor Anthony Phillips (quien fue brevemente reemplazado por Mick Barnard) y tras varios cambios de bateristas, el grupo quedó conformado en su primera formación \"clásica\" (1970-1975) por Peter Gabriel (voz y flauta), Tony Banks (teclados), Mike Rutherford (bajo y guitarras), Phil Collins (batería y percusión) y Steve Hackett (guitarra líder).​ Tras la salida de Gabriel -en 1975-​ y de Hackett -en 1977- el grupo quedó reducido a un cuarteto, y posteriormente a un trío, con Collins como cantante y baterista, Rutherford como guitarrista y bajista y Banks como tecladista. A partir de la década de 1980, la música de Genesis vería un cambio fundamental de estilo, del rock progresivo hacia el pop-rock, coincidiendo con la época de mayor éxito comercial y con Phil Collins como su líder más visible.\r\n\r\nEn 1996 Phil Collins abandonó oficialmente Genesis, para centrarse en su carrera solista, y Ray Wilson fue su reemplazo como vocalista por un breve lapso de tiempo. Genesis se separó definitivamente en 1998. Sin embargo en 2007 realizaron una exitosa gira de conciertos por Europa y los Estados Unidos, llamada \"Turn It On Again\", tras la cual en varias ocasiones se ha comentado una posible vuelta a los estudios de grabación.​ En el 2020 se anunció su regreso a los escenarios con la gira \"The Last Domino?\", que además de Collins, Banks y Rutherford, incluye al bajista/guitarrista y colaborador Daryl Struemer y al hijo de Phil, Nicholas Collins en batería en reemplazo de Chester Thompson. El 26 de marzo del 2022 dieron su último concierto de la gira de despedida en la ciudad de Londres, poniendo punto final a la actividad de la banda.', 'genesis', 'genesis@genesis.com', 1, '../media/img_grupos/genesis@genesis.com/genesis@genesis.com.jpg', '../media/img_grupos/genesis@genesis.com/genesis@genesis.comavatar.jpg', 0, 0),
+(13, 'Genesis', 'Genesis fue un grupo de rock (pop posteriormente) británico creado en 1967 por Tony Banks, Mike Rutherford, Peter Gabriel y Anthony Phillips.\r\n\r\nTras la partida de uno de sus principales fundadores, el guitarrista y compositor Anthony Phillips (quien fue brevemente reemplazado por Mick Barnard) fdfsdf', '5536e600536a665a75281c80bc779e0f', 'genesis@genesis.com', 1, '../media/img_grupos/genesis@genesis.com/genesis@genesis.com.jpg', '../media/img_grupos/genesis@genesis.com/genesis@genesis.comavatar.jpg', 0, 0),
 (15, 'Muse', 'Muse es una banda de rock británica formada en 1994, en Teignmouth, Devon. Desde su formación, sus integrantes son: Matt Bellamy (voz, guitarra, teclados), Christopher Wolstenholme (bajo, coros) y Dominic Howard (batería).\r\n\r\nTras el lanzamiento de Black Holes and Revelations, Morgan Nicholls comenzó a colaborar con la banda durante las presentaciones en vivo, haciéndose cargo de teclados, samples, de algunos coros, rara vez del bajo y últimamente de la segunda guitarra.​ La banda es conocida por sus extravagantes espectáculos en vivo, por fusionar géneros musicales como el rock alternativo, rock espacial, rock progresivo, rock sinfónico y electrónica,5​ además por los atípicos intereses de Bellamy en la conspiración global, la revolución, la astrofísica, vida extraterrestre, los fantasmas, la teología y el apocalipsis; temas que se ven reflejados en sus letras.\r\n\r\nHasta el día de hoy, Muse ha lanzado nueve álbumes de estudio: Showbiz (1999), Origin of Symmetry (2001). Absolution (2003), Black Holes and Revelations (2006), The Resistance (2009), The 2nd Law (2012), Drones (2015), Simulation Theory (2018) y Will of the People (2022).\r\nTambién han publicado tres álbumes en vivo: Hullabaloo Soundtrack (2001), el cual también contiene una compilación de lados B; HAARP (2008), que documenta las presentaciones de la banda en el Estadio de Wembley en 2007; Live at Rome Olympic Stadium (2013), una presentación de la banda ante más de 60 000 personas en Italia; Simulation Theory film filmado en agosto de 2019 en dos presentaciones en el O2 Arena, y tras un año, fue estrenado en agosto de 2020 para el cine IMAX.\r\n\r\nBlack Holes and Revelations le otorgó a Muse una nominación al Mercury Prize y un tercer lugar en la lista de sus mejores álbumes del año según la revista NME en 2006. Muse también ganó diversos premios a lo largo de su carrera, incluyendo cinco MTV Europe Music Awards, seis Q Awards, ocho NME Awards, dos Brit Awards (premio a la «mejor actuación británica en vivo»', NULL, NULL, 1, '../media/img_grupos/Muse_15/Muse_15_.jpg', '../media/img_grupos/Muse_15/Muse_15_avatar.jpg', 1, 0),
 (17, 'La Sudadera Del Manager', 'La Sudadera Del Manager es un grupo de rock nacido en Motril, Granada en 2012. A lo largo de los años, su música ha ido evolucionando y pasando por distintos estilos. Está formado por Manuel Morales a la voz, Josué Díaz al bajo y coros, Alberto Herrera a la guitarra, piano y coros, Álvaro Blanco a la guitarra y Joaquín Moreno a la batería y percusión. \r\n\r\nLas primeras grabaciones reflejan un rock duro, compuesto por canciones rápidas y contundentes, incluso con mensajes reivindicativos; un estilo típico de un grupo de amigos jóvenes que se juntan para tocar. Con el paso de los años, se fue produciendo un cambio de sonido, motivado en parte por la mezcla de estilos que cada miembro aportaba, desde el rock español más clásico por parte de Josué, hasta pequeñas pinceladas de rock progresivo por parte de Álvaro, pasando incluso por el jazz introducido por Alberto, el pianista. \r\n\r\nEn abril de 2013 presentaron en el Teatro Calderón de Motril su primer trabajo autoproducido, \'No Nos Pararán\', más una serie de temas inéditos. Tras este concierto, dieron una amplia gira de verano por distintos locales de la Costa Tropical Granadina, para, a finales de ese mismo año, volver a entrar al estudio a grabar otros 4 temas bajo el título de \'Hasta Siempre\'. Tras esto, hubo un largo período de conciertos y de intensa búsqueda musical para evolucionar en su sonido, lo que les llevaría a grabar su primer disco, \'Multipolar\', con 10 temas, que verá la luz en 2019.', 'lasudadera', 'lasudadera@gmail.com', 1, '../media/img_grupos/lasudadera@gmail.com/lasudadera@gmail.com.jpg', '../media/img_grupos/lasudadera@gmail.com/lasudadera@gmail.comavatar.jpg', 0, 0),
 (19, 'Pink Floyd', 'Pink Floyd es una banda de rock británica, fundada en Londres en 1965. Considerada un icono cultural del siglo XX y una de las bandas más influyentes, exitosas y aclamadas en la historia de la música popular, obtuvo gran popularidad dentro del circuito underground gracias a su música psicodélica y espacial, que con el paso del tiempo evolucionó hacia el rock progresivo y el rock sinfónico adquiriendo la popularidad con la que hoy son recordados. Es conocida por sus canciones de alto contenido filosófico, a veces de crítica política, junto a la experimentación sonora, las innovadoras portadas de sus discos y sus elaborados espectáculos en vivo. Sus ventas sobrepasan los 280 millones de álbumes vendidos en todo el mundo,​ 97,5 millones de ellos solamente en los Estados Unidos,​ convirtiéndose en una de las bandas con más ventas en la historia.\r\n\r\nInicia', 'pinkfloyd', 'pinkfloyd@gmail.com', 1, '../media/img_grupos/pinkfloyd@gmail.com/pinkfloyd@gmail.com.jpg', '../media/img_grupos/pinkfloyd@gmail.com/pinkfloyd@gmail.comavatar.jpg', 0, 0),
@@ -1316,41 +1349,86 @@ INSERT INTO `lista` (`id`, `nombre`, `foto`, `fecha_creacion`, `usuario`) VALUES
 (12, 'Mornings', '../media/img_users/cydonia8/cydonia8lista.webp', '2023-05-16', 1),
 (13, 'Awachupin', '../media/img_users/cydonia8/cydonia8lista13.jpeg', '2023-05-16', 1),
 (53, 'Across the sky', '../media/img_users/cydonia8/cydonia8lista3.webp', '2023-06-08', 1),
-(56, 'songs for painting', '../media/img_users/painteater/painteaterlista1.webp', '2023-06-11', 8);
+(56, 'songs for painting', '../media/img_users/painteater/painteaterlista1.webp', '2023-06-11', 8),
+(60, 'prueba', '../media/img_users/cydonia8/cydonia8lista4.jpg', '2023-08-13', 1),
+(61, 'Lista1', '../media/img_users/feldespato/feldespatolista1.jpg', '2023-08-17', 10);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `mensaje`
+-- Estructura de tabla para la tabla `member_receives_message`
 --
 
-CREATE TABLE `mensaje` (
-  `id` int(4) NOT NULL,
-  `contenido` varchar(500) NOT NULL,
-  `fecha` date DEFAULT NULL,
-  `grupo` int(4) DEFAULT NULL
+CREATE TABLE `member_receives_message` (
+  `usuario` int(4) NOT NULL,
+  `mensaje` int(4) NOT NULL,
+  `estado` tinyint(1) DEFAULT 0 CHECK (`estado` >= 0 and `estado` <= 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `member_receives_message`
+--
+
+INSERT INTO `member_receives_message` (`usuario`, `mensaje`, `estado`) VALUES
+(8, 20, 0),
+(8, 21, 0),
+(10, 20, 0),
+(10, 21, 1);
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `mensajes_promotores`
+-- Estructura de tabla para la tabla `patrons`
 --
 
-CREATE TABLE `mensajes_promotores` (
-  `id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `promotores`
---
-
-CREATE TABLE `promotores` (
+CREATE TABLE `patrons` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(30) NOT NULL
+  `name` varchar(30) NOT NULL,
+  `foto_avatar` varchar(300) NOT NULL DEFAULT '../media/image_user_default.png',
+  `mail` varchar(50) NOT NULL,
+  `pass` varchar(300) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `awaiting_activation` tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `patrons`
+--
+
+INSERT INTO `patrons` (`id`, `name`, `foto_avatar`, `mail`, `pass`, `active`, `awaiting_activation`) VALUES
+(1, 'mecena1', '../media/image_user_default.png', 'mecena@gmail.com', '580fd9eb3ea77a8d43eb5c5c6517eba6', 0, 1),
+(2, 'mecena2', '../media/image_patrons/mecena2@gmail.com/mecena2@gmail.com_avatar.jpg', 'mecena2@gmail.com', 'c462d1e17e32a8c6b2d0b972722dce3f', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `patrons_messages`
+--
+
+CREATE TABLE `patrons_messages` (
+  `id` int(11) NOT NULL,
+  `sender` varchar(20) NOT NULL,
+  `receiver` varchar(20) NOT NULL,
+  `content` varchar(1000) NOT NULL,
+  `m_date` datetime NOT NULL,
+  `patron` int(3) NOT NULL,
+  `artist` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `patrons_messages`
+--
+
+INSERT INTO `patrons_messages` (`id`, `sender`, `receiver`, `content`, `m_date`, `patron`, `artist`) VALUES
+(10, 'patron', 'artist', 'dsds', '2023-08-20 14:18:32', 2, 21),
+(11, 'patron', 'artist', 'Dream Theater es una banda estadounidense de metal progresivo, formada en 1985 con el nombre de Majesty por Mike Portnoy, John Myung y John Petrucci durante su estadía en el Berklee College of Music de Massachusetts. Poco a poco, fueron dejando sus estudios para dedicar más atención a la banda que terminaría llamándose Dream Theater. A pesar de que se sucedieron algunos cambios en la formación inicial, los tres miembros originales permanecieron junto a James LaBrie y Jordan Rudess hasta el 8 de septiembre de 2010, cuando Portnoy abandonó el grupo. En octubre de ese mismo año, la banda organizó unas audiciones para el reemplazo del puesto de batería. El 29 de abril de 2011 se reveló que Mike Mangini sería el nuevo baterista permanente del grupo.\r\n\r\nLa banda es conocida por el virtuosismo técnico de sus instrumentistas, quienes han ganado numerosos premios a lo largo de su carrera. John Petrucci ha sido elegido como el tercer guitarrista de la gira G3 en seis ocasiones, más que ningún ot', '2023-08-20 14:34:43', 2, 38),
+(12, 'patron', 'artist', 'prueba de mensajes a grupo', '2023-08-20 15:18:55', 2, 13),
+(13, 'patron', 'artist', 'segunda prueba', '2023-08-20 19:24:12', 2, 21),
+(14, 'patron', 'artist', 'segunda prueba genesis', '2023-08-20 19:24:45', 2, 13),
+(15, 'artist', 'patron', 'que os den, ratas', '2023-08-20 19:30:23', 2, 13),
+(16, 'patron', 'artist', 'sois unos guiris de mierda', '2023-08-20 19:54:40', 2, 13),
+(17, 'artist', 'patron', 'cxcx', '2023-08-20 19:54:58', 2, 13),
+(18, 'artist', 'patron', 'este color ta mas bonico', '2023-08-20 20:20:43', 2, 13);
 
 -- --------------------------------------------------------
 
@@ -1378,19 +1456,9 @@ INSERT INTO `publicacion` (`id`, `contenido`, `foto`, `titulo`, `fecha`, `grupo`
 (24, 'Los enmascarados Imperial Triumphant nos han sorprendido con una peculiar versión de ‘Paranoid Android’, el clásico de OK Computer de Radiohead. El vídeo animado que lo acompaña inspirado en Metropolis de Fritz Lang es igual de alucinante.\r\n\r\n«Somos grandes admiradores de Radiohead y su manera de trabajar», ha comentado el vocalista y guitarrista Zachary Ezrin. «Creemos que Radiohead tienen un enfoque diverso y único para la creación de canciones y el lirismo que siempre nos ha atraído, y la canción ‘Paranoid Android’ presenta un lienzo perfecto para que juguemos y creemos… Fue un placer reinterpretando este gran clásico del rock, y esperamos que lo encontréis inmensamente placentero».', '../media/img_posts/radiohead@gmail.com/fotoPrincipalpost24.webp', 'Imperial Triumphant comparten una versión de ‘Paranoid Androdid’ de Radiohead', '2023-07-12', 25),
 (25, 'En el año 1993, una parte importante de la juventud occidental no estaba muy animada. La música grunge todavía sonaba a todo volumen en las habitaciones de adolescentes vestidos con camisas de cuadros y pelo desordenado que vivían sumidos en la angustia y la desesperanza. Toda esa energía se tradujo en una buena lista de álbumes en la que, además de clásicos como el In Utero de Nirvana o el Siamese Dream de Smashing Pumpkins, se encuentra el Pablo Honey de Radiohead. Fue el disco con el que se dieron a conocer, y también el que, contra todo pronóstico, les llevó al estrellato hace justo treinta años gracias a un tema que todo el mundo conoce: Creep.\n\nSin embargo, tuvo que pasar un tiempo entre su aparición en la escena y los conciertos a rebosar a lo largo del mundo. Porque ese primer disco, que poco tiene que ver con sus sucesores, no tuvo un éxito fulgurante. “Todo fue mucho más lento de lo que da la sensación”, dice Joan S. Luna, jefe de redacción de Mondosonoro, a este periódico. Era su primer álbum y contenía un hit pero, en aquel momento, “nadie hablaba del gran grupo que iba a cambiar la historia del pop rock del Reino Unido y todo lo que llegaría después. Fundamentalmente porque con aquel disco no iban a conseguirlo. Se les vio como una suerte de réplica británica de la fórmula Pixies/Nirvana, aderezado con un sonido más pulido a lo U2 de los primeros tiempos”, sostiene.', '../media/img_posts/radiohead@gmail.com/fotoPrincipalpost25.jpg', 'Radiohead, 30 años siendo los raros de la clase', '2023-06-07', 25),
 (26, 'La Sudadera del Manager anuncia que tocará el próximo sábado 17 de junio a partir de las 10 de la noche en la Sala Partium, situada en la calle Melchor Almagro nº4 en Granada.\r\n\r\nA continuación os dejamos una lista de las personas que tienen pase VIP para el concierto:\r\n\r\nInmaculada Montejano Seco\r\nAitor Fernández Arguiñano \r\nMiguel Manzano.\r\n\r\nEntrada prohibida a:\r\n\r\nJosé María Escalera\r\n', '../media/img_posts/lasudadera@gmail.com/fotoPrincipalpost26.jpg', 'La Sudadera Del Manager anuncia concierto el 17 de junio en el Pub Partium', '2023-06-13', 17),
-(27, 'Tenacious D ha publicado un videoclip para estrenar su versión de “Wicked Game”, clásico lanzado por Chris Isaak en 1990 y popularizado también por HIM en 1997.\r\n\r\nPor supuesto, Tenacious D nos tiene que hacer reír de alguna forma y, por eso, han parodiado el estilo de los videoclips de Isaak, que llegaron a ser reconocidos como algunos de los más sexys jamás grabados. Por eso, Jack Black y Kyle Gass, bien fofisanos, nos muestran, corriendo a cámara lenta por la playa, que ellos también pueden deleitarnos con su imagen. En el videolcip original, Isaak aparecía en la playa junto a la modelo Helena Christensen.', '../media/img_posts/tenaciousd@gmail.com/fotoPrincipalpost27.jpg', 'Tenacious D publica una gloriosa versión de “Wicked Game”', '2023-06-12', 32);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `recibe`
---
-
-CREATE TABLE `recibe` (
-  `usuario` int(4) NOT NULL,
-  `mensaje` int(4) NOT NULL,
-  `estado` tinyint(1) DEFAULT 0 CHECK (`estado` >= 0 and `estado` <= 1)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(27, 'Tenacious D ha publicado un videoclip para estrenar su versión de “Wicked Game”, clásico lanzado por Chris Isaak en 1990 y popularizado también por HIM en 1997.\r\n\r\nPor supuesto, Tenacious D nos tiene que hacer reír de alguna forma y, por eso, han parodiado el estilo de los videoclips de Isaak, que llegaron a ser reconocidos como algunos de los más sexys jamás grabados. Por eso, Jack Black y Kyle Gass, bien fofisanos, nos muestran, corriendo a cámara lenta por la playa, que ellos también pueden deleitarnos con su imagen. En el videolcip original, Isaak aparecía en la playa junto a la modelo Helena Christensen.', '../media/img_posts/tenaciousd@gmail.com/fotoPrincipalpost27.jpg', 'Tenacious D publica una gloriosa versión de “Wicked Game”', '2023-06-12', 32),
+(29, 'dasdsadasd', '../media/img_posts//fotoPrincipalpost29.jpg', 'aaa', '2023-05-12', 13),
+(30, 'dasdsadasd', '../media/img_posts/genesis@genesis.com/fotoPrincipalpost30.jpg', 'aaa', '2023-05-12', 13);
 
 -- --------------------------------------------------------
 
@@ -1424,7 +1492,10 @@ INSERT INTO `reseña` (`id`, `titulo`, `contenido`, `fecha`, `usuario`, `album`)
 (30, 'Obra maestra de los de Devon', 'Este álbum contiene todo lo que hace que la gente ame a Muse. Sin duda una banda revolucionaria a tener en cuenta.', '2023-06-07', 1, 105),
 (32, 'Mi madre ha entrado mientras veía el videoclip.', 'Ahora no sabe qué pensar de mí, le he dicho que es sólo música pero se piensa que tengo alguna especie de obsesión con los señores mayores. Por favor, ayudadme.', '2023-06-11', 1, 126),
 (33, 'Pero qué dice el tonto de abajo', 'Que sí, que el álbum está guapo fiera pero tampoco te flipes. Voy a gastar mi comentario sólo para meterme contigo, acaso hay algo más español?', '2023-06-11', 8, 61),
-(34, 'Buen disco', 'Esta gente toca de puta madre.', '2023-06-14', 1, 68);
+(34, 'Buen disco', 'Esta gente toca de puta madre.', '2023-06-14', 1, 68),
+(35, 'que bonico', 'y que bien suena', '2023-08-13', NULL, 133),
+(36, 'bonico', 'bonico', '2023-08-13', 1, 133),
+(37, 'cfasa', 'dsfasfas', '2023-08-17', 10, 31);
 
 -- --------------------------------------------------------
 
@@ -1459,8 +1530,8 @@ INSERT INTO `usuario` (`id`, `nombre`, `apellidos`, `usuario`, `pass`, `foto_ava
 (1, 'Pakito', 'Gutierrez', 'cydonia8', 'ede94ef301964849f8c40564943bbd13', '../media/img_users/cydonia8/cydonia8avatar.jpeg', 'alvaro@gmail.com', '1996-07-17', -12.96, 12.91, -24.38, 14.48, -0.98, 13, 21),
 (5, 'John', 'Petrucci', 'jpetrucci', '36cc27d277e52a7a674a820d303586a8', '../media/img_users/jpetrucci/jpetrucciavatar.jpeg', 'jpetrucci@gmail.com', '2023-05-18', NULL, NULL, NULL, NULL, NULL, 2, 21),
 (6, 'Paul', 'McCartney', 'pmccartney', '8b7497c7394491548a338f78608ac283', '../media/img_users/pmccartney/pmccartneyavatar.jpeg', 'pmccartney@gmail.com', '2023-05-19', NULL, NULL, NULL, NULL, NULL, 4, 25),
-(8, 'Will', 'Paint', 'painteater', '6c15519f6ad015b47156dc38875ad53d', '../media/img_users/painteater/painteateravatar.png', 'paint@gmail.com', '1945-12-12', NULL, NULL, NULL, NULL, NULL, 12, 0),
-(10, 'Feldespato', 'Wild', 'feldespato', 'd994ac901c2b818714430acb7a85f8aa', '../media/img_users/feldespato/feldespatoavatar.jpeg', 'feldespato@gmail.com', '1998-02-04', NULL, NULL, NULL, NULL, NULL, 16, 0);
+(8, 'Will', 'Paint', 'painteater', '6c15519f6ad015b47156dc38875ad53d', '../media/img_users/painteater/painteateravatar.png', 'paint@gmail.com', '1945-12-12', NULL, NULL, NULL, NULL, NULL, 12, 13),
+(10, 'Feldespato', 'Wild', 'feldespato', 'd994ac901c2b818714430acb7a85f8aa', '../media/img_users/feldespato/feldespatoavatar.jpeg', 'feldespato@gmail.com', '1998-02-04', NULL, NULL, NULL, NULL, NULL, 16, 13);
 
 --
 -- Índices para tablas volcadas
@@ -1472,6 +1543,13 @@ INSERT INTO `usuario` (`id`, `nombre`, `apellidos`, `usuario`, `pass`, `foto_ava
 ALTER TABLE `album`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ce_alb_gru` (`grupo`);
+
+--
+-- Indices de la tabla `artist_receives_message`
+--
+ALTER TABLE `artist_receives_message`
+  ADD PRIMARY KEY (`artist`,`message`),
+  ADD KEY `ce_artm_patm` (`message`);
 
 --
 -- Indices de la tabla `cancion`
@@ -1523,6 +1601,13 @@ ALTER TABLE `foto_publicacion`
   ADD KEY `ce_fotpubl_publ` (`publicacion`);
 
 --
+-- Indices de la tabla `group_messages`
+--
+ALTER TABLE `group_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ce_mens_gru` (`group`);
+
+--
 -- Indices de la tabla `grupo`
 --
 ALTER TABLE `grupo`
@@ -1544,23 +1629,26 @@ ALTER TABLE `lista`
   ADD KEY `ce_list_usu` (`usuario`);
 
 --
--- Indices de la tabla `mensaje`
+-- Indices de la tabla `member_receives_message`
 --
-ALTER TABLE `mensaje`
+ALTER TABLE `member_receives_message`
+  ADD PRIMARY KEY (`usuario`,`mensaje`),
+  ADD KEY `ce_rec_mens` (`mensaje`);
+
+--
+-- Indices de la tabla `patrons`
+--
+ALTER TABLE `patrons`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `ce_mens_gru` (`grupo`);
+  ADD UNIQUE KEY `mail` (`mail`);
 
 --
--- Indices de la tabla `mensajes_promotores`
+-- Indices de la tabla `patrons_messages`
 --
-ALTER TABLE `mensajes_promotores`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `promotores`
---
-ALTER TABLE `promotores`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `patrons_messages`
+  ADD PRIMARY KEY (`id`,`patron`,`artist`),
+  ADD KEY `ce_patm_pat` (`patron`),
+  ADD KEY `ce_patm_gr` (`artist`);
 
 --
 -- Indices de la tabla `publicacion`
@@ -1568,13 +1656,6 @@ ALTER TABLE `promotores`
 ALTER TABLE `publicacion`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ce_publ_gru` (`grupo`);
-
---
--- Indices de la tabla `recibe`
---
-ALTER TABLE `recibe`
-  ADD PRIMARY KEY (`usuario`,`mensaje`),
-  ADD KEY `ce_rec_mens` (`mensaje`);
 
 --
 -- Indices de la tabla `reseña`
@@ -1625,13 +1706,19 @@ ALTER TABLE `estilo`
 -- AUTO_INCREMENT de la tabla `foto_grupo`
 --
 ALTER TABLE `foto_grupo`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `foto_publicacion`
 --
 ALTER TABLE `foto_publicacion`
   MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT de la tabla `group_messages`
+--
+ALTER TABLE `group_messages`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `grupo`
@@ -1643,37 +1730,31 @@ ALTER TABLE `grupo`
 -- AUTO_INCREMENT de la tabla `lista`
 --
 ALTER TABLE `lista`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
--- AUTO_INCREMENT de la tabla `mensaje`
+-- AUTO_INCREMENT de la tabla `patrons`
 --
-ALTER TABLE `mensaje`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `patrons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `mensajes_promotores`
+-- AUTO_INCREMENT de la tabla `patrons_messages`
 --
-ALTER TABLE `mensajes_promotores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `promotores`
---
-ALTER TABLE `promotores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `patrons_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `reseña`
 --
 ALTER TABLE `reseña`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -1690,6 +1771,13 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `album`
   ADD CONSTRAINT `ce_alb_gru` FOREIGN KEY (`grupo`) REFERENCES `grupo` (`id`);
+
+--
+-- Filtros para la tabla `artist_receives_message`
+--
+ALTER TABLE `artist_receives_message`
+  ADD CONSTRAINT `ce_artm_art` FOREIGN KEY (`artist`) REFERENCES `grupo` (`id`),
+  ADD CONSTRAINT `ce_artm_patm` FOREIGN KEY (`message`) REFERENCES `patrons_messages` (`id`);
 
 --
 -- Filtros para la tabla `cancion`
@@ -1724,6 +1812,12 @@ ALTER TABLE `foto_publicacion`
   ADD CONSTRAINT `ce_fotpubl_publ` FOREIGN KEY (`publicacion`) REFERENCES `publicacion` (`id`);
 
 --
+-- Filtros para la tabla `group_messages`
+--
+ALTER TABLE `group_messages`
+  ADD CONSTRAINT `ce_mens_gru` FOREIGN KEY (`group`) REFERENCES `grupo` (`id`);
+
+--
 -- Filtros para la tabla `grupo`
 --
 ALTER TABLE `grupo`
@@ -1743,23 +1837,24 @@ ALTER TABLE `lista`
   ADD CONSTRAINT `ce_list_usu` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`id`);
 
 --
--- Filtros para la tabla `mensaje`
+-- Filtros para la tabla `member_receives_message`
 --
-ALTER TABLE `mensaje`
-  ADD CONSTRAINT `ce_mens_gru` FOREIGN KEY (`grupo`) REFERENCES `grupo` (`id`);
+ALTER TABLE `member_receives_message`
+  ADD CONSTRAINT `ce_rec_mens` FOREIGN KEY (`mensaje`) REFERENCES `group_messages` (`id`),
+  ADD CONSTRAINT `ce_rec_usu` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `patrons_messages`
+--
+ALTER TABLE `patrons_messages`
+  ADD CONSTRAINT `ce_patm_gr` FOREIGN KEY (`artist`) REFERENCES `grupo` (`id`),
+  ADD CONSTRAINT `ce_patm_pat` FOREIGN KEY (`patron`) REFERENCES `patrons` (`id`);
 
 --
 -- Filtros para la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
   ADD CONSTRAINT `ce_publ_gru` FOREIGN KEY (`grupo`) REFERENCES `grupo` (`id`);
-
---
--- Filtros para la tabla `recibe`
---
-ALTER TABLE `recibe`
-  ADD CONSTRAINT `ce_rec_mens` FOREIGN KEY (`mensaje`) REFERENCES `mensaje` (`id`),
-  ADD CONSTRAINT `ce_rec_usu` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `reseña`

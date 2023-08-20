@@ -17,8 +17,8 @@
         $foto_avatar_correcta = checkPhoto("foto-avatar");
         
         if($foto_correcta and $foto_avatar_correcta){
-            $foto_avatar = newPhotoPath("foto-avatar", "avatar");
-            $foto = newPhotoPath("foto", "");
+            $foto_avatar = newPhotoPath("foto-avatar", "avatar", $user);
+            $foto = newPhotoPath("foto", "", $user);
             completeInformation($user, $_POST["bio"], $foto, $foto_avatar);
         }
         
@@ -26,7 +26,7 @@
     if(isset($_POST["actualizar-avatar"])){
         $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
         if($foto_avatar_correcta){
-            $foto_avatar = newPhotoPath("foto-avatar-nueva", "avatar");
+            $foto_avatar = newPhotoPath("foto-avatar-nueva", "avatar", $user);
             updateAvatarPhoto($user, $foto_avatar);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía de avatar actualizada correctamente
@@ -39,7 +39,7 @@
     }elseif(isset($_POST["actualizar-foto"])){
         $foto_correcta = checkPhoto("foto-nueva");
         if($foto_correcta){
-            $foto = newPhotoPath("foto-nueva", "");
+            $foto = newPhotoPath("foto-nueva", "", $user);
             updateMainPhoto($user, $foto);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía principal actualizada correctamente
@@ -70,7 +70,7 @@
         if(is_array($_FILES["fotos"])){
             $total = 0;       
             $cont = 0;
-            $id_grupo = getGroupID($_SESSION["user"]);
+            $id_grupo = getGroupID($user);
             foreach($_FILES["fotos"]["tmp_name"] as $key => $tmp_name){
                 // var_dump($foto_op);
                 $file_name = $_FILES['fotos']['name'][$key];
@@ -82,10 +82,10 @@
                     $total++;
                     if($correct){
                         $cont++;
-                        $check_limit = checkPhotoLimit($_SESSION["user"]);
+                        $check_limit = checkPhotoLimit($user);
                         if($check_limit < 8){
                             $id_foto = getAutoID("foto_grupo");
-                            $ruta = newGroupPhotoPath($id_foto, $file_type, $file_tmp);
+                            $ruta = newGroupPhotoPath($id_foto, $file_type, $file_tmp, $user);
                             addGroupExtraPhoto($ruta, $id_grupo);                    
                         }else{
                             $limite_alcanzado = true;

@@ -271,26 +271,26 @@
         return $correcto;
     }
 
-    function newPhotoPath($nombre, $tipo){
+    function newPhotoPath($nombre, $tipo, $user){
         $nuevo_nombre;
         switch($_FILES[$nombre]["type"]){
             case "image/jpeg":
-                $nuevo_nombre = $_SESSION["user"].$tipo.".jpg";
+                $nuevo_nombre = $user.$tipo.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = $_SESSION["user"].$tipo.".png";
+                $nuevo_nombre = $user.$tipo.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = $_SESSION["user"].$tipo.".gif";
+                $nuevo_nombre = $user.$tipo.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = $_SESSION["user"].$tipo.".webp";
+                $nuevo_nombre = $user.$tipo.".webp";
                 break;
         }
-        if(!file_exists("../media/img_grupos/".$_SESSION["user"])){
-            mkdir("../media/img_grupos/".$_SESSION["user"], 0777, true);
+        if(!file_exists("../media/img_grupos/".$user)){
+            mkdir("../media/img_grupos/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_grupos/".$_SESSION["user"]."/".$nuevo_nombre;
+        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
         move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
         return $nueva_ruta;
     }
@@ -300,7 +300,7 @@
         $arreglado = strtolower(str_replace($quitar, "", $nombre));
         return $arreglado;
     }
-    function newPhotoPathAlbum($nombre, $album){
+    function newPhotoPathAlbum($nombre, $album, $user){
         $nuevo_nombre;
         $quitar = ["/", ".", "*","'",":", "?", "(", ")"];
         $album = strtolower(str_replace($quitar, "", $album));
@@ -322,11 +322,11 @@
                 $nuevo_nombre = $album.".webp";
                 break;
         }
-        if(!file_exists("../media/img_grupos/".$_SESSION["user"])){
-            mkdir("../media/img_grupos/".$_SESSION["user"], 0777, true);
+        if(!file_exists("../media/img_grupos/".$user)){
+            mkdir("../media/img_grupos/".$user, 0777, true);
         }
 
-        $nueva_ruta = "../media/img_grupos/".$_SESSION["user"]."/".$nuevo_nombre;
+        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
         move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
         return $nueva_ruta;
     }
@@ -521,7 +521,7 @@
         return $correcto;
     }
 
-    function newPhotoPathPost($tipo, $num_foto, $id_post, $ruta_serv){
+    function newPhotoPathPost($tipo, $num_foto, $id_post, $ruta_serv, $user){
         $nuevo_nombre;
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
@@ -540,15 +540,15 @@
                 $nuevo_nombre = "foto".$num_foto."post".$id_post.".webp";
                 break;
         }
-        if(!file_exists("../media/img_posts/".$_SESSION["user"])){
-            mkdir("../media/img_posts/".$_SESSION["user"], 0777, true);
+        if(!file_exists("../media/img_posts/".$user)){
+            mkdir("../media/img_posts/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_posts/".$_SESSION["user"]."/".$nuevo_nombre;
+        $nueva_ruta = "../media/img_posts/".$user."/".$nuevo_nombre;
         move_uploaded_file($ruta_serv, $nueva_ruta);
         return $nueva_ruta;
     }
 
-    function newMainPhotoPathPost($id_post){
+    function newMainPhotoPathPost($id_post, $user){
         $nuevo_nombre;
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
@@ -567,10 +567,10 @@
                 $nuevo_nombre = "fotoPrincipalpost".$id_post.".webp";
                 break;
         }
-        if(!file_exists("../media/img_posts/".$_SESSION["user"])){
-            mkdir("../media/img_posts/".$_SESSION["user"], 0777, true);
+        if(!file_exists("../media/img_posts/".$user)){
+            mkdir("../media/img_posts/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_posts/".$_SESSION["user"]."/".$nuevo_nombre;
+        $nueva_ruta = "../media/img_posts/".$user."/".$nuevo_nombre;
         move_uploaded_file($_FILES["foto"]["tmp_name"], $nueva_ruta);
         return $nueva_ruta;
     }
@@ -582,26 +582,26 @@
         $insert->execute();
     }
 
-    function newGroupPhotoPath($num, $tipo, $tmp){
+    function newGroupPhotoPath($num, $tipo, $tmp, $user){
         $nuevo_nombre;
         switch($tipo){
             case "image/jpeg":
-                $nuevo_nombre = $_SESSION["user"]."fotoextra".$num.".jpg";
+                $nuevo_nombre = $user."fotoextra".$num.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = $_SESSION["user"]."fotoextra".$num.".png";
+                $nuevo_nombre = $user."fotoextra".$num.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = $_SESSION["user"]."fotoextra".$num.".gif";
+                $nuevo_nombre = $user."fotoextra".$num.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = $_SESSION["user"]."fotoextra".$num.".webp";
+                $nuevo_nombre = $user."fotoextra".$num.".webp";
                 break;
         }
-        if(!file_exists("../media/img_grupos/".$_SESSION["user"])){
-            mkdir("../media/img_grupos/".$_SESSION["user"], 0777, true);
+        if(!file_exists("../media/img_grupos/".$user)){
+            mkdir("../media/img_grupos/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_grupos/".$_SESSION["user"]."/".$nuevo_nombre;
+        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
         move_uploaded_file($tmp, $nueva_ruta);
         return $nueva_ruta;
     }

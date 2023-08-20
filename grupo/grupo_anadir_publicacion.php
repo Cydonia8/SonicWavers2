@@ -21,7 +21,7 @@
       $nuevo_id = getAutoID("publicacion");
     
       if($foto_correcta){
-        $ruta_princ = newMainPhotoPathPost($nuevo_id);
+        $ruta_princ = newMainPhotoPathPost($nuevo_id, $user);
         addPost($user, $titulo, $contenido, $ruta_princ, $fecha);
         if(is_array($_FILES["fotos"])){
             $total = 0;       
@@ -38,7 +38,7 @@
                     // var_dump($correct);
                     if($correct){
                         $cont++;
-                        $ruta = newPhotoPathPost($file_type, $cont, $nuevo_id, $file_tmp);
+                        $ruta = newPhotoPathPost($file_type, $cont, $nuevo_id, $file_tmp, $user);
                         addPostPhotos($ruta, $nuevo_id);                    
                     }
                 }

@@ -24,7 +24,7 @@
         $foto_correcta = checkPhoto("foto");
 
         if($foto_correcta){
-            $foto = newPhotoPathAlbum("foto", $_POST["nombre"]);
+            $foto = newPhotoPathAlbum("foto", $_POST["nombre"], $user);
             $_SESSION["foto_album"] = $foto;
             // addAlbum($id_grupo, $_POST["nombre"], $foto, $_POST["fecha"], 1);
             echo "<meta http-equiv='refresh' content='0;url=grupo_anadir_canciones.php'>";
