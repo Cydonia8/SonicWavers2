@@ -929,12 +929,14 @@ background: linear-gradient(90deg, rgba(0,0,0,1) 5%, rgba(7,77,119,1) 55%, rgba(
     font-size: 1.2rem;
 }
 div.sender-patron{
-    background-color: #d9fdd3;
+    background-color: #0ac0ee;
     color: black;
+    font-weight: bolder;
     border-radius: 10px;
 }
 div.sender-artist{
     background-color: white;
+    font-weight: bolder;
     color: black;
     border-radius: 10px;
 }

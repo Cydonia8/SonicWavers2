@@ -111,7 +111,7 @@ use Firebase\JWT\JWT;
         $time = time();
         $token = array(
             "iat" => $time, //Moment when token is created
-            "exp" => $time + 3600, //Expiration date of the token
+            "exp" => $time + 7200, //Expiration date of the token
             "data" => [
                 "user" => $mail,
                 "admin" => $is_admin, 
@@ -131,6 +131,7 @@ use Firebase\JWT\JWT;
             return false;
         }catch(ExpiredException $e){
             unset($_SESSION["token"]);
+
             return false;
         }
     }

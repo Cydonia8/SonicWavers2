@@ -12,7 +12,9 @@ use Firebase\JWT\JWT;
     }
 
     function checkTokenIsValid(){
-        
+        if(isset($_SESSION["token"])){
+            $decoded = decodeToken($_SESSION["token"]);
+        }
     }
 
      function imageIndex($ruta){
@@ -37,12 +39,12 @@ use Firebase\JWT\JWT;
             $jwt_dec = JWT::decode($token, new Key($_ENV["SECRET_KEY"], "HS256")); 
             return $jwt_dec;        
         } catch (UnexpectedValueException $e) {
-            echo "No se ha podido validar su sesión";
             unset($_SESSION["token"]);
+            echo "<meta http-equiv='refresh' content='0;url=login/login.php'>";
             return false;
         }catch(ExpiredException $e){
-            echo "Su sesión ha expirado";
             unset($_SESSION["token"]);
+            echo "<meta http-equiv='refresh' content='0;url=login/login.php'>";
             return false;
         }
     }

@@ -4,6 +4,8 @@
   require_once "square_image_creator/create_square_image.php";
   require_once "vendor/autoload.php";
   require_once "php_functions/index_functions.php";
+
+  checkTokenIsValid();
   decodeCookie();
   closeSession($_POST, "index");
 ?>
