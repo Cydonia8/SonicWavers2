@@ -3,27 +3,26 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
 
     $decoded = decodeToken($_SESSION["token"]);
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
-    // sleep(1.4);
 
-    $usuario_consulta = $conexion->prepare("SELECT id from usuario where usuario = ?");
-    $usuario_consulta->bind_param('s', $user);
-    $usuario_consulta->bind_result($user_id);
-    $usuario_consulta->execute();
-    $usuario_consulta->fetch();
-    $usuario_consulta->close();
+    $query_user = $con->prepare("SELECT id from user where username = ?");
+    $query_user->bind_param('s', $user);
+    $query_user->bind_result($user_id);
+    $query_user->execute();
+    $query_user->fetch();
+    $query_user->close();
 
-    $consulta_albumes = $conexion->query("SELECT a.id id, a.foto foto, titulo, g.nombre autor from album a, grupo g, favorito f where a.activo = 1 and f.album = a.id and a.grupo = g.id and f.usuario = $user_id");
-    $datos_albumes = [];
+    $query_albums = $con->query("SELECT a.id id, a.picture picture, title, g.name author from album a, artist g, favorite f where a.active = 1 and f.album = a.id and a.artist = g.id and f.user = $user_id");
+    $data_albums = [];
 
-    while($fila = $consulta_albumes->fetch_array(MYSQLI_ASSOC)){
-        $datos_albumes[] = $fila;
+    while($row = $query_albums->fetch_array(MYSQLI_ASSOC)){
+        $data_albums[] = $row;
     }
-    $datos["albumes"] = $datos_albumes;
+    $data["albums"] = $data_albums;
 
-    $conexion->close();
-    echo json_encode($datos);
+    $con->close();
+    echo json_encode($data);

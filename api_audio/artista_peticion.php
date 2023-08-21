@@ -2,41 +2,40 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     // sleep(1);
     $id = $_GET["id"];
-    $sentencia_grupo = $conexion->query("select nombre, foto, foto_avatar, biografia, discografica from grupo where id = $id");
-    $datos_grupo = [];
+    $query_artist = $con->query("select name, image, avatar, bio from grupo where id = $id");
+    $artist_data = [];
     
-    while($fila = $sentencia_grupo->fetch_array(MYSQLI_ASSOC)){
-        $datos_grupo[] = $fila;
-        $disc = $fila["discografica"];
+    while($row = $query_artist->fetch_array(MYSQLI_ASSOC)){
+        $artist_data[] = $row;
     }
-    $datos['datos_grupo'] = $datos_grupo;
+    $data['artist_data'] = $artist_data;
 
-    // $consulta_canciones = $conexion->query("select titulo, duracion, archivo from cancion c, incluye i where c.id = i.cancion and i.album = $id");
+    // $consulta_canciones = $con->query("select titulo, duracion, archivo from cancion c, incluye i where c.id = i.cancion and i.album = $id");
     // $datos_canciones = [];
-    // while($fila = $consulta_canciones->fetch_array(MYSQLI_ASSOC)){
-    //     $datos_canciones[] = $fila;
+    // while($row = $consulta_canciones->fetch_array(MYSQLI_ASSOC)){
+    //     $datos_canciones[] = $row;
     // }
     // $datos["lista_canciones"] = $datos_canciones;
 
-    $sentencia_discos_grupo = $conexion->query("SELECT titulo, foto, id from album where activo = 1 and grupo = $id");
-    $datos_discos = [];
+    $query_artist_albums = $con->query("SELECT title, picture, id from album where active = 1 and artist = $id");
+    $album_data = [];
 
-    while($fila = $sentencia_discos_grupo->fetch_array(MYSQLI_ASSOC)){
-        $datos_discos[] = $fila;
+    while($row = $query_artist_albums->fetch_array(MYSQLI_ASSOC)){
+        $album_data[] = $row;
     }
-    $datos["discos_grupo"] = $datos_discos;
+    $data["artist_albums"] = $album_data;
 
-        $sentencia_publicaciones = $conexion->query("SELECT id, contenido, titulo, foto, fecha from publicacion where grupo = $id");
-        $datos_publicaciones = [];
+        $query_posts = $con->query("SELECT id, content, title, image, p_date from posts where artist = $id");
+        $posts_data = [];
 
-        while($fila = $sentencia_publicaciones->fetch_array(MYSQLI_ASSOC)){
-            $datos_publicaciones[] = $fila;
+        while($row = $query_posts->fetch_array(MYSQLI_ASSOC)){
+            $posts_data[] = $row;
         }
-        $datos["publicaciones_grupo"] = $datos_publicaciones;
+        $data["artist_posts"] = $posts_data;
 
 
-    echo json_encode($datos);
-    $conexion->close();
+    echo json_encode($data);
+    $con->close();

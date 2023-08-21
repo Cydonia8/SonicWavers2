@@ -2,29 +2,29 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     // sleep(1);
     
-    $contexto = $_GET["contexto"];
+    $context = $_GET["contexto"];
     $id = $_GET["id"];
-    if($contexto == "album"){
-        $sentencia_lista = $conexion->query("select a.id album_id, archivo, g.nombre autor, a.foto caratula, c.titulo titulo, c.id cancion_id from cancion c, incluye i, album a, grupo g where i.cancion = c.id and a.id = i.album and a.grupo = g.id and i.album = $id");
-        $datos_lista = [];
+    if($context == "album"){
+        $query_playlist = $con->query("select a.id album_id, file, g.name author, a.picture picture, c.title title, c.id song_id from songs c, album_contains i, album a, artist g where i.song = c.id and a.id = i.album and a.artist = g.id and i.album = $id");
+        $playlist_data = [];
         
-        while($fila = $sentencia_lista->fetch_array(MYSQLI_ASSOC)){
-            $datos_lista[] = $fila;
+        while($row = $query_playlist->fetch_array(MYSQLI_ASSOC)){
+            $playlist_data[] = $row;
         }
-        $datos['lista_canciones'] = $datos_lista;
+        $data['songlist'] = $playlist_data;
     }else{
-        $sentencia_lista = $conexion->query("select a.id album_id, archivo, g.nombre autor, a.foto caratula, c.titulo titulo, c.id cancion_id from cancion c, contiene co, album a, grupo g, incluye i where co.cancion = c.id and a.id = i.album and a.grupo = g.id and i.cancion = c.id and co.lista = $id and a.activo = 1 group by c.id order by orden asc");
-        $datos_lista = [];
+        $query_playlist = $con->query("select a.id album_id, file, g.name author, a.picture picture, c.title title, c.id song_id from songs c, playlist_includes co, album a, artist g, album_contains i where co.song = c.id and a.id = i.album and a.artist = g.id and i.song = c.id and co.playlist = $id and a.active = 1 group by c.id order by order asc");
+        $playlist_data = [];
 
-        while($fila = $sentencia_lista->fetch_array(MYSQLI_ASSOC)){
-            $datos_lista[] = $fila;
+        while($row = $query_playlist->fetch_array(MYSQLI_ASSOC)){
+            $playlist_data[] = $row;
         }
-        $datos["lista_canciones"] = $datos_lista;
+        $data["songlist"] = $playlist_data;
     }
     
 
-    echo json_encode($datos);
-    $conexion->close();
+    echo json_encode($data);
+    $con->close();

@@ -2,44 +2,44 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $patron = $_GET["patron"];
-    $patron_formateado = '%'.$patron.'%';
-    $busqueda_grupos = $conexion->prepare("SELECT id, nombre, foto_avatar, discografica from grupo where activo = 1 and nombre like ?");
-    $busqueda_grupos->bind_param('s', $patron_formateado);
-    $busqueda_grupos->execute();
-    $resultado_grupos = $busqueda_grupos->get_result();
-    $coincidencias_grupo = [];
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $pattern = $_GET["patron"];
+    $formated_pattern = '%'.$pattern.'%';
+    $artist_query = $con->prepare("SELECT id, name, avatar from artist where active = 1 and name like ?");
+    $artist_query->bind_param('s', $formated_pattern);
+    $artist_query->execute();
+    $artist_results = $artist_query->get_result();
+    $artist_matches = [];
 
-    while($fila = $resultado_grupos->fetch_assoc()){
-        $coincidencias_grupo[] = $fila;
+    while($row = $artist_results->fetch_assoc()){
+        $artist_matches[] = $row;
     }
-    $datos["grupos"] = $coincidencias_grupo;
-    $busqueda_grupos->close();
+    $data["artists"] = $artist_matches;
+    $artist_query->close();
 
-    $busqueda_albumes = $conexion->prepare("SELECT a.id id, a.foto foto, titulo, g.nombre grupo from album a, grupo g where a.grupo = g.id and a.activo = 1 and a.titulo like ?");
-    $busqueda_albumes->bind_param('s', $patron_formateado);
-    $busqueda_albumes->execute();
-    $resultado_albumes = $busqueda_albumes->get_result();
-    $coincidencias_albumes = [];
+    $albums_query = $con->prepare("SELECT a.id id, a.picture picture, title, g.name artist from album a, artist g where a.artist = g.id and a.active = 1 and a.title like ?");
+    $albums_query->bind_param('s', $formated_pattern);
+    $albums_query->execute();
+    $albums_results = $albums_query->get_result();
+    $albums_matches = [];
 
-    while($fila = $resultado_albumes->fetch_assoc()){
-        $coincidencias_albumes[] = $fila;
+    while($row = $albums_results->fetch_assoc()){
+        $albums_matches[] = $row;
     }
-    $datos["albumes"] = $coincidencias_albumes;
-    $busqueda_albumes->close();
+    $data["albums"] = $albums_matches;
+    $albums_query->close();
 
-    $busqueda_canciones = $conexion->prepare("SELECT c.id id, archivo, c.titulo titulo, a.foto caratula, g.nombre autor from cancion c, album a, incluye i, grupo g where c.id = i.cancion and a.id = i.album and g.id = a.grupo and a.activo = 1 and c.titulo like ?");
-    $busqueda_canciones->bind_param('s', $patron_formateado);
-    $busqueda_canciones->execute();
-    $resultado_canciones = $busqueda_canciones->get_result();
-    $coincidencias_canciones = [];
+    $songs_query = $con->prepare("SELECT c.id id, file, c.title title, a.picture picture, g.name author from songs c, album a, album_contains i, artist g where c.id = i.song and a.id = i.album and g.id = a.artist and a.active = 1 and c.title like ?");
+    $songs_query->bind_param('s', $formated_pattern);
+    $songs_query->execute();
+    $songs_results = $songs_query->get_result();
+    $songs_matches = [];
 
-    while($fila = $resultado_canciones->fetch_assoc()){
-        $coincidencias_canciones[] = $fila;
+    while($row = $songs_results->fetch_assoc()){
+        $songs_matches[] = $row;
     }
-    $datos["canciones"] = $coincidencias_canciones;
-    $busqueda_canciones->close();
-    $conexion->close();
+    $data["songs"] = $songs_matches;
+    $songs_query->close();
+    $con->close();
 
-    echo json_encode($datos);
+    echo json_encode($data);

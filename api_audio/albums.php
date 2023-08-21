@@ -2,14 +2,15 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     sleep(1);
-    $sentencia = $conexion->query("select a.id id, titulo, a.foto foto, nombre autor from album a, grupo g where a.grupo = g.id");
-    $datos = [];
+    $query = $con->query("select a.id id, title, a.picture picture, name author from album a, artist g where a.artist = g.id");
+    $data = [];
     
-    while($fila = $sentencia->fetch_array(MYSQLI_ASSOC)){
-        $datos[] = $fila;
+    while($row = $query->fetch_array(MYSQLI_ASSOC)){
+        $data[] = $row;
     }
-    $info['datos'] = $datos;
+    $info['data'] = $data;
 
     echo json_encode($info);
+    $con->close();

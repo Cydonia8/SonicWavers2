@@ -4,25 +4,25 @@
     header("Access-Control-Allow-Origin: *");
 
     $id = $_GET["id"];
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
 
-    $delete = $conexion->prepare("DELETE FROM contiene where lista = ?");
+    $delete = $con->prepare("DELETE FROM playlist_includes where playlist = ?");
     $delete->bind_param('i', $id);
     $delete->execute();
     $delete->close();
 
-    $consulta_foto = $conexion->prepare("SELECT foto from lista where id = ?");
-    $consulta_foto->bind_param('i', $id);
-    $consulta_foto->bind_result($foto);
-    $consulta_foto->execute();
-    $consulta_foto->fetch();
-    $consulta_foto->close();
+    $query_image = $con->prepare("SELECT image from playlists where id = ?");
+    $query_image->bind_param('i', $id);
+    $query_image->bind_result($image);
+    $query_image->execute();
+    $query_image->fetch();
+    $query_image->close();
 
-    unlink($foto);
+    unlink($image);
 
-    $delete_lista = $conexion->prepare("DELETE FROM lista where id = ?");
-    $delete_lista->bind_param('i', $id);
-    $delete_lista->execute();
-    $delete_lista->close();
+    $delete_playlist = $con->prepare("DELETE FROM playlists where id = ?");
+    $delete_playlist->bind_param('i', $id);
+    $delete_playlist->execute();
+    $delete_playlist->close();
 
-    $conexion->close();
+    $con->close();
