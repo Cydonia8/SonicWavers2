@@ -17,12 +17,12 @@ use Firebase\JWT\JWT;
     function userNameRepeated($user){
         $exists = true;
         $con = createConnection();
-        $consulta = $con->prepare("SELECT COUNT(*) from USUARIO where usuario = ?");
-        $consulta->bind_param("s", $user);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT COUNT(*) from user where username = ?");
+        $query->bind_param("s", $user);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
 
         if($count == 0){
@@ -51,31 +51,31 @@ use Firebase\JWT\JWT;
     function insertNewUser($user, $name, $surname, $pass, $mail, $style, $group){
         $con = createConnection();
         $pass = md5(md5($pass));
-        $consulta = $con->prepare("INSERT INTO USUARIO (usuario, nombre, apellidos, pass, correo, estilo, grupo) VALUES (?,?,?,?,?,?,?)");
-        $consulta->bind_param("sssssii", $user, $name, $surname, $pass, $mail, $style, $group);
-        $consulta->execute();
-        $consulta->close();
+        $query = $con->prepare("INSERT INTO user (username, name, surname, pass, mail, style, artist) VALUES (?,?,?,?,?,?,?)");
+        $query->bind_param("sssssii", $user, $name, $surname, $pass, $mail, $style, $group);
+        $query->execute();
+        $query->close();
         $con->close();
     }
 
     function insertNewGroup($name, $pass, $mail, $discografica){
         $con = createConnection();
         $pass = md5(md5($pass));
-        $consulta = $con->prepare("INSERT INTO grupo (nombre, pass, correo, discografica) VALUES (?,?,?,?)");
-        $consulta->bind_param("sssi", $name, $pass, $mail, $discografica);
-        $consulta->execute();
-        $consulta->close();
+        $query = $con->prepare("INSERT INTO artist (name, pass, mail) VALUES (?,?,?)");
+        $query->bind_param("sss", $name, $pass, $mail);
+        $query->execute();
+        $query->close();
         $con->close();
     }
 
-    function insertNewDiscographic($nombre, $pass, $mail){
-        $con = createConnection();
-        $consulta = $con->prepare("INSERT INTO discografica (nombre, pass, correo) VALUES (?,?,?)");
-        $consulta->bind_param("sss", $nombre, $pass, $mail);
-        $consulta->execute();
-        $consulta->close();
-        $con->close();
-    }
+    // function insertNewDiscographic($nombre, $pass, $mail){
+    //     $con = createConnection();
+    //     $query = $con->prepare("INSERT INTO discografica (nombre, pass, correo) VALUES (?,?,?)");
+    //     $query->bind_param("sss", $nombre, $pass, $mail);
+    //     $query->execute();
+    //     $query->close();
+    //     $con->close();
+    // }
 
     function insertNewPatron($name, $pass, $mail){
         $con = createConnection();
@@ -89,21 +89,21 @@ use Firebase\JWT\JWT;
     
 
     function loginUser($user, $pass){
-        $accede = false;
+        $enters = false;
         $con = createConnection();
         $pass = md5(md5($pass));
-        $consulta = $con->prepare("SELECT count(*) FROM USUARIO WHERE usuario = ? and pass = ?");
-        $consulta->bind_param("ss", $user, $pass);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) FROM user WHERE username = ? and pass = ?");
+        $query->bind_param("ss", $user, $pass);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
         if($count == 1){
-            $accede = true;
+            $enters = true;
         }
 
-        return $accede;
+        return $enters;
     }
 
     function generateToken($mail, $is_admin, $role){
@@ -155,12 +155,12 @@ use Firebase\JWT\JWT;
         $accede = false;
         $con = createConnection();
         $pass = md5(md5($pass));
-        $consulta = $con->prepare("SELECT count(*) FROM $tabla WHERE correo = ? and pass = ? and activo = 1");
-        $consulta->bind_param("ss", $mail, $pass);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) FROM $tabla WHERE mail = ? and pass = ? and active = 1");
+        $query->bind_param("ss", $mail, $pass);
+        $query->bind_result($count);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
         if($count == 1){
             $accede = true;

@@ -10,20 +10,20 @@
     $user = $decoded["data"]["user"];
 
     closeSession($_POST);
-    $miembros = groupHasMembers($user);
+    $members = groupHasMembers($user);
 
     if(isset($_POST["agregar"])){
-        $usuario = $_POST["usuario"];
+        $newuser = $_POST["usuario"];
         
-        $es_miembro = userIsMember($usuario);
-        $existe = userExists($usuario);
-        if($existe == 1 and $es_miembro == 0){
-            addNewMember($usuario, $user);
+        $is_member = userIsMember($user);
+        $exists = userExists($user);
+        if($exists == 1 and $is_member == 0){
+            addNewMember($newuser, $user);
         }
     }
     elseif(isset($_POST["eliminar-miembro"])){
         $id = $_POST["usuario"];
-        $eliminado = removeMember($id);
+        $deleted = removeMember($id);
     }
 
     if(isset($_POST["send-message"])){
@@ -69,13 +69,13 @@
                     <input type="submit" name="agregar" value="Agregar miembro">
                 </form>
                 <?php
-                    if(isset($existe)){
-                        if($existe == 0){
+                    if(isset($exists)){
+                        if($exists == 0){
                             echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Este usuario no existe en Sonic Waves
                             </div>";
                         }else{
-                            if(isset($es_miembro) and $es_miembro != 0){
+                            if(isset($is_member) and $is_member != 0){
                                 echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Este usuario ya pertenece a otro grupo
                             </div>";
@@ -93,12 +93,12 @@
             <div class="w-50 d-flex flex-column align-items-center gap-3">
                 <h2 class="text-center mb-5">Miembros actuales</h2>
                 <?php
-                    if($miembros == 0){
+                    if($members == 0){
                         echo "<h3 class='text-center'>No hay miembros actualmente</h3>";
                     }else{
                         getGroupMembers($user);
                     }
-                    if(isset($eliminado) and $eliminado){
+                    if(isset($deleted) and $deleted){
                         echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Usuario eliminado correctamente.
                             </div>";
@@ -108,7 +108,7 @@
             </div>
         </div>
         <?php
-            if($miembros != 0){
+            if($members != 0){
                 echo "<div>
                 <h2 class=\"text-center mb-4 mt-4\">Enviar mensaje a miembros</h2>
             </div>

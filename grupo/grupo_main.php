@@ -10,24 +10,24 @@
     $decoded = json_decode(json_encode($decoded), true);
 
     $user = $decoded["data"]["user"];
-    $nombre_grupo = getGroupNameByMail($user);
+    $artist_name = getGroupNameByMail($user);
 
     if(isset($_POST["completar"])){
-        $foto_correcta = checkPhoto("foto");
-        $foto_avatar_correcta = checkPhoto("foto-avatar");
+        $image_ok = checkPhoto("foto");
+        $avatar_ok = checkPhoto("foto-avatar");
         
-        if($foto_correcta and $foto_avatar_correcta){
-            $foto_avatar = newPhotoPath("foto-avatar", "avatar", $user);
-            $foto = newPhotoPath("foto", "", $user);
-            completeInformation($user, $_POST["bio"], $foto, $foto_avatar);
+        if($image_ok and $avatar_ok){
+            $avatar = newPhotoPath("foto-avatar", "avatar", $user);
+            $image = newPhotoPath("foto", "", $user);
+            completeInformation($user, $_POST["bio"], $foto, $avatar);
         }
         
     }
     if(isset($_POST["actualizar-avatar"])){
-        $foto_avatar_correcta = checkPhoto("foto-avatar-nueva");
-        if($foto_avatar_correcta){
-            $foto_avatar = newPhotoPath("foto-avatar-nueva", "avatar", $user);
-            updateAvatarPhoto($user, $foto_avatar);
+        $avatar_ok = checkPhoto("foto-avatar-nueva");
+        if($avatar_ok){
+            $avatar = newPhotoPath("foto-avatar-nueva", "avatar", $user);
+            updateAvatarPhoto($user, $avatar);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía de avatar actualizada correctamente
                 </div>";
@@ -37,10 +37,10 @@
           </div>";
         }
     }elseif(isset($_POST["actualizar-foto"])){
-        $foto_correcta = checkPhoto("foto-nueva");
-        if($foto_correcta){
-            $foto = newPhotoPath("foto-nueva", "", $user);
-            updateMainPhoto($user, $foto);
+        $image_ok = checkPhoto("foto-nueva");
+        if($image_ok){
+            $image = newPhotoPath("foto-nueva", "", $user);
+            updateMainPhoto($user, $image);
             echo "<div class=\"alert alert-success position-fixed bottom-0 start-50 translate-middle\" role=\"alert\">
                     Fotografía principal actualizada correctamente
                 </div>";
@@ -70,7 +70,7 @@
         if(is_array($_FILES["fotos"])){
             $total = 0;       
             $cont = 0;
-            $id_grupo = getGroupID($user);
+            $artist_id = getGroupID($user);
             foreach($_FILES["fotos"]["tmp_name"] as $key => $tmp_name){
                 // var_dump($foto_op);
                 $file_name = $_FILES['fotos']['name'][$key];
@@ -84,11 +84,11 @@
                         $cont++;
                         $check_limit = checkPhotoLimit($user);
                         if($check_limit < 8){
-                            $id_foto = getAutoID("foto_grupo");
-                            $ruta = newGroupPhotoPath($id_foto, $file_type, $file_tmp, $user);
-                            addGroupExtraPhoto($ruta, $id_grupo);                    
+                            $image_id = getAutoID("foto_grupo");
+                            $path = newGroupPhotoPath($image_id, $file_type, $file_tmp, $user);
+                            addGroupExtraPhoto($path, $artist_id);                    
                         }else{
-                            $limite_alcanzado = true;
+                            $limit_reached = true;
                         }
                         
                     }
@@ -117,15 +117,15 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $nombre_grupo; ?> | Perfil de grupo</title>
+    <title><?php echo $artist_name; ?> | Perfil de grupo</title>
 </head>
 <body id="grupo-main">
     <?php
-        $completo = checkInformationCompleted($user);
-        if(!$completo){
+        $completed = checkInformationCompleted($user);
+        if(!$completed){
             echo "<section class=\"form-group-completition gap-5\">
                     <img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\">
-                    <h2>¡Bienvenido a Sonic Waves, $nombre_grupo! Esperamos que encuentres en nuestra plataforma todo lo que necesites</h2>
+                    <h2>¡Bienvenido a Sonic Waves, $artist_name! Esperamos que encuentres en nuestra plataforma todo lo que necesites</h2>
                     <h3>Antes de continuar, por favor, completa la información que nos falta sobre ti, sólo será un momento.</h3>
                     <form class=\" gap-3 d-flex flex-column\" action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
                         <legend>Biografía del grupo (5000 caracteres máximo)</legend>
@@ -161,7 +161,7 @@
                 getGroupExtraPhotos($user);
             echo "</div>";
             echo "</section>";
-            if(isset($limite_alcanzado)){
+            if(isset($limit_reached)){
                 echo "<div class=\"text-center mt-3 alert alert-warning\" role=\"alert\"> Has alcanzado el límite de fotos permitido.</div>";
             }
         }

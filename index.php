@@ -123,16 +123,16 @@
         <div class="d-flex container-samples-index gap-5 flex-column flex-md-row text-black bg-white p-3" data-aos="fade-up" data-aos-duration="1200">
         <?php
           $con = new mysqli('localhost', 'root', '', 'sonicwaves');
-          $query = $con->query("select c.titulo titulo, g.nombre grup, archivo, a.foto portada, c.times_played times from cancion c, album a, grupo g, incluye i where a.grupo = g.id and i.album = a.id and i.cancion = c.id and a.activo = 1 group by c.id order by times_played desc limit 3");
+          $query = $con->query("select c.title title, g.name artist, file, a.picture picture, c.times_played times from songs c, album a, artist g, album_contains i where a.artist = g.id and i.album = a.id and i.song = c.id and a.active = 1 group by c.id order by times_played desc limit 3");
           $cont = 1;
           while($row = $query->fetch_array(MYSQLI_ASSOC)){
-          $title = $row["titulo"];
-            $audio = $row["archivo"];
-            $img = $row["portada"];
+          $title = $row["title"];
+            $audio = $row["file"];
+            $img = $row["picture"];
             $times = $row["times"];
             $img = imageIndex($img);
             $audio = imageIndex($audio);
-            $artist = $row["grup"];
+            $artist = $row["artist"];
             
             echo "<div class=\"cancion-prev d-flex align-items-center flex-column gap-3 justify-content-between\">
                     <div class=\"text-center d-flex flex-column gap-3\">
@@ -160,12 +160,12 @@
       <h2 class="text-center mt-5">Nuestros artistas</h2>
       <div class="d-flex container-samples-index gap-5 justify-content-center flex-column flex-md-row p-5 mt-4 artists-global-container" data-aos="fade-up" data-aos-duration="1200">
           <?php
-            $query = $con->query("SELECT foto_avatar, nombre from grupo where id <> 0 and activo = 1 order by rand() limit 9");
+            $query = $con->query("SELECT avatar, name from artist where id <> 0 and active = 1 order by rand() limit 9");
             while($row = $query->fetch_array(MYSQLI_ASSOC)){
-              $avatar = imageIndex($row["foto_avatar"]);
+              $avatar = imageIndex($row["avatar"]);
               echo "<div class='d-flex flex-column index-artists-container align-items-center gap-3'>
                       <img src='$avatar' class='rounded-circle img-fluid border'>
-                      <h6 class='text-center'>$row[nombre]</h6>
+                      <h6 class='text-center'>$row[name]</h6>
                   </div>";
             }
           ?>

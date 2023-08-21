@@ -4,81 +4,81 @@
 
     function getGroupNameByMail($mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT nombre from grupo where correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($nombre);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT name from artist where mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($name);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $nombre;
+        return $name;
     }
 
     function checkInformationCompleted($mail){
-        $completo = false;
+        $complete = false;
 
         $con = createConnection();
-        $consulta = $con->prepare("SELECT biografia, foto, foto_avatar from grupo where correo = ?");
-        $consulta->bind_param("s", $mail);
-        $consulta->bind_result($bio, $foto, $foto_avatar);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT bio, image, avatar from artist where mail = ?");
+        $query->bind_param("s", $mail);
+        $query->bind_result($bio, $image, $avatar);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        if(($bio !== NULL and $foto!== NULL and $foto_avatar !== NULL) and ($bio != "" and $foto != "" and $foto_avatar != "")){
-            $completo = true;
+        if(($bio !== NULL and $image!== NULL and $avatar !== NULL) and ($bio != "" and $image != "" and $avatar != "")){
+            $complete = true;
         }
-        return $completo;
+        return $complete;
     }
 
     function getAlbumName($id, $mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT titulo from album a, grupo g where a.grupo = g.id and a.id = ? and g.correo = ?");
-        $consulta->bind_param('is', $id, $mail);
-        $consulta->bind_result($titulo);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT title from album a, artist g where a.artist = g.id and a.id = ? and g.mail = ?");
+        $query->bind_param('is', $id, $mail);
+        $query->bind_result($title);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $titulo;
+        return $title;
     }
 
     function totalAlbumReviews($id){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT count(*) from reseña where album = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($total);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) from review where album = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($total);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
         return $total;
     }
 
-    function activeFormat($activo){
-        return $activo == 0 ? '<span class="inactive-state">Inactivo. <a class="text-white text-decoration-underline" href="../contacto/contacto.php">Contáctenos</a></span>' : '<span class="active-state">Activo</span>';
+    function activeFormat($active){
+        return $active == 0 ? '<span class="inactive-state">Inactivo. <a class="text-white text-decoration-underline" href="../contacto/contacto.php">Contáctenos</a></span>' : '<span class="active-state">Activo</span>';
     }
 
     function getGroupAlbums($mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT titulo, a.foto foto, lanzamiento, a.id id, a.activo activo from album a, grupo g where a.grupo = g.id and correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($titulo, $foto, $lanzamiento, $id, $activo);
-        $consulta->execute();
-        $consulta->store_result();
-        if($consulta->num_rows > 0){
+        $query = $con->prepare("SELECT title, a.picture picture, release_date, a.id id, a.active active from album a, artist g where a.artist = g.id and mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($title, $picture, $date, $id, $active);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows > 0){
             $counter = 0;
-            while($consulta->fetch()){
-                $estado = activeFormat($activo);
+            while($query->fetch()){
+                $state = activeFormat($active);
                 $total_reviews = totalAlbumReviews($id);
-                $fecha = formatDate($lanzamiento);
+                $release_date = formatDate($date);
                 echo "<div class='border rounded p-2 album-container-group-main d-flex flex-column flex-lg-row align-items-center align-items-lg-start justify-content-center gap-3'>
-                        <img class='rounded' src='$foto'>
+                        <img class='rounded' src='$picture'>
                         <div class='w-50 d-flex flex-column gap-3 justify-content-between h-100'>
-                            <h5>$titulo</h5>
-                            <h5>Lanzado el $fecha</h5>
+                            <h5>$title</h5>
+                            <h5>Lanzado el $release_date</h5>
                             <h5>Reseñas recibidas: $total_reviews</h5>
-                            $estado
+                            $state
                         </div></div>";
                 // if($counter+1 % 3 == 0){
                 //     echo "</div>";
@@ -88,21 +88,21 @@
         }else{
             echo "<h2 class='mt-3 mb-5'>No hay discos publicados por el momento</h2>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function getGroupInfo($mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT nombre, foto, pass, correo, foto_avatar, biografia from grupo where correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($nombre, $foto, $pass, $correo, $foto_avatar, $bio);
-        $consulta->execute();
-        $consulta->fetch();
-        echo "<section class='banner-group-main mb-5 pb-3' data-bg='$foto'>
+        $query = $con->prepare("SELECT name, image, pass, mail, avatar, bio from artist where mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($name, $image, $pass, $mail, $avatar, $bio);
+        $query->execute();
+        $query->fetch();
+        echo "<section class='banner-group-main mb-5 pb-3' data-bg='$image'>
                 <div class='position-relative'>
                     <a class='banner-group-main-avatar-link' href=''>
-                        <img class='banner-group-main-avatar rounded-circle' src='$foto_avatar'>
+                        <img class='banner-group-main-avatar rounded-circle' src='$avatar'>
                         <ion-icon class='icon-edit-avatar-group d-none' name=\"pencil-outline\"></ion-icon>
                     </a>
                     
@@ -110,7 +110,7 @@
                 </div>
             </section>
             <section class='d-flex flex-column align-items-center justify-content-center pt-4'>
-                <h1 class='text-center'>$nombre</h1>
+                <h1 class='text-center'>$name</h1>
                 <section class='group-main-info container-xl d-flex flex-column flex-md-row align-items-center align-items-md-start gap-5 mt-5 mb-5'>
                     <div class='w-50'>
                         <form action='#' method='post'>
@@ -133,7 +133,7 @@
                                     <label for=\"mail\">Correo electrónico (para cambiar su correo contacte con los administradores)</label>
                                     <ion-icon name=\"mail-outline\"></ion-icon>
                                 </div>
-                                <input disabled readonly value='$correo' name=\"mail\" type=\"email\">                        
+                                <input disabled readonly value='$mail' name=\"mail\" type=\"email\">                        
                             </div>
                             <div class=\"input-field d-flex flex-column mb-3\">
                                 <div class=\"input-visuals d-flex justify-content-between\">
@@ -150,7 +150,7 @@
                 </section>
             <section class=\"update-avatar-photo d-none flex-column justify-content-center align-items-center\">
                 <ion-icon class='close-modal-update-avatar position-absolute' name=\"close-outline\"></ion-icon>
-                <img class='rounded-circle w-25' src=\"$foto_avatar\" alt=\"\">
+                <img class='rounded-circle w-25' src=\"$avatar\" alt=\"\">
                 <form class='text-center' action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
                     <div class=\"input-field  mb-3 gap-2\">
                         <div class=\" justify-content-between\">
@@ -165,7 +165,7 @@
             </section>
             <section class=\"update-main-photo d-none flex-column justify-content-center align-items-center\">
                 <ion-icon class='close-modal-update-main-photo position-absolute' name=\"close-outline\"></ion-icon>
-                <img class='rounded w-50' src=\"$foto\" alt=\"\">
+                <img class='rounded w-50' src=\"$image\" alt=\"\">
                 <form class='text-center' action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
                     <div class=\"input-field  mb-3 gap-2\">
                         <div class=\" justify-content-between\">
@@ -183,23 +183,23 @@
                 getGroupAlbums($mail);
             echo "</section>
                 </section>";
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
-    function updateAvatarPhoto($mail, $foto_avatar){
+    function updateAvatarPhoto($mail, $avatar){
         $con = createConnection();
-        $update = $con->prepare("UPDATE grupo set foto_avatar = ? where correo = ?");
-        $update->bind_param('ss', $foto_avatar, $mail);
+        $update = $con->prepare("UPDATE artist set avatar = ? where mail = ?");
+        $update->bind_param('ss', $avatar, $mail);
         $update->execute();
         $update->close();
         $con->close();
     }
 
-    function updateMainPhoto($mail, $foto){
+    function updateMainPhoto($mail, $image){
         $con = createConnection();
-        $update = $con->prepare("UPDATE grupo set foto = ? where correo = ?");
-        $update->bind_param('ss', $foto, $mail);
+        $update = $con->prepare("UPDATE artist set image = ? where mail = ?");
+        $update->bind_param('ss', $image, $mail);
         $update->execute();
         $update->close();
         $con->close();
@@ -207,25 +207,25 @@
 
     // function getGroupInfo2($mail){
     //     $con = createConnection();
-    //     $consulta = $con->prepare("SELECT nombre, foto, foto_avatar, biografia from grupo where correo = ?");
-    //     $consulta->bind_param('s', $mail);
-    //     $consulta->bind_result($nombre, $foto, $foto_avatar, $bio);
-    //     $consulta->execute();
-    //     $consulta->fetch();
+    //     $query = $con->prepare("SELECT nombre, foto, foto_avatar, biografia from grupo where correo = ?");
+    //     $query->bind_param('s', $mail);
+    //     $query->bind_result($nombre, $foto, $foto_avatar, $bio);
+    //     $query->execute();
+    //     $query->fetch();
     //     echo "<section class='banner-group-main' data-bg='$foto'><img class='img-fluid' src='$foto'><img src='$foto_avatar'></section>";
-    //     $consulta->close();
+    //     $query->close();
     //     $con->close();
     // }
 
     function getStyles(){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT nombre, id FROM estilo where id <> 0");
-        $consulta->bind_result($nombre, $id);
-        $consulta->execute();
-        while($consulta->fetch()) {
-            echo "<option class=\"p-2\" value=\"$id\">$nombre</option>";
+        $query = $con->prepare("SELECT name, id FROM styles where id <> 0");
+        $query->bind_result($name, $id);
+        $query->execute();
+        while($query->fetch()) {
+            echo "<option class=\"p-2\" value=\"$id\">$name</option>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
@@ -250,91 +250,91 @@
               </header>";
     }
 
-    function completeInformation($mail, $bio, $foto, $foto_avatar){
+    function completeInformation($mail, $bio, $image, $avatar){
         $con = createConnection();
-        $actualizacion = $con->prepare("UPDATE grupo SET biografia = ?, foto = ?, foto_avatar = ? WHERE correo = ?");
-        $actualizacion->bind_param("ssss", $bio, $foto, $foto_avatar, $mail);
+        $actualizacion = $con->prepare("UPDATE artist SET bio = ?, image = ?, avatar = ? WHERE artist = ?");
+        $actualizacion->bind_param("ssss", $bio, $image, $avatar, $mail);
         $actualizacion->execute();
         $actualizacion->close();
         $con->close();
     }
 
-    function checkPhoto($nombre){
-        $correcto = false;
-        $formato = $_FILES[$nombre]["type"];
-        $size = $_FILES[$nombre]["size"];
+    function checkPhoto($name){
+        $correct = false;
+        $format = $_FILES[$name]["type"];
+        $size = $_FILES[$name]["size"];
         $size_mb = $size / pow(1024, 2);
 
-        if($size_mb < 10 and ($formato == "image/jpeg" or $formato == "image/png" or $formato == "image/gif" or $formato == "image/webp")){
-            $correcto = true;
+        if($size_mb < 10 and ($format == "image/jpeg" or $format == "image/png" or $format == "image/gif" or $format == "image/webp")){
+            $correct = true;
         }
-        return $correcto;
+        return $correct;
     }
 
-    function newPhotoPath($nombre, $tipo, $user){
-        $nuevo_nombre;
-        switch($_FILES[$nombre]["type"]){
+    function newPhotoPath($name, $type, $user){
+        $new_name;
+        switch($_FILES[$name]["type"]){
             case "image/jpeg":
-                $nuevo_nombre = $user.$tipo.".jpg";
+                $new_name = $user.$type.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = $user.$tipo.".png";
+                $new_name = $user.$type.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = $user.$tipo.".gif";
+                $new_name = $user.$type.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = $user.$tipo.".webp";
+                $new_name = $user.$type.".webp";
                 break;
         }
         if(!file_exists("../media/img_grupos/".$user)){
             mkdir("../media/img_grupos/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/img_grupos/".$user."/".$new_name;
+        move_uploaded_file($_FILES[$nombre]["tmp_name"], $new_path);
+        return $new_path;
     }
     
-    function removeSpecialCharacters($nombre){
-        $quitar = ["/", "*","'","[","]", "?", "(", ")"];
-        $arreglado = strtolower(str_replace($quitar, "", $nombre));
-        return $arreglado;
+    function removeSpecialCharacters($name){
+        $remove = ["/", "*","'","[","]", "?", "(", ")"];
+        $fixed = strtolower(str_replace($remove, "", $name));
+        return $fixed;
     }
-    function newPhotoPathAlbum($nombre, $album, $user){
-        $nuevo_nombre;
-        $quitar = ["/", ".", "*","'",":", "?", "(", ")"];
-        $album = strtolower(str_replace($quitar, "", $album));
+    function newPhotoPathAlbum($name, $album, $user){
+        $new_name;
+        $remove = ["/", ".", "*","'",":", "?", "(", ")"];
+        $album = strtolower(str_replace($remove, "", $album));
 
         switch($_FILES[$nombre]["type"]){
             case "image/jpg":
-                $nuevo_nombre = $album.".jpg";
+                $new_name = $album.".jpg";
                 break;
             case "image/jpeg":
-                $nuevo_nombre = $album.".jpg";
+                $new_name = $album.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = $album.".png";
+                $new_name = $album.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = $album.".gif";
+                $new_name = $album.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = $album.".webp";
+                $new_name = $album.".webp";
                 break;
         }
         if(!file_exists("../media/img_grupos/".$user)){
             mkdir("../media/img_grupos/".$user, 0777, true);
         }
 
-        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/img_grupos/".$user."/".$new_name;
+        move_uploaded_file($_FILES[$nombre]["tmp_name"], $new_path);
+        return $new_path;
     }
 
-    function addAlbum($grupo, $nombre, $foto, $lanzamiento, $activo){
+    function addAlbum($artist, $name, $picture, $release_date, $active){
         $con = createConnection();
-        $insercion = $con->prepare("INSERT INTO album (titulo,foto,activo,grupo,lanzamiento) values (?, ?, ?, ?, ?)");
-        $insercion->bind_param('ssiis', $nombre, $foto, $activo, $grupo, $lanzamiento);
+        $insercion = $con->prepare("INSERT INTO album (title,picture,active,artist,release_date) values (?, ?, ?, ?, ?)");
+        $insercion->bind_param('ssiis', $name, $picture, $active, $grupo, $release_date);
         $insercion->execute();
         $insercion->close();
         $con->close();
@@ -342,36 +342,36 @@
 
     function getGroupID($mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT id from grupo where correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($id);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT id from artist where mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($id);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
         return $id;
     }
     
     function getAllGroupSongs($id){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT distinct c.id cancion_id, c.titulo titulo_cancion from grupo g, album a, cancion c, incluye i where a.grupo = g.id and i.cancion = c.id and i.album = a.id and g.id = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($id, $cancion);
-        $consulta->execute();
-        while($consulta->fetch()){
-            echo "<option value=\"$id\">$cancion</option>";
+        $query = $con->prepare("SELECT distinct c.id song_id, c.title title from artist g, album a, song c, album_contains i where a.artist = g.id and i.song = c.id and i.album = a.id and g.id = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($id, $song);
+        $query->execute();
+        while($query->fetch()){
+            echo "<option value=\"$id\">$song</option>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function generateInputs($num){
-        $contador = 1;
+        $counter = 1;
         echo "<ul class='song-adder-list d-flex flex-column gap-5'>";
-        while($contador <= $num){
-            $name = "titulo".$contador;
-            $name2 = "archivo".$contador;
-            $name3 = "estilo".$contador;
+        while($counter <= $num){
+            $name = "titulo".$counter;
+            $name2 = "archivo".$counter;
+            $name3 = "estilo".$counter;
             echo "<li><div class='input-field'>
                     <label for=\"\">Título</label>
                     <input required type=\"text\" name=\"$name\">
@@ -382,234 +382,234 @@
                     getStyles();
                     echo "</select>
                  </div></li>";
-            $contador++;
+            $counter++;
         }
         echo "</ul>
                 <button name='cargar' style='--clr:#c49c23' class='btn-danger-own'><span>Cargar álbum</span><i></i></button>";
     }
 
     function generateSelects($num, $id){
-        $contador = 1;
+        $counter = 1;
         echo "<ul class='selects-container'>";
-        while($contador <= $num){
-            $name = "cancion".$contador;
+        while($counter <= $num){
+            $name = "cancion".$counter;
             echo "<li><select required name=\"$name\"><option value='' hidden>Elige una canción</option>";
                 getAllGroupSongs($id);
                  echo "</select></li>";
-            $contador++;
+            $counter++;
         }
         echo "</ul><button name='cargar' style='--clr:#c49c23' class='btn-danger-own'><span>Cargar álbum</span><i></i></button>";
     }
 
-    function getDuration($cancion){
-        $mp3file = new MP3File($cancion);
+    function getDuration($song){
+        $mp3file = new MP3File($song);
         $duration_seconds = $mp3file->getDurationEstimate();
-        $minutos = MP3File::formatTime($duration_seconds);
-        return $minutos;
+        $minutes = MP3File::formatTime($duration_seconds);
+        return $minutes;
     }
 
-    function addSong($titulo, $archivo, $duracion, $estilo){
+    function addSong($title, $file, $length, $style){
         $con = createConnection();
-        $insertar = $con->prepare("INSERT INTO cancion (titulo,duracion,archivo,estilo) values (?,?,?,?)");
-        $insertar->bind_param('sssi', $titulo, $duracion, $archivo, $estilo);
-        $insertar->execute();
-        $filas_afectadas = $insertar->affected_rows;
-        $insertar->close();
+        $insert = $con->prepare("INSERT INTO songs (title,length,file,style) values (?,?,?,?)");
+        $insert->bind_param('sssi', $title, $length, $file, $style);
+        $insert->execute();
+        $rows = $insert->affected_rows;
+        $insert->close();
         $con->close();
-        return $filas_afectadas;
+        return $rows;
     }
 
-    function linkSongToAlbum($album, $cancion){
+    function linkSongToAlbum($album, $song){
         $con = createConnection();
-        $insertar = $con->prepare("INSERT INTO incluye (album,cancion) values (?,?)");
-        $insertar->bind_param('ii', $album, $cancion);
-        $insertar->execute();
-        $filas_afectadas = $insertar->affected_rows;
-        $insertar->close();
+        $insert = $con->prepare("INSERT INTO album_contains (album,song) values (?,?)");
+        $insert->bind_param('ii', $album, $song);
+        $insert->execute();
+        $rows = $insert->affected_rows;
+        $insert->close();
         $con->close();
-        return $filas_afectadas;
+        return $rows;
     }
 
-    function moveUploadedSong($nombre, $grupo, $album){
+    function moveUploadedSong($name, $artist, $album){
         $album = removeSpecialCharacters($album);
-        if(!file_exists("../media/audio/$grupo")){
-            mkdir("../media/audio/$grupo");
+        if(!file_exists("../media/audio/$artist")){
+            mkdir("../media/audio/$artist");
         }
         // echo $album;
-        // echo $_SERVER['DOCUMENT_ROOT']."/SonicWaves/media/audio/$grupo/$album";
-        if(!file_exists("../media/audio/$grupo/$album")){
-            if(!mkdir("../media/audio/$grupo/$album")){
-                echo "Error, no se pudo crear la carpeta $grupo $album";
+        // echo $_SERVER['DOCUMENT_ROOT']."/SonicWaves/media/audio/$artist/$album";
+        if(!file_exists("../media/audio/$artist/$album")){
+            if(!mkdir("../media/audio/$artist/$album")){
+                echo "Error, no se pudo crear la carpeta $artist $album";
             }
         }
-        $cancion = $_FILES[$nombre]["name"];
-        $cancion = removeSpecialCharacters($cancion);
-        $nueva_ruta = "../media/audio/$grupo/$album/$cancion";
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
-        return $nueva_ruta;
+        $song = $_FILES[$name]["name"];
+        $song = removeSpecialCharacters($song);
+        $new_path = "../media/audio/$artist/$album/$song";
+        move_uploaded_file($_FILES[$name]["tmp_name"], $new_path);
+        return $new_path;
     }
 
     function getLastSongID(){
         $con = createConnection();
-        $consulta = $con->query("SELECT id from cancion order by id desc limit 1");
-        $fila = $consulta->fetch_array(MYSQLI_ASSOC);
-        $id = $fila["id"];
+        $query = $con->query("SELECT id from songs order by id desc limit 1");
+        $row = $query->fetch_array(MYSQLI_ASSOC);
+        $id = $row["id"];
         return $id;
     }
 
     function getGroupName($id){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT nombre from grupo where id = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($nombre);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT name from artist where id = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($name);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $nombre;
+        return $name;
     }
 
     function updateBio($mail, $bio){
         $con = createConnection();
-        $update = $con->prepare("UPDATE grupo set biografia = ? where correo = ?");
+        $update = $con->prepare("UPDATE artist set bio = ? where mail = ?");
         $update->bind_param('ss', $bio, $mail);
         $update->execute();
         $update->close();
         $con->close();
     }
 
-    function emailRepeatedAtUpdate($mail, $mail_act){
-        $con = createConnection();
-        $consulta = $con->prepare("SELECT count(*) from grupo where correo = ? or correo = ?");
-        $consulta->bind_param('ss', $mail, $mail_act);
-        $consulta->bind_result($count);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
-        $con->close();
-        return $count;
-    }
+    // function emailRepeatedAtUpdate($mail, $mail_act){
+    //     $con = createConnection();
+    //     $query = $con->prepare("SELECT count(*) from grupo where correo = ? or correo = ?");
+    //     $query->bind_param('ss', $mail, $mail_act);
+    //     $query->bind_result($count);
+    //     $query->execute();
+    //     $query->fetch();
+    //     $query->close();
+    //     $con->close();
+    //     return $count;
+    // }
 
     function updateGroupData($user, $pass){
         $con = createConnection();
-        $update = $con->prepare("UPDATE grupo set pass = ? where correo = ?");
+        $update = $con->prepare("UPDATE artist set pass = ? where mail = ?");
         $update->bind_param('ss', $pass, $user);
         $update->execute();
         $update->close();
         $con->close();
     }
 
-    function addPost($mail, $titulo, $contenido, $foto, $fecha){
+    function addPost($mail, $title, $content, $image, $p_date){
         $con = createConnection();
         $id = getGroupID($mail);
-        $insert = $con->prepare("INSERT into publicacion (titulo, contenido, foto, fecha, grupo) values (?,?,?,?,?)");
-        $insert->bind_param('ssssi', $titulo, $contenido, $foto, $fecha, $id);
+        $insert = $con->prepare("INSERT into posts (title, content, image, p_date, artist) values (?,?,?,?,?)");
+        $insert->bind_param('ssssi', $title, $content, $image, $p_date, $id);
         $insert->execute();
         $insert->close();
         $con->close();
     }
 
-    function checkPhotosArray($nombre, $index){
-        $correcto = false;
-        $formato = $_FILES[$nombre]["type"][$index];
-        $size = $_FILES[$nombre]["size"][$index];
+    function checkPhotosArray($name, $index){
+        $correct = false;
+        $format = $_FILES[$name]["type"][$index];
+        $size = $_FILES[$name]["size"][$index];
         $size_mb = $size / pow(1024, 2);
 
-        if($size_mb < 10 and ($formato == "image/jpeg" or $formato == "image/png" or $formato == "image/gif" or $formato == "image/webp")){
-            $correcto = true;
+        if($size_mb < 10 and ($format == "image/jpeg" or $format == "image/png" or $format == "image/gif" or $format == "image/webp")){
+            $correct = true;
         }
-        return $correcto;
+        return $correct;
     }
 
-    function newPhotoPathPost($tipo, $num_foto, $id_post, $ruta_serv, $user){
-        $nuevo_nombre;
+    function newPhotoPathPost($type, $index_image, $id_post, $original_path, $user){
+        $new_name;
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
 
-        switch($tipo){
+        switch($type){
             case "image/jpeg":
-                $nuevo_nombre = "foto".$num_foto."post".$id_post.".jpg";
+                $new_name = "foto".$index_image."post".$id_post.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = "foto".$num_foto."post".$id_post.".png";
+                $new_name = "foto".$index_image."post".$id_post.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = "foto".$num_foto."post".$id_post.".gif";
+                $new_name = "foto".$index_image."post".$id_post.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = "foto".$num_foto."post".$id_post.".webp";
+                $new_name = "foto".$index_image."post".$id_post.".webp";
                 break;
         }
         if(!file_exists("../media/img_posts/".$user)){
             mkdir("../media/img_posts/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_posts/".$user."/".$nuevo_nombre;
-        move_uploaded_file($ruta_serv, $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/img_posts/".$user."/".$new_name;
+        move_uploaded_file($original_path, $new_path);
+        return $new_path;
     }
 
     function newMainPhotoPathPost($id_post, $user){
-        $nuevo_nombre;
+        $new_name;
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
 
         switch($_FILES["foto"]["type"]){
             case "image/jpeg":
-                $nuevo_nombre = "fotoPrincipalpost".$id_post.".jpg";
+                $new_name = "fotoPrincipalpost".$id_post.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = "fotoPrincipalpost".$id_post.".png";
+                $new_name = "fotoPrincipalpost".$id_post.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = "fotoPrincipalpost".$id_post.".gif";
+                $new_name = "fotoPrincipalpost".$id_post.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = "fotoPrincipalpost".$id_post.".webp";
+                $new_name = "fotoPrincipalpost".$id_post.".webp";
                 break;
         }
         if(!file_exists("../media/img_posts/".$user)){
             mkdir("../media/img_posts/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_posts/".$user."/".$nuevo_nombre;
-        move_uploaded_file($_FILES["foto"]["tmp_name"], $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/img_posts/".$user."/".$new_name;
+        move_uploaded_file($_FILES["foto"]["tmp_name"], $new_path);
+        return $new_path;
     }
 
-    function addPostPhotos($enlace, $publicacion){
+    function addPostPhotos($link, $post){
         $con = createConnection();
-        $insert = $con->prepare("INSERT INTO foto_publicacion (enlace, publicacion) values (?, ?)");
-        $insert->bind_param('si', $enlace, $publicacion);
+        $insert = $con->prepare("INSERT INTO post_photos (link, post) values (?, ?)");
+        $insert->bind_param('si', $link, $post);
         $insert->execute();
     }
 
-    function newGroupPhotoPath($num, $tipo, $tmp, $user){
-        $nuevo_nombre;
-        switch($tipo){
+    function newGroupPhotoPath($num, $type, $tmp, $user){
+        $new_name;
+        switch($type){
             case "image/jpeg":
-                $nuevo_nombre = $user."fotoextra".$num.".jpg";
+                $new_name = $user."fotoextra".$num.".jpg";
                 break;
             case "image/png":
-                $nuevo_nombre = $user."fotoextra".$num.".png";
+                $new_name = $user."fotoextra".$num.".png";
                 break;
             case "image/gif":
-                $nuevo_nombre = $user."fotoextra".$num.".gif";
+                $new_name = $user."fotoextra".$num.".gif";
                 break;
             case "image/webp":
-                $nuevo_nombre = $user."fotoextra".$num.".webp";
+                $new_name = $user."fotoextra".$num.".webp";
                 break;
         }
         if(!file_exists("../media/img_grupos/".$user)){
             mkdir("../media/img_grupos/".$user, 0777, true);
         }
-        $nueva_ruta = "../media/img_grupos/".$user."/".$nuevo_nombre;
-        move_uploaded_file($tmp, $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/img_grupos/".$user."/".$new_name;
+        move_uploaded_file($tmp, $new_path);
+        return $new_path;
     }
 
-    function addGroupExtraPhoto($foto, $id_grupo){
+    function addGroupExtraPhoto($image, $artist){
         $con = createConnection();
-        $insert = $con->prepare("INSERT INTO foto_grupo (enlace, grupo) values (?,?)");
-        $insert->bind_param('si', $foto, $id_grupo);
+        $insert = $con->prepare("INSERT INTO artist_photos (link, artist) values (?,?)");
+        $insert->bind_param('si', $image, $artist);
         $insert->execute();
         $insert->close();
         $con->close();
@@ -618,7 +618,7 @@
     function checkPhotoLimit($user){
         $con = createConnection();
         $id = getGroupID($user);
-        $query = $con->prepare("SELECT count(*) from foto_grupo where grupo = ?");
+        $query = $con->prepare("SELECT count(*) from artist_photos where artist = ?");
         $query->bind_param('i', $id);
         $query->bind_result($count);
         $query->execute();
@@ -631,15 +631,15 @@
     function getGroupExtraPhotos($user){
         $con = createConnection();
         $id = getGroupID($user);
-        $query = $con->prepare("SELECT id, enlace from foto_grupo where grupo = ?");
+        $query = $con->prepare("SELECT id, link from artist_photos where artist = ?");
         $query->bind_param('i', $id);
-        $query->bind_result($id, $enlace);
+        $query->bind_result($id, $link);
         $query->execute();
         $query->store_result();
         if($query->num_rows > 0){
             while($query->fetch()){
                 echo "<form action='#' method='post' class='position-relative'>
-                        <img src='$enlace' class='img-fluid object-fit-cover'>
+                        <img src='$link' class='img-fluid object-fit-cover'>
                         <input hidden value='$id' name='id-foto'>
                         <button style='--clr:#e80c0c' class='btn-danger-own position-absolute' name='eliminar-foto'><span>Eliminar</span><i></i></button>
                      </form>";
@@ -653,7 +653,7 @@
 
     function getPhotoLink($id){
         $con = createConnection();
-        $query = $con->prepare("SELECT enlace from foto_grupo where id = ?");
+        $query = $con->prepare("SELECT link from artist_photos where id = ?");
         $query->bind_param('i', $id);
         $query->bind_result($link);
         $query->execute();
@@ -666,7 +666,7 @@
     function deletePhoto($id){
         $link = getPhotoLink($id);
         $con = createConnection();
-        $delete = $con->prepare("DELETE FROM foto_grupo where id = ?");
+        $delete = $con->prepare("DELETE FROM artist_photos where id = ?");
         $delete->bind_param('i', $id);
         $delete->execute();
         $delete->close();
@@ -674,30 +674,30 @@
         unlink($link);
     }
 
-    function checkEnoughAlbumsGroup($id_grupo){
+    function checkEnoughAlbumsGroup($id_artist){
         $con = createConnection();
-        $consulta = $con->query("SELECT count(*) total from album a, grupo g where a.grupo = g.id and g.id = $id_grupo");
-        $fila = $consulta->fetch_array(MYSQLI_ASSOC);
-        $total = $fila["total"];
+        $query = $con->query("SELECT count(*) total from album a, artist g where a.artist = g.id and g.id = $id_artist");
+        $row = $query->fetch_array(MYSQLI_ASSOC);
+        $total = $row["total"];
         $con->close();
         return $total;
     }
 
     function getAlbumsWithReviews($mail){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT a.foto foto, titulo, a.id id from album a, grupo g where a.grupo = g.id and g.correo = ?");
-        $consulta->bind_param('s', $mail);
-        $consulta->bind_result($foto, $titulo, $id);
-        $consulta->execute();
-        while($consulta->fetch()){
+        $query = $con->prepare("SELECT a.picture picture, title, a.id id from album a, artist g where a.artist = g.id and g.mail = ?");
+        $query->bind_param('s', $mail);
+        $query->bind_result($picture, $title, $id);
+        $query->execute();
+        while($query->fetch()){
             $total_reviews = totalAlbumReviews($id);
             echo "<div class='d-flex gap-3 align-items-center rounded album-review-group-container'>
                     <div class='album-review-container-img'>
-                        <img src='$foto' class='img-fluid'>
+                        <img src='$picture' class='img-fluid'>
                         <canvas></canvas>
                     </div>
                     <div class='d-flex flex-column gap-1'>
-                        <h4 class='mt-0'>$titulo</h4>
+                        <h4 class='mt-0'>$title</h4>
                         <h4>Reseñas totales: $total_reviews</h4>
                     ";
             if($total_reviews != 0){
@@ -710,124 +710,124 @@
             }
                 
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function getAllReviewsOfAlbum($id){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT titulo, contenido, fecha, foto_avatar from reseña r, usuario u where r.usuario = u.id and album = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($titulo, $contenido, $fecha, $foto);
-        $consulta->execute();
-        $consulta->store_result();
+        $query = $con->prepare("SELECT title, content, r_date, avatar from review r, user u where r.user = u.id and album = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($title, $content, $r_date, $avatar);
+        $query->execute();
+        $query->store_result();
 
-        if($consulta->num_rows > 0){
-            while($consulta->fetch()){
-                $fecha = formatDate($fecha);
+        if($query->num_rows > 0){
+            while($query->fetch()){
+                $r_date = formatDate($r_date);
                 echo "<div class='d-flex flex-column gap-3 review-individual-container-group-section'>
                         <div class='d-flex align-items-center gap-2'>
-                            <img src='$foto' class='rounded-circle'>
-                            <h2 class='m-0'>$titulo</h2>
+                            <img src='$avatar' class='rounded-circle'>
+                            <h2 class='m-0'>$title</h2>
                         </div>
-                        <p>$contenido</p>
-                        <i>Reseña escrita el $fecha</i>
+                        <p>$content</p>
+                        <i>Reseña escrita el $r_date</i>
                     </div>";
             }
         }else{
             echo "<h3>No hay reseñas escritas aún</h3>";
         }
         
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function groupHasMembers($mail){
         $id = getGroupID($mail);
         $con = createConnection();
-        $consulta = $con->prepare("SELECT count(*) from usuario where grupo = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($miembros);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) from user where artist = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($members);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $miembros;
+        return $members;
     }
 
-    function userExists($usuario){
+    function userExists($user){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT count(*) from usuario where usuario = ?");
-        $consulta->bind_param('s', $usuario);
-        $consulta->bind_result($existe);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT count(*) from user where username = ?");
+        $query->bind_param('s', $user);
+        $query->bind_result($exists);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $existe;
+        return $exists;
     }
 
-    function userIsMember($usuario){
+    function userIsMember($user){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT grupo from usuario where usuario = ?");
-        $consulta->bind_param('s', $usuario);
-        $consulta->bind_result($es_miembro);
-        $consulta->execute();
-        $consulta->fetch();
-        $consulta->close();
+        $query = $con->prepare("SELECT artist from user where username = ?");
+        $query->bind_param('s', $user);
+        $query->bind_result($is_member);
+        $query->execute();
+        $query->fetch();
+        $query->close();
         $con->close();
-        return $es_miembro;
+        return $is_member;
     }
     
-    function addNewMember($usuario, $mail){
-        $id_grupo = getGroupID($mail);
+    function addNewMember($user, $mail){
+        $group_id = getGroupID($mail);
         $con = createConnection();
-        $insert = $con->prepare("UPDATE usuario set grupo = ? where usuario = ?");
-        $insert->bind_param('is', $id_grupo, $usuario);
+        $insert = $con->prepare("UPDATE user set artist = ? where username = ?");
+        $insert->bind_param('is', $group_id, $user);
         $insert->execute();
         $insert->close();
         $con->close();
     }
     
-    function removeMember($usuario){
-        $eliminado = false;
+    function removeMember($user){
+        $deleted = false;
         $con = createConnection();
-        $update = $con->prepare("UPDATE usuario set grupo = 0 where id = ?");
-        $update->bind_param('i', $usuario);
+        $update = $con->prepare("UPDATE user set artist = 0 where id = ?");
+        $update->bind_param('i', $user);
         $update->execute();
         if($update){
-            $eliminado = true;
+            $deleted = true;
         }
         $update->close();
         $con->close();
-        return $eliminado;
+        return $deleted;
     }
     
     function getGroupMembers($mail){
         $id = getGroupID($mail);
         $con = createConnection();
-        $consulta = $con->prepare("SELECT usuario, foto_avatar, id from usuario where grupo = ?");
-        $consulta->bind_param('i', $id);
-        $consulta->bind_result($usuario, $foto, $id_usuario);
-        $consulta->execute();
-        while($consulta->fetch()){
+        $query = $con->prepare("SELECT username, avatar, id from user where artist = ?");
+        $query->bind_param('i', $id);
+        $query->bind_result($user, $avatar, $id_user);
+        $query->execute();
+        while($query->fetch()){
             echo "<div class='d-flex align-items-center gap-3'>
-                    <img src='$foto' class='group-member-avatar img-fluid rounded-circle'>
-                    <h3 class='m-0'>$usuario</h3>
+                    <img src='$avatar' class='group-member-avatar img-fluid rounded-circle'>
+                    <h3 class='m-0'>$user</h3>
                     <form action='#' method='post'>
-                        <input hidden value='$id_usuario' name='usuario'>
+                        <input hidden value='$id_user' name='usuario'>
                         <button style='--clr:#dc143c' class='btn-danger-own' name='eliminar-miembro'><span>Eliminar</span><i></i></button>
                     </form>
                   </div>";
         }
-        $consulta->close();
+        $query->close();
         $con->close();
     }
 
     function getGroupMembersIDs($id){
         $con = createConnection();
         $ids = [];
-        $query = $con->prepare("SELECT id from usuario where grupo = ?");
+        $query = $con->prepare("SELECT id from user where artist = ?");
         $query->bind_param('i', $id);
         $query->bind_result($id_member);
         $query->execute();
@@ -859,7 +859,7 @@
             $query->close();
             $members = getGroupMembersIDs($id_group);
             foreach($members as $member){
-                $link_message = $con->query("INSERT INTO member_receives_message (usuario, mensaje) values ($member, $id)");
+                $link_message = $con->query("INSERT INTO member_receives_message (user, message) values ($member, $id)");
             }
             $message_sent = true;
         }
@@ -869,15 +869,15 @@
 
     function getMessagesWithPatrons($mail){
         $con = createConnection();
-        $query = $con->prepare("SELECT DISTINCT p.foto_avatar foto, p.name name, p.id id from patrons p, patrons_messages pm, grupo g where p.id = pm.patron and g.id = pm.artist and
-        g.correo = ?");
+        $query = $con->prepare("SELECT DISTINCT p.avatar avatar, p.name name, p.id id from patrons p, patrons_messages pm, artist g where p.id = pm.patron and g.id = pm.artist and
+        g.mail = ?");
         $query->bind_param('s', $mail);
-        $query->bind_result($foto, $name, $id);
+        $query->bind_result($avatar, $name, $id);
         $query->execute();
         while($query->fetch()){
             echo "<div class='d-flex gap-3 align-items-center rounded album-review-group-container'>
                     <div class='album-review-container-img'>
-                        <img src='$foto' class='img-fluid'>
+                        <img src='$avatar' class='img-fluid'>
                         <canvas></canvas>
                     </div>
                     <div class='d-flex flex-column gap-1'>
@@ -894,8 +894,8 @@
 
     function retrieveMesagesWithPatron($mail, $id_patron){
         $con = createConnection();
-        $query = $con->prepare("SELECT content, receiver, sender, m_date, p.name patron_name, g.nombre group_name from patrons_messages pm, patrons p, grupo g where pm.patron = p.id and p.id = ? and g.id = pm.artist and
-        g.correo = ? order by m_date desc");
+        $query = $con->prepare("SELECT content, receiver, sender, m_date, p.name patron_name, g.name group_name from patrons_messages pm, patrons p, artist g where pm.patron = p.id and p.id = ? and g.id = pm.artist and
+        g.mail = ? order by m_date desc");
         $query->bind_param('is', $id_patron, $mail);
         $query->bind_result($content, $receiver, $sender, $date, $patron_name, $group_name);
         $query->execute();

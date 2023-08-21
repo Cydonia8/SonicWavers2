@@ -10,23 +10,23 @@
 
     $user = $decoded["data"]["user"];
 
-    $nombre_grupo = getGroupNameByMail($user);
-    $nuevo_id = getAutoID("album");
-    $_SESSION["id_album"] = $nuevo_id;
-    $id_grupo = getGroupID($user);
-    $total = checkEnoughAlbumsGroup($id_grupo);
+    $artist_name = getGroupNameByMail($user);
+    $new_id = getAutoID("album");
+    $_SESSION["id_album"] = $new_id;
+    $artist_id = getGroupID($user);
+    $total = checkEnoughAlbumsGroup($artist_id);
 
     if(isset($_POST["crear"])){
         $_SESSION["titulo_album"] = $_POST["nombre"];
         $_SESSION["lanzamiento"] = $_POST["fecha"];
         $_SESSION["num_canciones"] = $_POST["num-canciones"];
         $_SESSION["recopilatorio"] = isset($_POST["recopilatorio"]) ? $_POST["recopilatorio"] : NULL;
-        $foto_correcta = checkPhoto("foto");
+        $image_ok = checkPhoto("foto");
 
-        if($foto_correcta){
-            $foto = newPhotoPathAlbum("foto", $_POST["nombre"], $user);
-            $_SESSION["foto_album"] = $foto;
-            // addAlbum($id_grupo, $_POST["nombre"], $foto, $_POST["fecha"], 1);
+        if($image_ok){
+            $image = newPhotoPathAlbum("foto", $_POST["nombre"], $user);
+            $_SESSION["foto_album"] = $image;
+            // addAlbum($artist_id, $_POST["nombre"], $foto, $_POST["fecha"], 1);
             echo "<meta http-equiv='refresh' content='0;url=grupo_anadir_canciones.php'>";
         }else{
             echo "<h2>Hay algún dato incorrecto. Por favor, vuelva a intentarlo</h2>";
@@ -48,7 +48,7 @@
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="../estilos.css">
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $nombre_grupo; ?> | Nuevo álbum</title>
+    <title><?php echo $artist_name; ?> | Nuevo álbum</title>
 </head>
 <body id="grupo-nuevo-album">
     <?php

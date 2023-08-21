@@ -29,7 +29,7 @@
             
         }
     }elseif(isset($_POST["access-group"])){
-        $access = loginGroupDisc($_POST["mail"], $_POST["pass"], "grupo");
+        $access = loginGroupDisc($_POST["mail"], $_POST["pass"], "artist");
 
         // if(!$accede){
         //     echo "<div data-mdb-delay=\"3000\" class=\"alert text-center mt-3 alert-danger alert-dismissible fade show\" role=\"alert\">Credenciales incorrectas</div>";

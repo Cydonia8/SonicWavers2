@@ -17,21 +17,21 @@ use Firebase\JWT\JWT;
         }
     }
 
-     function imageIndex($ruta){
-        $imagen_rutanueva = preg_replace("`^.{1}`",'',$ruta);
-        return $imagen_rutanueva;
+     function imageIndex($path){
+        $new_path = preg_replace("`^.{1}`",'',$path);
+        return $new_path;
     }
     
-    function imageUser($user, $table, $identificador){
+    function imageUser($user, $table, $identifier){
         $con = createConnection();
-        $consulta = $con->prepare("SELECT foto_avatar from $table where $identificador = ?");
+        $consulta = $con->prepare("SELECT avatar from $table where $identifier = ?");
         $consulta->bind_param('s',$user);
-        $consulta->bind_result($foto);
+        $consulta->bind_result($avatar);
         $consulta->execute();
         $consulta->fetch();
         $consulta->close();
         $con->close();
-        return $foto;
+        return $avatar;
     }
 
      function decodeToken($token){
@@ -56,8 +56,8 @@ use Firebase\JWT\JWT;
                 $token_decoded = decodeToken($_SESSION["token"]);
                 $token_decoded = json_decode(json_encode($token_decoded), true);
                 if($token_decoded["data"]["admin"]){
-                    $foto = imageUser("admin", "usuario", "usuario");
-                    $foto = imageIndex($foto);
+                    $avatar = imageUser("admin", "user", "username");
+                    $avatar = imageIndex($avatar);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -65,7 +65,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"admin/admin_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -76,8 +76,8 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "user"){
-                    $foto = imageUser($token_decoded["data"]["user"], "usuario", "usuario");
-                    $foto = imageIndex($foto);
+                    $avatar = imageUser($token_decoded["data"]["user"], "user", "username");
+                    $avatar = imageIndex($avatar);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -86,7 +86,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"reproductor/reproductor.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -97,8 +97,8 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "group"){
-                    $foto = imageUser($token_decoded["data"]["user"], "grupo", "correo");
-                    $foto = imageIndex($foto);
+                    $avatar = imageUser($token_decoded["data"]["user"], "artist", "mail");
+                    $avatar = imageIndex($avatar);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -106,7 +106,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"grupo/grupo_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -117,8 +117,8 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "mail");
-                    $foto = imageIndex($foto);
+                    $avatar = imageUser($token_decoded["data"]["user"], "patrons", "mail");
+                    $avatar = imageIndex($avatar);
                     echo "<header class=\"header-index\">
                     <a href='index.php' class='enlace-index'><img src=\"media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -126,7 +126,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"patrons/patrons_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -154,14 +154,14 @@ use Firebase\JWT\JWT;
         }else{
             if(isset($_SESSION["token"])){
                 if($token_decoded["data"]["admin"]){
-                    $foto = imageUser("admin", "usuario", "usuario");
+                    $avatar = imageUser("admin", "user", "username");
                     echo "<header class=\"header-index\">
                         <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
                             <ul class=\"links-header\"> 
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"../admin/admin_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -172,7 +172,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "user"){
-                    $foto = imageUser($token_decoded["data"]["user"], "usuario", "usuario");
+                    $avatar = imageUser($token_decoded["data"]["user"], "user", "username");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -181,7 +181,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"../contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -192,7 +192,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }elseif($token_decoded["data"]["role"] == "group"){
-                    $foto = imageUser($token_decoded["data"]["user"], "grupo", "correo");
+                    $avatar = imageUser($token_decoded["data"]["user"], "artist", "mail");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -200,7 +200,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"../contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"../grupo/grupo_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -211,7 +211,7 @@ use Firebase\JWT\JWT;
                         </nav>
                     </header>";
                 }else{
-                    $foto = imageUser($token_decoded["data"]["user"], "patrons", "mail");
+                    $avatar = imageUser($token_decoded["data"]["user"], "patrons", "mail");
                     echo "<header class=\"header-index\">
                     <a href='../index.php' class='enlace-index'><img src=\"../media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"\"></a>
                         <nav>
@@ -219,7 +219,7 @@ use Firebase\JWT\JWT;
                                 <li><a href=\"../contacto/contacto.php\">Contacto</a></li>
                                 <li class=\"li-foto\">
                                     <div class=\"dropdown\">
-                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$foto\">
+                                        <img data-bs-toggle=\"dropdown\" aria-expanded=\"false\" class=\"rounded-circle dropdown-toggle\" src=\"$avatar\">
                                         <ul class=\"dropdown-menu\">
                                             <li><a class=\"dropdown-item\" href=\"../patrons/patrons_main.php\">Perfil</a></li>
                                             <li><form action=\"#\" method=\"post\"><input id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
@@ -245,8 +245,8 @@ use Firebase\JWT\JWT;
             }
         }
     }
-    function closeSession($POST, $seccion = "noindex"){
-        if($seccion == "noindex"){
+    function closeSession($POST, $section = "noindex"){
+        if($section == "noindex"){
             if(isset($_POST["cerrar-sesion"])){
                 if(isset($_COOKIE['sesion'])){
                     setcookie("sesion","", time()-3600, '/');
@@ -280,12 +280,12 @@ use Firebase\JWT\JWT;
         }    
     }
     
-    function printFooter($ruta){
+    function printFooter($path){
         echo "<footer id=\"footer\">
         <div class=\"container\">
             <div class=\"row\">
                 <div class=\"col-md-3 d-flex flex-column align-items-center\">
-                    <a href=\"$ruta/index.php\"><img src=\"$ruta/media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"Logo de Sonic Waves\" class=\"img-fluid logo-footer\"></a>
+                    <a href=\"$path/index.php\"><img src=\"$path/media/assets/sonic-waves-high-resolution-logo-color-on-transparent-background (1).png\" alt=\"Logo de Sonic Waves\" class=\"img-fluid logo-footer\"></a>
                   <div class=\"footer-about\">
                       <p>All Rights Reserved | 2023</p>
                       <p>Sonic Waves es una filial de Revolver Music</p>
@@ -295,12 +295,12 @@ use Firebase\JWT\JWT;
                 <div class=\"col-md-3 d-flex flex-column align-items-center\">
                     <div class=\"useful-link\">
                         <h2>Enlaces útiles</h2>
-                        <img src=\"$ruta/assets/images/about/home_line.png\" alt=\"\" class=\"img-fluid\">
+                        <img src=\"$path/assets/images/about/home_line.png\" alt=\"\" class=\"img-fluid\">
                         <div class=\"use-links\">
-                            <li><a href=\"$ruta/index.php\"><i class=\"fa-solid fa-angles-right\"></i> Home</a></li>
-                            <li><a href=\"$ruta/proximamente/proximamente.php\"><i class=\"fa-solid fa-angles-right\"></i>Próximamante: Dolby Atmos</a></li>
-                            <li><a href=\"$ruta/reproductor/reproductor.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
-                            <li><a href=\"$ruta/contacto/contacto.php\"><i class=\"fa-solid fa-angles-right\"></i> Contacto</a></li>
+                            <li><a href=\"$path/index.php\"><i class=\"fa-solid fa-angles-right\"></i> Home</a></li>
+                            <li><a href=\"$path/proximamente/proximamente.php\"><i class=\"fa-solid fa-angles-right\"></i>Próximamante: Dolby Atmos</a></li>
+                            <li><a href=\"$path/reproductor/reproductor.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
+                            <li><a href=\"$path/contacto/contacto.php\"><i class=\"fa-solid fa-angles-right\"></i> Contacto</a></li>
                         </div>
                     </div>
     
@@ -308,7 +308,7 @@ use Firebase\JWT\JWT;
                 <div class=\"col-md-3 d-flex flex-column align-items-center\">
                     <div class=\"social-links\">
                         <h2>Síguenos</h2>
-                        <img src=\"$ruta/assets/images/about/home_line.png\" alt=\"\">
+                        <img src=\"$path/assets/images/about/home_line.png\" alt=\"\">
                         <div class=\"social-icons\">
                             <li><a href=\"\"><i class=\"fa-brands fa-twitter\"></i>Twitter</a></li>
                             <li><a href=\"\"><i class=\"fa-brands fa-instagram\"></i> Instagram</a></li>
@@ -321,7 +321,7 @@ use Firebase\JWT\JWT;
                 <div class=\"col-md-3 d-flex flex-column align-items-center\">
                     <div class=\"address d-flex flex-column align-items-center\">
                         <h2>Nuestras oficinas</h2>
-                        <img src=\"$ruta/assets/images/about/home_line.png\" alt=\"\" class=\"img-fluid\">
+                        <img src=\"$path/assets/images/about/home_line.png\" alt=\"\" class=\"img-fluid\">
                         <div class=\"address-links\">
                             <li class=\"address1\"><i class=\"fa-solid fa-location-dot\"></i> 3 Abbey Rd, London
                             NW8 9AY, Reino Unido 

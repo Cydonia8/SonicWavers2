@@ -11,18 +11,18 @@
 
     $user = $decoded["data"]["user"];
 
-    $nombre_grupo = getGroupNameByMail($user);
+    $artist_name = getGroupNameByMail($user);
 
     if(isset($_POST["subir"])){
-      $titulo = strip_tags($_POST["titulo"]);  
-      $contenido = strip_tags($_POST["contenido"]);
-      $foto_correcta = checkPhoto("foto");
-      $fecha = $_POST["fecha"];
-      $nuevo_id = getAutoID("publicacion");
+      $title = strip_tags($_POST["titulo"]);  
+      $content = strip_tags($_POST["contenido"]);
+      $image_ok = checkPhoto("foto");
+      $date = $_POST["fecha"];
+      $new_id = getAutoID("publicacion");
     
-      if($foto_correcta){
-        $ruta_princ = newMainPhotoPathPost($nuevo_id, $user);
-        addPost($user, $titulo, $contenido, $ruta_princ, $fecha);
+      if($image_ok){
+        $main_path = newMainPhotoPathPost($new_id, $user);
+        addPost($user, $title, $content, $main_path, $date);
         if(is_array($_FILES["fotos"])){
             $total = 0;       
             $cont = 0;
@@ -38,8 +38,8 @@
                     // var_dump($correct);
                     if($correct){
                         $cont++;
-                        $ruta = newPhotoPathPost($file_type, $cont, $nuevo_id, $file_tmp, $user);
-                        addPostPhotos($ruta, $nuevo_id);                    
+                        $path = newPhotoPathPost($file_type, $cont, $new_id, $file_tmp, $user);
+                        addPostPhotos($path, $new_id);                    
                     }
                 }
                 
@@ -64,7 +64,7 @@
     <script src="../scripts/grupo_add_post.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $nombre_grupo; ?> | Añadir publicación</title>
+    <title><?php echo $artist_name; ?> | Añadir publicación</title>
 </head>
 <body id="grupo-añadir-publi">
     <?php
@@ -111,8 +111,8 @@
         </form>
     </section>
     <?php
-        if(isset($foto_correcta)){
-            if(!$foto_correcta){
+        if(isset($image_ok)){
+            if(!$image_ok){
                 echo "<div class=\"text-center alert alert-danger\" role=\"alert\">Publicación no creada. Fallo con la foto principal.</div>";
             }else{
                 echo "<div class=\"text-center alert alert-success\" role=\"alert\">Publicación creada.</div>";

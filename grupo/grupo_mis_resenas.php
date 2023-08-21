@@ -13,7 +13,7 @@
 
     $user = $decoded["data"]["user"];
 
-    $nombre_grupo = getGroupNameByMail($user);
+    $artist_name = getGroupNameByMail($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +29,7 @@
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <script src="../scripts/grupo_mis_resenas.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $nombre_grupo; ?> | Mis reseñas</title>
+    <title><?php echo $artist_name; ?> | Mis reseñas</title>
 </head>
 <body id="grupo-mis-reseñas">
     <?php

@@ -34,13 +34,13 @@
         menuGrupoDropdown("position-static");
         echo "<section class='container-xxl d-flex flex-column gap-4'>";
         if(isset($_GET["ver-reseñas"])){
-            $titulo_album = getAlbumName($_GET["id"], $user);
-            echo "<h1 class=\"text-center\">Reseñas de $titulo_album</h1>";
+            $album_title = getAlbumName($_GET["id"], $user);
+            echo "<h1 class=\"text-center\">Reseñas de $album_title</h1>";
             getAllReviewsOfAlbum($_GET["id"]);
         }elseif(isset($_GET["id"])){
-            $titulo_album = getAlbumName($_GET["id"], $user);
-            if($titulo_album != ""){
-                echo "<h1 class=\"text-center\">Reseñas de $titulo_album</h1>";
+            $album_title = getAlbumName($_GET["id"], $user);
+            if($album_title != ""){
+                echo "<h1 class=\"text-center\">Reseñas de $album_title</h1>";
                 getAllReviewsOfAlbum($_GET["id"]);
             }else{
                 echo "<h2>Lo sentimos, no encontramos ese álbum para el usuario $user</h2>";
