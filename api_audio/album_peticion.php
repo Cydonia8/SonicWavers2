@@ -5,7 +5,7 @@
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
 
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
 
     if(isset($_SESSION["token"])){
         $decoded = decodeToken($_SESSION["token"]);
@@ -15,47 +15,47 @@
     
 
     $id = $_GET["id"];
-    $sentencia = $conexion->query("select titulo, a.foto foto, g.nombre autor, lanzamiento, g.foto_avatar avatar, g.id id_grupo, d.nombre discografica, d.foto_avatar foto_discografica from album a, grupo g, discografica d where g.discografica = d.id and a.grupo = g.id and a.id = $id");
-    $datos_album = [];
+    $query = $con->query("select title, a.picture picture, g.name author, release_date, g.avatar avatar, g.id artist_id from album a, artist g, where a.artist = g.id and a.id = $id");
+    $album_data = [];
     
-    while($fila = $sentencia->fetch_array(MYSQLI_ASSOC)){
-        $datos_album[] = $fila;
+    while($row = $query->fetch_array(MYSQLI_ASSOC)){
+        $album_data[] = $row;
     }
-    $datos['datos_album'] = $datos_album;
+    $data['album_data'] = $album_data;
 
     if(isset($_SESSION["token"])){
-        $sentencia_usuario = $conexion->prepare("SELECT id from usuario where usuario = ?");
-        $sentencia_usuario->bind_param('s', $user);
-        $sentencia_usuario->bind_result($id_usuario);
-        $sentencia_usuario->execute();
-        $sentencia_usuario->fetch();
-        $sentencia_usuario->close();
+        $user_query = $con->prepare("SELECT id from user where username = ?");
+        $user_query->bind_param('s', $user);
+        $user_query->bind_result($id_user);
+        $user_query->execute();
+        $user_query->fetch();
+        $user_query->close();
 
-        $sentencia_favorito = $conexion->prepare("select count(*) from favorito where album = ? and usuario = ?");
-        $sentencia_favorito->bind_param('ii', $id, $id_usuario);
-        $sentencia_favorito->bind_result($favorito);
-        $sentencia_favorito->execute();
-        $sentencia_favorito->fetch();
-        $sentencia_favorito->close();
+        $favorite_query = $con->prepare("select count(*) from favorite where album = ? and user = ?");
+        $favorite_query->bind_param('ii', $id, $id_user);
+        $favorite_query->bind_result($favorite);
+        $favorite_query->execute();
+        $favorite_query->fetch();
+        $favorite_query->close();
 
-        $datos["favorito"] = $favorito;
+        $data["favorite"] = $favorite;
     }
 
-    $consulta_total_canciones = $conexion->prepare("SELECT count(*) from incluye where album = ?");
-    $consulta_total_canciones->bind_param('i', $id);
-    $consulta_total_canciones->bind_result($total_canciones);
-    $consulta_total_canciones->execute();
-    $consulta_total_canciones->fetch();
-    $consulta_total_canciones->close();
+    $num_songs_query = $con->prepare("SELECT count(*) from album_contains where album = ?");
+    $num_songs_query->bind_param('i', $id);
+    $num_songs_query->bind_result($total_songs);
+    $num_songs_query->execute();
+    $num_songs_query->fetch();
+    $num_songs_query->close();
 
-    $datos["canciones_totales"] = $total_canciones;
+    $data["total_songs"] = $total_songs;
 
-    $consulta_canciones = $conexion->query("select i.album album, titulo, duracion, archivo, e.nombre estilo, c.id id from cancion c, incluye i, estilo e where c.id = i.cancion and e.id = c.estilo and i.album = $id");
-    $datos_canciones = [];
-    while($fila = $consulta_canciones->fetch_array(MYSQLI_ASSOC)){
-        $datos_canciones[] = $fila;
+    $songs_query = $con->query("select i.album album, title, length, file, e.name style, c.id id from songs c, album_contains i, style e where c.id = i.song and e.id = c.style and i.album = $id");
+    $songs_data = [];
+    while($row = $songs_query->fetch_array(MYSQLI_ASSOC)){
+        $songs_data[] = $row;
     }
-    $datos["lista_canciones"] = $datos_canciones;
+    $data["songs_list"] = $songs_data;
 
-    echo json_encode($datos);
-    $conexion->close();
+    echo json_encode($data);
+    $con->close();

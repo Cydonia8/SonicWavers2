@@ -10,25 +10,25 @@
 
     if(isset($_FILES["foto"]["type"])){
         $foto_type = $_FILES["foto"]["type"];
-            $nuevo_nombre;
+            $new_name;
             switch($foto_type){
                 case "image/jpeg":
-                    $nuevo_nombre = $user.'avatar.jpeg';
+                    $new_name = $user.'avatar.jpeg';
                     break;
                 case "image/webp":
-                    $nuevo_nombre = $user.'avatar.webp';
+                    $new_name = $user.'avatar.webp';
                     break;
                 case "image/png":
-                    $nuevo_nombre = $user.'avatar.png';
+                    $new_name = $user.'avatar.png';
                     break;
             }
             if(!file_exists('../media/img_users/'.$user)){
                 mkdir('../media/img_users/'.$user);
             }
-            $nueva_ruta = '../media/img_users/'.$user.'/'.$nuevo_nombre;
-            move_uploaded_file($_FILES["foto"]["tmp_name"], $nueva_ruta);
+            $new_path = '../media/img_users/'.$user.'/'.$new_name;
+            move_uploaded_file($_FILES["foto"]["tmp_name"], $new_path);
 
-        $update = $con->prepare("UPDATE usuario set foto_avatar = ? where usuario = ?");
+        $update = $con->prepare("UPDATE user set avatar = ? where username = ?");
         $update->bind_param('ss', $nueva_ruta, $user);
         $update->execute();
         $update->close();

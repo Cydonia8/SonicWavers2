@@ -2,25 +2,25 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     // sleep(1.5);
     $id = $_GET["id"];
-    $sentencia_datos_album = $conexion->query("select titulo, a.foto foto, nombre autor, lanzamiento, g.foto_avatar avatar, g.id id_grupo from album a, grupo g where a.grupo = g.id and a.id = $id");
-    $datos_album = [];
+    $album_data_query = $con->query("select title, a.picture picture, name author, release_date, g.avatar avatar, g.id artist_id from album a, artist g where a.artist = g.id and a.id = $id");
+    $album_data = [];
     
-    while($fila = $sentencia_datos_album->fetch_array(MYSQLI_ASSOC)){
-        $datos_album[] = $fila;
+    while($row = $album_data_query->fetch_array(MYSQLI_ASSOC)){
+        $album_data[] = $row;
     }
-    $datos['datos_album'] = $datos_album;
+    $data['album_data'] = $album_data;
 
-    $sentencia_reseñas = $conexion->query("select titulo, contenido, fecha, u.usuario autor, u.foto_avatar foto from reseña r, usuario u where r.usuario = u.id and r.album = $id order by fecha desc");
-    $datos_reseña = [];
+    $reviews_query = $con->query("select title, content, r_date, u.username author, u.avatar avatar from review r, user u where r.user = u.id and r.album = $id order by r_date desc");
+    $reviews_data = [];
     
-    while($fila = $sentencia_reseñas->fetch_array(MYSQLI_ASSOC)){
-        $datos_reseña[] = $fila;
+    while($row = $reviews_query->fetch_array(MYSQLI_ASSOC)){
+        $reviews_data[] = $row;
     }
-    $datos['reseñas'] = $datos_reseña;
+    $data['reviews'] = $reviews_data;
 
 
-    echo json_encode($datos);
-    $conexion->close();
+    echo json_encode($data);
+    $con->close();

@@ -2,31 +2,31 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root','','sonicwaves');
+    $con = new mysqli('localhost', 'root','','sonicwaves');
 
-    $lista = $_GET["lista"];
-    $cancion = $_GET["cancion"];
+    $playlist = $_GET["lista"];
+    $song = $_GET["cancion"];
 
-    $sentencia_comprobar = $conexion->prepare("SELECT count(*) from contiene where lista = ? and cancion = ?");
-    $sentencia_comprobar->bind_param('ii', $lista, $cancion);
-    $sentencia_comprobar->bind_result($comprobante);
-    $sentencia_comprobar->execute();
-    $sentencia_comprobar->fetch();
-    $sentencia_comprobar->close();
+    $query = $con->prepare("SELECT count(*) from playlist_includes where playlist = ? and song = ?");
+    $query->bind_param('ii', $playlist, $song);
+    $query->bind_result($check);
+    $query->execute();
+    $query->fetch();
+    $query->close();
 
-    $ultima_cancion = $conexion->prepare("SELECT orden from contiene where lista = ? order by orden desc limit 1");
-    $ultima_cancion->bind_param('i', $lista);
-    $ultima_cancion->bind_result($ultima);
-    $ultima_cancion->execute();
-    $ultima_cancion->fetch();
-    $ultima_cancion->close();
+    $last_song = $con->prepare("SELECT order from playlist_includes where playlist = ? order by order desc limit 1");
+    $last_song->bind_param('i', $playlist);
+    $last_song->bind_result($last);
+    $last_song->execute();
+    $last_song->fetch();
+    $last_song->close();
 
-    $orden = $ultima != '' ? ++$ultima : 1;
+    $order = $last != '' ? ++$last : 1;
 
 
-    if($comprobante == 0){
-        $insert = $conexion->prepare("INSERT INTO contiene (lista, cancion, orden) values (?,?,?)");
-        $insert->bind_param('iii', $lista, $cancion, $orden);
+    if($check == 0){
+        $insert = $con->prepare("INSERT INTO playlist_includes (playlist, song, order) values (?,?,?)");
+        $insert->bind_param('iii', $playlist, $song, $order);
         $insert->execute();
         $insert->close();
         http_response_code(200);
@@ -34,4 +34,4 @@
         http_response_code(400);
     }
     
-    $conexion->close();
+    $con->close();

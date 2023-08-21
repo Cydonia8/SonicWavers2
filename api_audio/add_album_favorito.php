@@ -8,20 +8,20 @@
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
 
     $id_album = $_GET["id"];
 
-    $usuario_consulta = $conexion->prepare("SELECT id from usuario where usuario = ?");
+    $usuario_consulta = $con->prepare("SELECT id from user where username = ?");
     $usuario_consulta->bind_param('s', $user);
-    $usuario_consulta->bind_result($usuario);
+    $usuario_consulta->bind_result($user_id);
     $usuario_consulta->execute();
     $usuario_consulta->fetch();
     $usuario_consulta->close();
 
-    $insert = $conexion->prepare("INSERT INTO favorito (usuario, album) values (?,?)");
-    $insert->bind_param('ii', $usuario, $id_album);
+    $insert = $con->prepare("INSERT INTO favorite (user, album) values (?,?)");
+    $insert->bind_param('ii', $user_id, $id_album);
     $insert->execute();
     $insert->close();
     
-    $conexion->close();
+    $con->close();

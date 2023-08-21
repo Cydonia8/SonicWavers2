@@ -10,32 +10,32 @@
     $user = $decoded["data"]["user"];
 
     if(isset($_POST["f_nac"]) && isset($_POST["estilo"])){
-        $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-        $f_nac = $_REQUEST["f_nac"];
-        $estilo = $_REQUEST["estilo"];
-        $foto_avatar_type = $_FILES["foto_avatar"]["type"];
-        $nuevo_nombre;
-        switch($foto_avatar_type){
+        $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+        $birth_date = $_REQUEST["f_nac"];
+        $style = $_REQUEST["estilo"];
+        $avatar_type = $_FILES["foto_avatar"]["type"];
+        $new_name;
+        switch($avatar_type){
             case "image/jpeg":
-                $nuevo_nombre = $usuario.'avatar.jpeg';
+                $new_name = $user.'avatar.jpeg';
                 break;
             case "image/webp":
-                $nuevo_nombre = $usuario.'avatar.webp';
+                $new_name = $user.'avatar.webp';
                 break;
             case "image/png":
-                $nuevo_nombre = $usuario.'avatar.png';
+                $new_name = $user.'avatar.png';
                 break;
         }
-        if(!file_exists('../media/img_users/'.$usuario)){
-            mkdir('../media/img_users/'.$usuario);
+        if(!file_exists('../media/img_users/'.$user)){
+            mkdir('../media/img_users/'.$user);
         }
-        $nueva_ruta = '../media/img_users/'.$usuario.'/'.$nuevo_nombre;
-        move_uploaded_file($_FILES["foto_avatar"]["tmp_name"], $nueva_ruta);
+        $new_path = '../media/img_users/'.$user.'/'.$new_name;
+        move_uploaded_file($_FILES["foto_avatar"]["tmp_name"], $new_path);
 
-        $update = $conexion->prepare("UPDATE usuario set f_nac = ?, estilo = ?, foto_avatar = ? where usuario = ?");
-        $update->bind_param('siss', $f_nac, $estilo, $nueva_ruta, $usuario);
+        $update = $con->prepare("UPDATE user set birth_date = ?, style = ?, avatar = ? where username = ?");
+        $update->bind_param('siss', $birth_date, $style, $new_path, $user);
         $update->execute();
         $update->close();
-        $conexion->close();
+        $con->close();
     }
 
