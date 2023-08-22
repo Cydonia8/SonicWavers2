@@ -4,7 +4,7 @@
     header("Access-Control-Allow-Origin: *");
 
     $id = $_GET["id"];
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
 
     $delete = $con->prepare("DELETE FROM playlist_includes where playlist = ?");
     $delete->bind_param('i', $id);

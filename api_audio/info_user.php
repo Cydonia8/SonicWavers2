@@ -8,7 +8,7 @@
     $decoded = json_decode(json_encode($decoded), true);
 
     $user = $decoded["data"]["user"];
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $query_profile = $con->prepare("SELECT style from user where id <> 0 and username = ?");
     $query_profile->bind_param('s', $user);
     $query_profile->bind_result($check_profile);

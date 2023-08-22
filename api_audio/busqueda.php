@@ -2,7 +2,7 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $pattern = $_GET["patron"];
     $formated_pattern = '%'.$pattern.'%';
     $artist_query = $con->prepare("SELECT id, name, avatar from artist where active = 1 and name like ?");

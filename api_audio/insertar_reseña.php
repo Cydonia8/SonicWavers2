@@ -12,7 +12,7 @@
         $title = $_REQUEST["titulo"];
         $content = $_REQUEST["contenido"];
         $album = $_REQUEST["id-album"];
-        $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+        $con = createConnection();
         $query = $con->prepare("SELECT id from user where username = ?");
         $query->bind_param('s', $user);
         $query->bind_result($user_id);

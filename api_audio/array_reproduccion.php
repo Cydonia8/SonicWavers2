@@ -2,7 +2,7 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     // sleep(1);
     
     $context = $_GET["contexto"];

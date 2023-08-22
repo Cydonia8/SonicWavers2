@@ -2,7 +2,7 @@
     require_once "../php_functions/login_register_functions.php";
     session_start();
     header("Access-Control-Allow-Origin");
-    $con = new mysqli('localhost','root','','sonicwaves');
+    $con = createConnection();
 
     $decoded = decodeToken($_SESSION["token"]);
     $decoded = json_decode(json_encode($decoded), true);

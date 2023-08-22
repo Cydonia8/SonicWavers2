@@ -3,26 +3,26 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
 
     $decoded = decodeToken($_SESSION["token"]);
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $consulta_estilo = $conexion->prepare("SELECT estilo from usuario where usuario = ?");
-    $consulta_estilo->bind_param('s', $user);
-    $consulta_estilo->bind_result($estilo);
-    $consulta_estilo->execute();
-    $consulta_estilo->fetch();
-    $consulta_estilo->close();
+    $query_style = $con->prepare("SELECT style from user where username = ?");
+    $query_style->bind_param('s', $user);
+    $query_style->bind_result($style);
+    $query_style->execute();
+    $query_style->fetch();
+    $query_style->close();
 
-    $consulta_aleatorio = $conexion->query("select a.id album_id, archivo, g.nombre autor, a.foto caratula, c.titulo titulo, c.id cancion_id from cancion c, incluye i, album a, grupo g where i.cancion = c.id and a.id = i.album and a.grupo = g.id and c.estilo = $estilo and a.activo = 1 order by rand()");
-    $datos_lista = [];
+    $query_random = $con->query("select a.id album_id, archivo, g.nombre autor, a.foto caratula, c.titulo titulo, c.id cancion_id from cancion c, incluye i, album a, grupo g where i.cancion = c.id and a.id = i.album and a.grupo = g.id and c.estilo = $style and a.activo = 1 order by rand()");
+    $list_data = [];
 
-    while($fila = $consulta_aleatorio->fetch_array(MYSQLI_ASSOC)){
-        $datos_lista[] = $fila;
+    while($row = $query_random->fetch_array(MYSQLI_ASSOC)){
+        $list_data[] = $row;
     }
-    $datos["lista_aleatorio"] = $datos_lista;
+    $data["random_list"] = $list_data;
 
-    $conexion->close();
-    echo json_encode($datos);
+    $con->close();
+    echo json_encode($data);

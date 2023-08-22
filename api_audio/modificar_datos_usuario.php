@@ -9,7 +9,7 @@
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $query_current_mail = $con->prepare("SELECT mail from user where username = ?");
     $query_current_mail->bind_param('s', $user);
     $query_current_mail->bind_result($current_mail);

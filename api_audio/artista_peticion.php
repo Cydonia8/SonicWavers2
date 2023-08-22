@@ -2,7 +2,7 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     // sleep(1);
     $id = $_GET["id"];
     $query_artist = $con->query("select name, image, avatar, bio from grupo where id = $id");

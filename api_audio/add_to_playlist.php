@@ -2,7 +2,7 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root','','sonicwaves');
+    $con = createConnection();
 
     $playlist = $_GET["lista"];
     $song = $_GET["cancion"];

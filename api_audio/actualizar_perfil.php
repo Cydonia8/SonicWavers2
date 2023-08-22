@@ -10,7 +10,7 @@
     $user = $decoded["data"]["user"];
 
     if(isset($_POST["f_nac"]) && isset($_POST["estilo"])){
-        $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+        $con = createConnection();
         $birth_date = $_REQUEST["f_nac"];
         $style = $_REQUEST["estilo"];
         $avatar_type = $_FILES["foto_avatar"]["type"];

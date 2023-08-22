@@ -11,7 +11,7 @@
     $user = $decoded["data"]["user"];
 
     $date = date('Y-m-d');
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $id_user = $con->prepare("SELECT id from user where username = ?");
     $id_user->bind_param('s', $user);
     $id_user->bind_result($id);

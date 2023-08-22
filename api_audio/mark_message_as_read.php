@@ -9,7 +9,7 @@
 
     $user = $decoded["data"]["user"];
 
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
 
     $id_msg = $_GET["id"];
 

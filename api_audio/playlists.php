@@ -8,26 +8,26 @@
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $id_user = $conexion->prepare("SELECT id from usuario where usuario = ?");
+    $con = createConnection();
+    $id_user = $con->prepare("SELECT id from user where username = ?");
     $id_user->bind_param('s', $user);
     $id_user->bind_result($id);
     $id_user->execute();
     $id_user->fetch();
     $id_user->close();
 
-    $datos_lista = [];
+    $playlist_data = [];
 
-    $consulta_listas = $conexion->prepare("SELECT l.id id, l.nombre nombre, foto, u.usuario usuario from lista l, usuario u where l.usuario = u.id and l.usuario = ?");
-    $consulta_listas->bind_param('i', $id);
-    $consulta_listas->execute();
-    $resultado=$consulta_listas->get_result();
+    $query_playlists = $con->prepare("SELECT l.id id, l.title title, image, u.username user from playlists l, user u where l.user = u.id and l.user = ?");
+    $query_playlists->bind_param('i', $id);
+    $query_playlists->execute();
+    $result=$query_playlists->get_result();
 
-    while($fila = $resultado->fetch_assoc()){
-        $datos_lista[] = $fila;
+    while($row = $result->fetch_assoc()){
+        $playlist_data[] = $row;
     }
 
-    $datos["listas"] = $datos_lista;
-    $consulta_listas->close();
-    $conexion->close();
-    echo json_encode($datos);
+    $data["playlists"] = $playlist_data;
+    $query_playlists->close();
+    $con->close();
+    echo json_encode($data);

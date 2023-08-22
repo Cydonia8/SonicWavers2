@@ -8,7 +8,7 @@
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
 
     $id_album = $_GET["id"];
 

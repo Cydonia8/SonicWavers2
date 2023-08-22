@@ -2,23 +2,24 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $id = $_GET["id"];
 
-    $consulta_publicacion = $con->query("SELECT titulo, contenido, foto, fecha, grupo from publicacion where id = $id");
-    $datos_publicacion = [];
-    while($fila = $consulta_publicacion->fetch_array(MYSQLI_ASSOC)){
-        $datos_publicacion[] = $fila;
+    $query_post = $con->query("SELECT title, content, image, p_date, artist from posts where id = $id");
+    $post_data = [];
+    while($row = $query_post->fetch_array(MYSQLI_ASSOC)){
+        $post_data[] = $row;
     }
-    $datos["datos_publicacion"] = $datos_publicacion;
+    $data["post_data"] = $post_data;
 
-    $consulta_fotos_extra = $con->query("SELECT enlace from foto_publicacion where publicacion = $id");
-    $fotos_extra = [];
-    if($consulta_fotos_extra->num_rows > 0){
-        while($fila = $consulta_fotos_extra->fetch_array(MYSQLI_ASSOC)){
-            $fotos_extra[] = $fila;
+    //Revisar foto_publicacion tabla
+    $query_extra_photos = $con->query("SELECT link from foto_publicacion where publicacion = $id");
+    $extra_photos = [];
+    if($query_extra_photos->num_rows > 0){
+        while($row = $query_extra_photos->fetch_array(MYSQLI_ASSOC)){
+            $extra_photos[] = $row;
         }
-        $datos["fotos_extra"] = $fotos_extra;
+        $data["extra_photos"] = $extra_photos;
     }
     
-    echo json_encode($datos);
+    echo json_encode($data);

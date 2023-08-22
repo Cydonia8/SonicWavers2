@@ -2,7 +2,7 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $id = $_GET["id"];
 
     $query_playlist_data = $con->prepare("SELECT l.title title, image, pl_date, u.username author, avatar from playlists l, user u where u.id = l.user and l.id = ?");

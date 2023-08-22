@@ -2,7 +2,7 @@
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     sleep(1);
     $query = $con->query("select a.id id, title, a.picture picture, name author from album a, artist g where a.artist = g.id");
     $data = [];

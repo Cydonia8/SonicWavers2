@@ -9,7 +9,7 @@
 
     $user = $decoded["data"]["user"];
 
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     $query = $con->prepare("SELECT content, m_date, state, g.name name_group, mrm.message id_msg from artist g, group_messages gm, member_receives_message mrm, user u where g.id = gm.group
     and gm.id = mrm.message and mrm.user = u.id and u.username = ? order by m_date desc");
     $query->bind_param('s', $user);

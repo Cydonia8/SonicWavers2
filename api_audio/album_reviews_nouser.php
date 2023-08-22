@@ -2,7 +2,7 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = createConnection();
     // sleep(1.5);
     $id = $_GET["id"];
     $album_data_query = $con->query("select title, a.picture picture, name author, release_date, g.avatar avatar, g.id artist_id from album a, artist g where a.artist = g.id and a.id = $id");
