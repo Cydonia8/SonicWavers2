@@ -1,11 +1,11 @@
 <?php
-    
+    require_once "../php_functions/general.php";
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
     $con = createConnection();
     // sleep(1);
     $id = $_GET["id"];
-    $query_artist = $con->query("select name, image, avatar, bio from grupo where id = $id");
+    $query_artist = $con->query("select name, image, avatar, bio from artist where id = $id");
     $artist_data = [];
     
     while($row = $query_artist->fetch_array(MYSQLI_ASSOC)){

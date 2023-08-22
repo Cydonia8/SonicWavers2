@@ -1,4 +1,5 @@
 <?php
+require_once "../php_functions/general.php";
     session_start();
     header("Access-Control-Allow-Origin:*");
     $con = new mysqli('localhost', 'root', '', 'sonicwaves');

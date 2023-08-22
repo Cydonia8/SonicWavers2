@@ -1,4 +1,5 @@
 <?php
+    require_once "../php_functions/general.php";
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
     $con = createConnection();
@@ -7,9 +8,9 @@
     $id_recommended_artist = $con->query("SELECT id from artist where id <> 0 and image is not null and active = 1 order by rand() limit 1");
     $row = $id_recommended_artist->fetch_array(MYSQLI_ASSOC);
     $id = $row["id"];
-    $query_recommended_group = $con->prepare("SELECT link, artist, name from artist_photos f, artist g where f.artist = g.id and artist = ? order by rand() limit 1");
+    $query_recommended_group = $con->prepare("SELECT link, artist, g.id name from artist_photos f, artist g where f.artist = g.id and artist = ? order by rand() limit 1");
     $query_recommended_group->bind_param('i', $id);
-    $query_recommended_group->bind_result($recommended, $artist, $name);
+    $query_recommended_group->bind_result($image, $name, $id);
     $query_recommended_group->execute();
     $query_recommended_group->store_result();
     $query_recommended_group->fetch();
@@ -17,9 +18,9 @@
     
     if($query_recommended_group->num_rows != 0){
         $query_recommended_group->close();
-        $datos["grupo_recomendado"] = $recommended;
-        $datos["id_recommended_artist"] = $artist;
-        $datos["nombre_grupo_recomendado"] = $name;
+        $data["artist"] = $image;
+        $data["id_recommended_artist"] = $id;
+        $data["name"] = $name;
     }else{
         $query_recommended_group->close();
         $query_recommended_group_v2 = $con->prepare("SELECT name, image, id from artist where id = ? and image is not null");
@@ -28,9 +29,9 @@
         $query_recommended_group_v2->execute();
         $query_recommended_group_v2->fetch();
         $query_recommended_group_v2->close();
-        $datos["grupo_recomendado"] = $recommended;
-        $datos["id_recommended_artist"] = $artist;
-        $datos["nombre_grupo_recomendado"] = $name;
+        $data["artist"] = $recommended;
+        $data["id_recommended_artist"] = $artist;
+        $data["name"] = $name;
     }
     
 

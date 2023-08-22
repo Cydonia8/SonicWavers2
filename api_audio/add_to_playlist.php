@@ -2,6 +2,7 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
+    require_once "../php_functions/general.php";
     $con = createConnection();
 
     $playlist = $_GET["lista"];

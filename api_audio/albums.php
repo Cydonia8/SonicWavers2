@@ -1,4 +1,5 @@
 <?php
+    require_once "../php_functions/general.php";
     
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");

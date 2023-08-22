@@ -1,6 +1,6 @@
 <?php
     require_once "../php_functions/login_register_functions.php";
-
+    require_once "../php_functions/general.php";
     session_start();
     header('Content-Type: application/json');
 	header("Access-Control-Allow-Origin: *");
@@ -15,7 +15,7 @@
     
 
     $id = $_GET["id"];
-    $query = $con->query("select title, a.picture picture, g.name author, release_date, g.avatar avatar, g.id artist_id from album a, artist g, where a.artist = g.id and a.id = $id");
+    $query = $con->query("select title, a.picture picture, g.name author, release_date, g.avatar avatar, g.id artist_id from album a, artist g where a.artist = g.id and a.id = $id");
     $album_data = [];
     
     while($row = $query->fetch_array(MYSQLI_ASSOC)){
@@ -50,7 +50,7 @@
 
     $data["total_songs"] = $total_songs;
 
-    $songs_query = $con->query("select i.album album, title, length, file, e.name style, c.id id from songs c, album_contains i, style e where c.id = i.song and e.id = c.style and i.album = $id");
+    $songs_query = $con->query("select i.album album, title, length, file, e.name style, c.id id from songs c, album_contains i, styles e where c.id = i.song and e.id = c.style and i.album = $id");
     $songs_data = [];
     while($row = $songs_query->fetch_array(MYSQLI_ASSOC)){
         $songs_data[] = $row;

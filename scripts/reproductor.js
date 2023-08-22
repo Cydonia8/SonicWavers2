@@ -70,11 +70,11 @@ const highFilter = new BiquadFilterNode(context,{type:'highshelf',frequency:1600
 const finalGain = new GainNode(context)
 
 //Cola reproducción que contendrá las canciones que se irán reproduciendo
-let cola_reproduccion = []
-//Indice de canción que se está reproduciendo
-let indice=0
+let playing_queue = []
+//song_index de canción que se está reproduciendo
+let song_index=0
 
-let ultimo_indice
+let last_song_index
 //Variable para controlar el aleatorio
 let shuffle_state = false
 
@@ -129,7 +129,7 @@ function activateShuffle(){
 //     const btn_eq = main_content.querySelector("button")
 //     const btn_guardar = main_content.querySelector(".save")
 //     btn_eq.addEventListener("click", ()=>{
-//         activateAudioFilters(btn_guardar) //Activar los filtros de ecualización
+//         activateAudioFilters(btn_guardar) //Activar los filters de ecualización
 //     })
 
 //     const div_ecualizador = document.createElement("div")
@@ -478,7 +478,7 @@ search_bar.addEventListener("keyup", async ()=>{
             })                          
 
             div_song.addEventListener("click", (evt)=>{
-                cola_reproduccion.push(cancion)
+                playing_queue.push(cancion)
                 playSearchedSong(cancion)
             })
             resultados_canciones.appendChild(div_song)
@@ -675,9 +675,9 @@ async function deletePlaylist(id){
 
 async function printPlaylist(id){
     main_content.innerHTML=""
-    const respuesta = await fetch(`../api_audio/imprimir_playlist.php?id=${id}`)
-    const datos = await respuesta.json()
-    const datos_lista = datos["datos_lista"] 
+    const response = await fetch(`../api_audio/imprimir_playlist.php?id=${id}`)
+    const data = await response.json()
+    const datos_lista = data["datos_lista"] 
     main_content.classList.add("position-absolute", "w-100", "top-0")
     const section_playlist_head = document.createElement("section")
     section_playlist_head.classList.add("container-fluid", "d-flex","flex-column", "flex-lg-row", "lista-page-header", "gap-3", "align-items-center", "p-3")
@@ -721,16 +721,16 @@ async function printPlaylist(id){
 
     const lista_canciones = datos["datos_canciones"]
 
-    const section_lista_canciones = document.createElement("section")
-    section_lista_canciones.classList.add("p-4", "d-flex", "flex-column", "gap-3")
+    const section_songs_list = document.createElement("section")
+    section_songs_list.classList.add("p-4", "d-flex", "flex-column", "gap-3")
     lista_canciones.forEach((cancion, index)=>{
-        let indice = index+1
+        let song_index = index+1
         const cancion_container = document.createElement("div")
         cancion_container.classList.add("d-flex", "justify-content-between", "cancion-row")
         cancion_container.setAttribute("data-cancion", id)
         cancion_container.setAttribute("data-index", index)
         cancion_container.innerHTML=`<div class='d-flex gap-3 align-items-center'>
-                                        <span>${indice}</span>
+                                        <span>${song_index}</span>
                                         <div>
                                             <h5 class='m-0 cancion-link'>${cancion.titulo}</h5> 
                                             <span class='track-info-artist'>${cancion.autor}</span>
@@ -760,13 +760,13 @@ async function printPlaylist(id){
             const ul_container = cancion_container.querySelector(".dropdown-menu")
             getAllPlaylists(ul_container, "modal", id_cancion)
         })                          
-        section_lista_canciones.appendChild(cancion_container)
+        section_songs_list.appendChild(cancion_container)
         
     })
-    main_content.appendChild(section_lista_canciones)
+    main_content.appendChild(section_songs_list)
     if(!audio.paused){
-        for(const child of section_lista_canciones.children){
-            if(child.children[0].children[1].innerText == cola_reproduccion[indice].titulo){
+        for(const child of section_songs_list.children){
+            if(child.children[0].children[1].innerText == playing_queue[song_index].titulo){
                 child.children[0].children[1].classList.add("current-song-playing")
             }
         }
@@ -795,25 +795,24 @@ async function playerMainState(){
     main_content.classList.remove("position-absolute")
     loader.classList.remove("d-none")
     loader.classList.add("d-flex")
-    const respuesta = await fetch("../api_audio/player_main_state.php")
-    const datos = await respuesta.json()
+    const response = await fetch("../api_audio/player_main_state.php")
+    const data = await response.json()
     loader.classList.remove("d-flex")
     loader.classList.add("d-none")
-    
-    const recomendado = {
-        foto: datos["grupo_recomendado"],
-        id: datos["id_grupo_recomendado"],
-        nombre: datos["nombre_grupo_recomendado"],
-        discografica: datos["discografica"]
+    console.log(data)
+    const recommended = {
+        image: data["artist"],
+        id: data["id_recommended_artist"],
+        name: data["name"],
     }
     let disco = 'Grupo <ion-icon name="checkmark-circle-outline"></ion-icon>'
     const banner_main = document.createElement("div")
     banner_main.classList.add("banner-recomended", "mx-auto", "d-flex", "align-items-center", "flex-column", "justify-content-end", "position-relative", "mb-4")
-    banner_main.setAttribute("data-artist-id", recomendado.id)
-    banner_main.innerHTML=`<h2 class='recomended-group-name mb-0'>${recomendado.nombre}</h2>
+    banner_main.setAttribute("data-artist-id", recommended.id)
+    banner_main.innerHTML=`<h2 class='recomended-group-name mb-0'>${recommended.name}</h2>
     <h5 class='ms-3 d-flex align-items-center gap-2 grupo-esencial-badge'>${disco}</h5>`
     
-    banner_main.style.backgroundImage=`url('${recomendado.foto}')`
+    banner_main.style.backgroundImage=`url('${recommended.image}')`
     banner_main.style.backgroundSize='cover'
     banner_main.style.backgroundPosition='center'
     banner_main.style.height='40vh'
@@ -825,13 +824,13 @@ async function playerMainState(){
     main_content.innerHTML+=`<h2 class='ms-4'>Álbumes populares</h2>`
     main_content.appendChild(main_albums_container)
     const main_content_albums_container = main_content.querySelector(".main-content-albums-container")
-    datos["datos"].forEach(disco=>{
+    data["data"].forEach(album=>{
         const div_album_container = document.createElement("div")
         div_album_container.classList.add("d-flex", "flex-column", "justify-content-around", "album-inner-container")
-        div_album_container.setAttribute("data-album-id", disco.id)
-        div_album_container.innerHTML= `<img src='${disco.foto}' class='img-fluid mb-1 rounded'>
-        <a>${disco.titulo}</a>
-        <span class='artist-link' data="${disco.grupo_id}">${disco.autor}</span>`
+        div_album_container.setAttribute("data-album-id", album.id)
+        div_album_container.innerHTML= `<img src='${album.picture}' class='img-fluid mb-1 rounded'>
+        <a>${album.title}</a>
+        <span class='artist-link' data="${album.artist_id}">${album.author}</span>`
 
         
         main_content_albums_container.appendChild(div_album_container)       
@@ -842,51 +841,51 @@ async function playerMainState(){
     main_content.innerHTML+=`<h2 class='ms-4 mt-3'>Artistas populares</h2>`
     main_content.appendChild(main_artists_container)
     const main_content_artists_container = main_content.querySelector(".main-content-artists-container")
-    datos["artistas"].forEach(artista=>{
+    data["artists"].forEach(artist=>{
         const div_artist_container = document.createElement("div")
-        div_artist_container.setAttribute("data-artist-id", artista.id)
+        div_artist_container.setAttribute("data-artist-id", artist.id)
         div_artist_container.addEventListener("click", ()=>{
-            showGroup(artista.id)
+            showGroup(artist.id)
         })
         div_artist_container.classList.add("d-flex", "flex-column", "justify-content-around", "artist-inner-container")   
-        div_artist_container.innerHTML=`<img src='${artista.foto_avatar}' class='img-fluid rounded-circle'>
-        <a class='text-center text-white'>${artista.nombre}</a>`
+        div_artist_container.innerHTML=`<img src='${artist.avatar}' class='img-fluid rounded-circle'>
+        <a class='text-center text-white'>${artist.name}</a>`
         main_content_artists_container.appendChild(div_artist_container)
     })
 
-    const estilo_r1 = datos["estilo_random1"]
-    const albums_estilo_r1 = datos["albums_estilo_r1"];
+    const style_r1 = data["random_style1"]
+    const albums_style_r1 = data["albums_style_r1"];
 
     const albums_random1 = document.createElement("div")
     albums_random1.classList.add("d-flex", "flex-column", "flex-lg-row", "justify-content-start", "gap-3", "main-content-artists-container", "container-fluid")
-    main_content.innerHTML+=`<h2 class='ms-4 mt-3'>Álbumes recomendados de ${estilo_r1}</h2>`
-    albums_estilo_r1.forEach(album=>{
+    main_content.innerHTML+=`<h2 class='ms-4 mt-3'>Álbumes recomendados de ${style_r1}</h2>`
+    albums_style_r1.forEach(album=>{
         const div_album_r1_container = document.createElement("div")
         div_album_r1_container.classList.add("d-flex", "flex-column", "justify-content-around", "album-inner-container")
         div_album_r1_container.setAttribute("data-album-id", album.id)
-        div_album_r1_container.innerHTML=`<img src='${album.foto}' class='img-fluid mb-1 rounded'>
-        <a>${album.titulo}</a>
-        <span class='artist-link' data="${album.grupo_id}">${album.autor}</span>`
+        div_album_r1_container.innerHTML=`<img src='${album.picture}' class='img-fluid mb-1 rounded'>
+        <a>${album.title}</a>
+        <span class='artist-link' data="${album.artist_id}">${album.author}</span>`
         albums_random1.appendChild(div_album_r1_container)
     })
     main_content.appendChild(albums_random1)
-    const pubs_random = datos["publicaciones_random"]
-    console.log(pubs_random)
+    const pubs_random = data["random_posts"]
+  
     main_content.innerHTML+="<h2 class='ms-4 mt-3'>Consulta algunas de nuestras publicaciones exclusivas</h2>"
     const div_publis = document.createElement("div")
     div_publis.classList.add("d-flex", "flex-column", "p-3", "gap-3", "initial-state-pubs-container")
     pubs_random.forEach(pub=>{
         const div_pub = document.createElement("div")
         div_pub.classList.add("d-flex", "gap-3")
-        div_pub.innerHTML=`<img src='${pub.foto}' class='img-pub-initial-state'>
+        div_pub.innerHTML=`<img src='${pub.image}' class='img-pub-initial-state'>
                             <div class='p-1 d-flex flex-column align-items-start gap-2'>
-                                <h3>${pub.titulo}</h3>
-                                <h4>${pub.grupo}</h4>
-                                <i>${formatDate(pub.fecha)}</i>
+                                <h3>${pub.title}</h3>
+                                <h4>${pub.artist}</h4>
+                                <i>${formatDate(pub.p_date)}</i>
                                 <button type="button" style='--clr:#0ce8e8' class='btn-danger-own'><span>Ver completa</span><i></i></button>
                             </div>`
-        const ver_publicacion = div_pub.querySelector("button")
-        ver_publicacion.addEventListener("click", ()=>{
+        const full_post = div_pub.querySelector("button")
+        full_post.addEventListener("click", ()=>{
             watchFullPost(pub.id)
         })
         div_publis.appendChild(div_pub)
@@ -900,17 +899,17 @@ async function initializePlayer(evt){
 
 //Actualizar tiempo actual de la canción
 audio.addEventListener("timeupdate", ()=>{
-    let current_minutos = Math.floor(audio.currentTime/60)
-    let current_segundos = Math.floor(audio.currentTime - current_minutos * 60)
+    let current_minutes = Math.floor(audio.currentTime/60)
+    let current_seconds = Math.floor(audio.currentTime - current_minutes * 60)
 
     let width = parseFloat(audio.currentTime / audio.duration * 100)
     seek.value = width
     bar2.style.width=`${width}%`
     dot.style.left=`${width}%`
-    if(current_segundos < 10){
-        current_segundos = `0${current_segundos}`
+    if(current_seconds < 10){
+        current_seconds = `0${current_seconds}`
     }
-    current_time.innerText=`${current_minutos}:${current_segundos}`
+    current_time.innerText=`${current_minutes}:${current_seconds}`
 })
 
 document.addEventListener("click", (evt)=>{
@@ -939,12 +938,12 @@ document.addEventListener("click", (evt)=>{
 //Actualizar duración total de la canción
 audio.addEventListener("loadedmetadata", ()=>{
     seek.max=audio.duration
-    let duracion_min = Math.floor(audio.duration/60)
-    let duracion_segundos = Math.floor(audio.duration - duracion_min * 60);
-    if(duracion_segundos < 10){
-        duracion_segundos = `0${duracion_segundos}`
+    let length_min = Math.floor(audio.duration/60)
+    let length_seconds = Math.floor(audio.duration - length_min * 60);
+    if(length_seconds < 10){
+        length_seconds = `0${length_seconds}`
     }   
-    end_time.innerText=`${duracion_min}:${duracion_segundos}`
+    end_time.innerText=`${length_min}:${length_seconds}`
 })
 
 
@@ -959,88 +958,88 @@ audio.addEventListener("ended", ()=>{
     end_time.innerText='0:00'
     play_pause.setAttribute("name", "play-outline")
     if(!shuffle_state){
-        indice++
+        song_index++
     }else{
-        indice = Math.floor(Math.random()*cola_reproduccion.length)
+        song_index = Math.floor(Math.random()*playing_queue.length)
     }
     
     const row_album = document.querySelectorAll(".cancion-row")
     let arr = Array.from(row_album)
-    const filtro = arr.filter(cont=>cont.children[0].children[0].innerText == indice+1)
-    if(indice < cola_reproduccion.length){
-        if(filtro.length != 0){
+    const filter = arr.filter(cont=>cont.children[0].children[0].innerText == song_index+1)
+    if(song_index < playing_queue.length){
+        if(filter.length != 0){
             arr.forEach(item=>{
                 item.children[0].children[1].classList.remove("current-song-playing")
             })
-            filtro[0].children[0].children[1].classList.add("current-song-playing")
+            filter[0].children[0].children[1].classList.add("current-song-playing")
         }
-        playSong(indice)
+        playSong(song_index)
     }
 })
 next.addEventListener("click", ()=>{
     if(!shuffle_state){
-        indice++
+        song_index++
     }else{
-        ultimo_indice = indice
-        indice = Math.floor(Math.random()*cola_reproduccion.length)
+        last_song_index = song_index
+        song_index = Math.floor(Math.random()*playing_queue.length)
     }
     
     const row_album = document.querySelectorAll(".cancion-row")
 
     let arr = Array.from(row_album)
-    const filtro = arr.filter(cont=>cont.children[0].children[0].innerText == indice+1)
+    const filter = arr.filter(cont=>cont.children[0].children[0].innerText == song_index+1)
     
-    if(indice < cola_reproduccion.length){
-        if(filtro.length != 0){
+    if(song_index < playing_queue.length){
+        if(filter.length != 0){
             arr.forEach(item=>{
                 item.children[0].children[1].classList.remove("current-song-playing")
             })
 
-            if(filtro[0].children[0].children[1].children[0].innerText == cola_reproduccion[indice].titulo){
-                filtro[0].children[0].children[1].classList.add("current-song-playing")
+            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].titulo){
+                filter[0].children[0].children[1].classList.add("current-song-playing")
             }
             
         }
-        playSong(indice)
+        playSong(song_index)
     }else{
-        indice = 0
+        song_index = 0
         if(row_album.length != 0){
             row_album.item(row_album.length-1).children[0].children[1].classList.remove("current-song-playing")
             row_album.item(0).children[0].children[1].classList.add("current-song-playing")
         }
-        playSong(indice)
+        playSong(song_index)
     }
 })
 previous.addEventListener("click", ()=>{
     if(!shuffle_state){
-        indice--
+        song_index--
     }else{
-        indice = ultimo_indice
+        song_index = last_song_index
     }
     
     const row_album = document.querySelectorAll(".cancion-row")
     let arr = Array.from(row_album)
-    const filtro = arr.filter(cont=>cont.children[0].children[0].innerText == indice+1)
-    if(indice >= 0){
-        if(filtro.length != 0){
+    const filter = arr.filter(cont=>cont.children[0].children[0].innerText == song_index+1)
+    if(song_index >= 0){
+        if(filter.length != 0){
             arr.forEach(item=>{
                 item.children[0].children[1].classList.remove("current-song-playing")
             })
-            if(filtro[0].children[0].children[1].children[0].innerText == cola_reproduccion[indice].titulo){
-                filtro[0].children[0].children[1].classList.add("current-song-playing")
+            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].titulo){
+                filter[0].children[0].children[1].classList.add("current-song-playing")
             }
         }
-        playSong(indice)
+        playSong(song_index)
     }else{
-        indice = 0
-        playSong(indice)
+        song_index = 0
+        playSong(song_index)
     }
 })
 
 volume_input.addEventListener("input", ()=>{
-    let valor = volume_input.value
-    audio.volume=valor
-    let width = valor*100
+    let value = volume_input.value
+    audio.volume=value
+    let width = value*100
     volume_bar.style.width=`${width}%`
     volume_dot.style.left=`${width}%`
     if(audio.volume > 0 && audio.volume <= .25){
@@ -1070,32 +1069,32 @@ function initialVolume(){
 }
  
 async function initializeUser(){
-    const respuesta = await fetch(`../api_audio/info_user.php`)
-    const datos = await respuesta.json()
-    let usuario_datos = datos["datos"]
-    console.log(usuario_datos)
-    let completado = datos["perfil_completado"]
-    if(completado == 0){
-        const respuesta_est = await fetch('../api_audio/estilos.php');
-        const datos_est = await respuesta_est.json()
-        const estilos = datos_est["estilos"]
+    const response = await fetch(`../api_audio/info_user.php`)
+    const data = await response.json()
+    let user_data = data["data"]
+    console.log(user_data)
+    let completed = data["profile_completed"]
+    if(completed == 0){
+        const response_styles = await fetch('../api_audio/estilos.php');
+        const data_styles = await response_styles.json()
+        const styles = data_styles["styles"]
 
-        const formulario_completar = document.createElement("section")
-        formulario_completar.classList.add("position-fixed", "top-0", "d-flex", "justify-content-center", "align-items-center")
+        const form_complete = document.createElement("section")
+        form_complete.classList.add("position-fixed", "top-0", "d-flex", "justify-content-center", "align-items-center")
         const div_container = document.createElement("div")
         div_container.classList.add("d-flex", "flex-column", "p-3", "gap-3","border", "align-items-center")
         div_container.style.background=`linear-gradient(90deg, rgba(0,0,0,1) 5%, rgba(12,159,196,1) 55%, rgba(0,0,0,1) 93%)`
         div_container.innerHTML=`<img src='../media/assets/sonic-waves-logo-simple.png' class="w-25 mx-auto">
         <h1 class='text-center'>¡Bienvenido a Sonic Waves!</h1>
-        <p class="w-50 text-center">¡Enhorabuena ${usuario_datos[0].nombre} ${usuario_datos[0].apellidos}! Ya formas parte de la familia de Sonic Waves. Antes de podar usar
+        <p class="w-50 text-center">¡Enhorabuena ${user_data[0].name} ${user_data[0].surname}! Ya formas parte de la familia de Sonic Waves. Antes de podar usar
         nuestro reproductor y todas las posibilidades que este ofrece deberás completar tu perfil. Pero 
         ¡no te preocupes, no te llevará más de 30 segundos!</p>`
         const form = document.createElement("form")
         form.classList.add("d-flex", "flex-column", "align-items-center", "gap-3")
         form.setAttribute("enctype", "multipart/form-data")
         form.setAttribute("method", "post")
-        const select_estilo = createSelect(estilos)
-        form.appendChild(select_estilo)
+        const select_style = createSelect(styles)
+        form.appendChild(select_style)
         form.innerHTML+=`<div class="input-field d-flex flex-column mb-3">
                             <div class="input-visuals d-flex justify-content-between align-items-center gap-3">
                                 <label for="usuario">Fecha de nacimiento</label>
@@ -1112,30 +1111,30 @@ async function initializeUser(){
                         </div>                  
                         
                         <button type="button" style='--clr:#0ce8e8' class='btn-danger-own' id='completar-perfil'><span>Completar datos</span><i></i></button>`
-        const input_fecha = form.querySelector("#f_nac")
-        const input_foto = form.querySelector("#foto_avatar")
-        const input_estilo = form.querySelector("select")
+        const input_date = form.querySelector("#f_nac")
+        const input_avatar = form.querySelector("#foto_avatar")
+        const input_style = form.querySelector("select")
         const btn_update = form.querySelector("#completar-perfil")
 
         div_container.appendChild(form)
-        formulario_completar.style.width="100%"
-        formulario_completar.style.height="100dvh"
-        formulario_completar.style.backdropFilter="blur(3px)"
-        formulario_completar.style.zIndex="8888888888888888888888888888888888888888888888888888888888888"
-        formulario_completar.appendChild(div_container)
-        document.body.appendChild(formulario_completar)
+        form_complete.style.width="100%"
+        form_complete.style.height="100dvh"
+        form_complete.style.backdropFilter="blur(3px)"
+        form_complete.style.zIndex="8888888888888888888888888888888888888888888888888888888888888"
+        form_complete.appendChild(div_container)
+        document.body.appendChild(form_complete)
         btn_update.addEventListener("click", ()=>{
-            if(input_estilo.value.trim() !== "" && input_foto.value.trim() !== "" && input_fecha.value.trim() !== ""){
-                updateProfile(input_foto, input_estilo, input_fecha, form)
+            if(input_style.value.trim() !== "" && input_avatar.value.trim() !== "" && input_date.value.trim() !== ""){
+                updateProfile(input_avatar, input_style, input_date, form)
                 location.reload()
             }
             
         })
         
     }
-    profile_menu_avatar.parentElement.parentElement.previousElementSibling.src=usuario_datos[0].foto_avatar
-    console.log(usuario_datos[0])
-    if(usuario_datos[0].grupo != "sin grupo"){
+    profile_menu_avatar.parentElement.parentElement.previousElementSibling.src=user_data[0].avatar
+
+    if(user_data[0].artist != "sin grupo"){
         const li = document.createElement("li")
         li.innerHTML='<a class="dropdown-item" id="link-msgs" href="">Mensajes</a>'
 
@@ -1187,7 +1186,7 @@ async function loadUserMessages(){
         let date_split = msg.m_date.split(" ")
 
         const div_msg = document.createElement("div")
-        if(msg.estado == 0){
+        if(msg.state == 0){
             div_msg.classList.add("message-not-readed")
         }else{
             div_msg.classList.add("message-readed")
@@ -1195,7 +1194,7 @@ async function loadUserMessages(){
         div_msg.classList.add("container-message", 'p-3', "rounded")
         div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${formatDate(date_split[0])} a las ${date_split[1]}</h3>
                             <p>${msg.content}</p>`
-        if(msg.estado == 0){
+        if(msg.state == 0){
             div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`
             const mark_msg = div_msg.querySelector(".mark-msg-as-readed")
             mark_msg.addEventListener("click", async ()=>{
@@ -1208,30 +1207,30 @@ async function loadUserMessages(){
     main_content.appendChild(section_msgs)
 }
 
-function createSelect(estilos){
+function createSelect(styles){
     const select = document.createElement("select")
     select.classList.add("p-1")
     select.setAttribute("name", "estilo")
     select.innerHTML="<option checked hidden value='null'>Escoge un estilo</option>"
-    estilos.forEach(estilo=>{
-        select.innerHTML+=`<option value="${estilo.id}">${estilo.nombre}</option>`
+    styles.forEach(style=>{
+        select.innerHTML+=`<option value="${style.id}">${style.name}</option>`
     })
     
     return select
 }
 
-async function updateProfile(input_foto, input_estilo, input_fecha, formulario_perfil){
+async function updateProfile(input_avatar, input_style, input_date, profile_form){
     const formData = new FormData()
-    formData.append("foto_avatar", input_foto.files[0])
-    formData.append("estilo", input_estilo.value)
-    formData.append("f_nac", input_fecha.value)
+    formData.append("foto_avatar", input_avatar.files[0])
+    formData.append("estilo", input_style.value)
+    formData.append("f_nac", input_date.value)
 
     
     await fetch(`../api_audio/actualizar_perfil.php`, {
         method: 'POST',
         body: formData
     })
-    formulario_perfil.reset()
+    profile_form.reset()
     
 }
 
@@ -1242,29 +1241,29 @@ async function showAlbum(target){
     loader.classList.add("d-flex")
     const id = target.getAttribute("data-album-id")
 
-    const respuesta = await fetch(`../api_audio/album_peticion.php?id=${id}`)
-    const datos = await respuesta.json()
+    const response = await fetch(`../api_audio/album_peticion.php?id=${id}`)
+    const data = await response.json()
     loader.classList.add("d-none")
     loader.classList.remove("d-flex")
     
-    const favorito = datos["favorito"]
-    const total_canciones = datos["canciones_totales"]
+    const favorite = data["favorite"]
+    const total_songs = data["total_songs"]
    
-    const datos_album = datos["datos_album"]
-    const corazon = favorito == 0 ? "fa-regular" : "fa-solid"
+    const album_data = data["album_data"]
+    const heart = favorite == 0 ? "fa-regular" : "fa-solid"
     main_content.classList.add("position-absolute", "w-100", "top-0")
     const section_album_head = document.createElement("section")
     section_album_head.classList.add("container-fluid", "d-flex","flex-column", "flex-lg-row", "album-page-header", "gap-3", "align-items-center", "p-3")
     section_album_head.innerHTML=`<canvas></canvas>
                                     <div class='d-flex flex-column gap-3 align-items-center align-items-md-start'>
-                                        <h1 class='text-sm-center'>${datos_album[0].titulo}</h1>
+                                        <h1 class='text-sm-center'>${album_data[0].title}</h1>
                                         <div class='d-flex align-items-center gap-2'>
-                                            <img src='${datos_album[0].avatar}' class='avatar-album-page'>
-                                            <h3 data-artist-id=${datos_album[0].id_grupo} class='m-0 album-page-artist-link'>${datos_album[0].autor}</h3>
+                                            <img src='${album_data[0].avatar}' class='avatar-album-page'>
+                                            <h3 data-artist-id=${album_data[0].artist_id} class='m-0 album-page-artist-link'>${album_data[0].author}</h3>
                                         </div>
-                                        <h4>Lanzado el ${formatDate(datos_album[0].lanzamiento)} · ${total_canciones} canciones</h4>
+                                        <h4>Lanzado el ${formatDate(album_data[0].release_date)} · ${total_songs} canciones</h4>
                                         <div class='d-flex gap-4'>
-                                            <i data-favorite=${favorito} class="${corazon} fa-heart add-favorite-album"></i>
+                                            <i data-favorite=${favorite} class="${heart} fa-heart add-favorite-album"></i>
                                             <i data-album-id="${id}" class="fa-regular fa-comment add-album-review see-album-reviews"></i>
                                         </div>
                                     </div>`
@@ -1272,8 +1271,8 @@ async function showAlbum(target){
     const add_favorite = section_album_head.querySelector(".add-favorite-album")
     const see_reviews = section_album_head.querySelector(".see-album-reviews")
     add_favorite.addEventListener("click", (evt)=>{
-        const es_favorito = evt.target.getAttribute("data-favorite")
-        if(es_favorito == 0){
+        const is_favorite = evt.target.getAttribute("data-favorite")
+        if(is_favorite == 0){
             addFavoriteAlbum(id)
             add_favorite.classList.remove("fa-regular")
             add_favorite.classList.add("fa-solid")
@@ -1288,14 +1287,14 @@ async function showAlbum(target){
     see_reviews.addEventListener("click", async ()=>{
         await seeAlbumReviews(id)
     })
-    const enlace_grupo = section_album_head.querySelector("h3")
-    enlace_grupo.addEventListener("click", ()=>{
-        showGroup(datos_album[0].id_grupo)
+    const artist_link = section_album_head.querySelector("h3")
+    artist_link.addEventListener("click", ()=>{
+        showGroup(album_data[0].artist_id)
     })
     const img = document.createElement("img")
     canvas.width='300'
     canvas.height='300'
-    img.src=`${datos_album[0].foto}`
+    img.src=`${album_data[0].picture}`
     img.width='300px'
     img.height='300px'
     let ctxt = canvas.getContext("2d")
@@ -1312,55 +1311,55 @@ async function showAlbum(target){
 
     section_album_head.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
     main_content.appendChild(section_album_head)
-    const lista_canciones = datos["lista_canciones"]
-    const section_lista_canciones = document.createElement("section")
-    section_lista_canciones.classList.add("p-4", "d-flex", "flex-column", "gap-3")
+    const songs_list = data["songs_list"]
+    const section_songs_list = document.createElement("section")
+    section_songs_list.classList.add("p-4", "d-flex", "flex-column", "gap-3")
 
-    lista_canciones.forEach((cancion, index)=>{
-        let indice = index+1
-        const cancion_container = document.createElement("div")
-        cancion_container.classList.add("d-flex", "justify-content-between", "cancion-row")
-        cancion_container.setAttribute("data-cancion", cancion.album)
-        cancion_container.setAttribute("data-index", index)
-        cancion_container.innerHTML=`<div class='d-flex gap-3 align-items-center'>
-                                        <span>${indice}</span>
+    songs_list.forEach((song, index)=>{
+        let song_index = index+1
+        const song_container = document.createElement("div")
+        song_container.classList.add("d-flex", "justify-content-between", "cancion-row")
+        song_container.setAttribute("data-cancion", song.album)
+        song_container.setAttribute("data-index", index)
+        song_container.innerHTML=`<div class='d-flex gap-3 align-items-center'>
+                                        <span>${song_index}</span>
                                         <div>
-                                            <h5 class='m-0 cancion-link'>${cancion.titulo}</h5> 
-                                            <span class='track-info-artist'>${datos_album[0].autor}</span>
+                                            <h5 class='m-0 cancion-link'>${song.title}</h5> 
+                                            <span class='track-info-artist'>${album_data[0].author}</span>
                                         </div>
-                                        <button data-bs-auto-close="true" data-song-id=${cancion.id} class="btn-group dropup add-song-to-playlist d-flex align-items-center p-0 border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false"><ion-icon name="add-outline"></ion-icon></button>
+                                        <button data-bs-auto-close="true" data-song-id=${song.id} class="btn-group dropup add-song-to-playlist d-flex align-items-center p-0 border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false"><ion-icon name="add-outline"></ion-icon></button>
                                             <ul class="dropdown-menu overflow-auto dropdown-menu-add-playlist">
                                             </ul>                                      
                                     </div>                                    
                                     <div class='d-flex align-items-center gap-3'>
-                                        <span>${cancion.duracion}</span>
+                                        <span>${song.length}</span>
                                         
                                     </div>`                                   
-        cancion_container.addEventListener("click", (evt)=>{
+        song_container.addEventListener("click", (evt)=>{
             loadPlayingList(evt, "album")
         })     
-        const add_song_playlist = cancion_container.querySelector(".add-song-to-playlist")
+        const add_song_playlist = song_container.querySelector(".add-song-to-playlist")
         add_song_playlist.addEventListener("click", (evt)=>{
             evt.stopPropagation()
-            const id_cancion = evt.currentTarget.getAttribute("data-song-id")
-            const ul_container = cancion_container.querySelector(".dropdown-menu")
-            getAllPlaylists(ul_container, "modal", id_cancion)
+            const song_id = evt.currentTarget.getAttribute("data-song-id")
+            const ul_container = song_container.querySelector(".dropdown-menu")
+            getAllPlaylists(ul_container, "modal", song_id)
         })                          
-        section_lista_canciones.appendChild(cancion_container)
+        section_songs_list.appendChild(song_container)
         
     })
     // if(datos_album[0].discografica != "Autogestionado"){
     //     main_content.innerHTML+=`<i class="album-copyright">Publicado por ${datos_album[0].discografica}, All Rights Reserved © <img src='${datos_album[0].foto_discografica}' class='rounded-circle discografica-copyright-image'></i>`
     // }else{
-    //     section_lista_canciones.innerHTML+=`<i class="album-copyright">Publicado por ${datos_album[0].autor}, All Rights Reserved © <img src='${datos_album[0].avatar}' class='rounded-circle discografica-copyright-image'></i>`
+    //     section_songs_list.innerHTML+=`<i class="album-copyright">Publicado por ${datos_album[0].autor}, All Rights Reserved © <img src='${datos_album[0].avatar}' class='rounded-circle discografica-copyright-image'></i>`
     // }
-    main_content.appendChild(section_lista_canciones)
+    main_content.appendChild(section_songs_list)
     
     if(!audio.paused){
-        for(const child of section_lista_canciones.children){
+        for(const child of section_songs_list.children){
             if(!child.classList.contains("album-copyright")){
           
-                if(child.children[0].children[1].children[0].innerText == cola_reproduccion[indice].titulo){
+                if(child.children[0].children[1].children[0].innerText == playing_queue[song_index].titulo){
                     child.children[0].children[1].classList.add("current-song-playing")
                 }
             }
@@ -1382,25 +1381,25 @@ async function seeAlbumReviews(id){
     loader.classList.remove("d-none")
     loader.classList.add("d-flex")
     
-    const respuesta = await fetch(`../api_audio/album_reviews.php?id=${id}`)
-    const datos = await respuesta.json()
+    const response = await fetch(`../api_audio/album_reviews.php?id=${id}`)
+    const data = await response.json()
     loader.classList.remove("d-flex")
     loader.classList.add("d-none")
 
-    const datos_album = datos["datos_album"]
-    const reseña_escrita = datos["reseña_escrita"]
+    const album_data = data["album_data"]
+    const written_review = data["has_wrote_review"]
     main_content.classList.add("position-absolute", "w-100", "top-0")
     const section_album_head = document.createElement("section")
     // section_album_head.setAttribute("data-album-id", id)
     section_album_head.classList.add("container-fluid", "d-flex","flex-column", "flex-lg-row", "album-page-header", "gap-3", "align-items-center", "p-3")
     section_album_head.innerHTML=`<canvas></canvas>
                                     <div class='d-flex flex-column gap-3'>
-                                        <h1>${datos_album[0].titulo}</h1>
+                                        <h1>${album_data[0].title}</h1>
                                         <div class='d-flex align-items-center gap-2'>
-                                            <img src='${datos_album[0].avatar}' class='avatar-album-page'>
-                                            <h3 data-artist-id=${datos_album[0].id_grupo} class='m-0'>${datos_album[0].autor}</h3>
+                                            <img src='${album_data[0].avatar}' class='avatar-album-page'>
+                                            <h3 data-artist-id=${album_data[0].artist_id} class='m-0'>${album_data[0].author}</h3>
                                         </div>
-                                        <h4>Lanzado el ${formatDate(datos_album[0].lanzamiento)}</h4>
+                                        <h4>Lanzado el ${formatDate(album_data[0].release_date)}</h4>
                                         <div class='d-flex gap-4'>
                                       
                                             <ion-icon data-album-id="${id}"  class="album-song-list" name="musical-notes-outline"></ion-icon>
@@ -1411,14 +1410,14 @@ async function seeAlbumReviews(id){
     album_songs.addEventListener("click", (evt)=>{
         showAlbum(evt.target)
     })
-    const enlace_grupo = section_album_head.querySelector("h3")
-    enlace_grupo.addEventListener("click", ()=>{
-        showGroup(datos_album[0].id_grupo)
+    const artist_link = section_album_head.querySelector("h3")
+    artist_link.addEventListener("click", ()=>{
+        showGroup(album_data[0].artist_id)
     })
     const img = document.createElement("img")
     canvas.width='300'
     canvas.height='300'
-    img.src=`${datos_album[0].foto}`
+    img.src=`${album_data[0].picture}`
     let ctxt = canvas.getContext("2d")
     ctxt.drawImage(img, 0, 0, 280, 280)
     const image_data = ctxt.getImageData(0,0,canvas.width, canvas.height)
@@ -1435,24 +1434,24 @@ async function seeAlbumReviews(id){
     main_content.appendChild(section_album_head)
     // main_content.innerHTML+="<h2 class='text-center'>Reseñas de los usuarios de Sonic Waves</h2>"
 
-    const datos_reviews = datos["reseñas"]
-    if(reseña_escrita[0].comprobante == 0){
-        const formulario_reseña = document.createElement("form")
-        formulario_reseña.setAttribute("id", "formulario-insertar-reseña")
-        formulario_reseña.classList.add("d-flex", "flex-column", "gap-5", "align-items-center", "p-3")
-        formulario_reseña.innerHTML=`<div class='input-field w-100'><input class="w-100" placeholder="Título de la reseña" name="titulo" type="text" id="titulo-reseña" required></div>
+    const review_data = data["reviews"]
+    if(written_review[0].checker == 0){
+        const form_review = document.createElement("form")
+        form_review.setAttribute("id", "formulario-insertar-reseña")
+        form_review.classList.add("d-flex", "flex-column", "gap-5", "align-items-center", "p-3")
+        form_review.innerHTML=`<div class='input-field w-100'><input class="w-100" placeholder="Título de la reseña" name="titulo" type="text" id="titulo-reseña" required></div>
                                     <div class='input-field w-100'><input class="w-100" placeholder="Contenido de la reseña" type="text" id="contenido-reseña" name="contenido" required></div>
                                     <input hidden value="${id}" name="id-album">
                                     <button data-album-id="${id}" id="enviar-reseña" type="button" style='--clr:#0ce8e8' class='btn-danger-own'><span>Comentar</span><i></i></button>`
-        const section_nueva_reseña = document.createElement("section")
-        section_nueva_reseña.innerHTML=`<h2 class='text-center mt-4'>Añade tu reseña para ${datos_album[0].titulo}</h2>`
-        const boton_insertar_reseña = formulario_reseña.querySelector("#enviar-reseña")
-        const titulo_reseña = formulario_reseña.querySelector("#titulo-reseña")
-        const contenido_reseña = formulario_reseña.querySelector("#contenido-reseña")
-        section_nueva_reseña.appendChild(formulario_reseña)
-        boton_insertar_reseña.addEventListener("click", async (evt)=>{
-            if(titulo_reseña.value.trim() !== "" && contenido_reseña.value.trim() !== ""){
-                await insertReview(formulario_reseña)
+        const section_new_review = document.createElement("section")
+        section_new_review.innerHTML=`<h2 class='text-center mt-4'>Añade tu reseña para ${album_data[0].title}</h2>`
+        const btn_insert_review = form_review.querySelector("#enviar-reseña")
+        const review_title = form_review.querySelector("#titulo-reseña")
+        const review_content = form_review.querySelector("#contenido-reseña")
+        section_new_review.appendChild(form_review)
+        btn_insert_review.addEventListener("click", async (evt)=>{
+            if(review_title.value.trim() !== "" && review_content.value.trim() !== ""){
+                await insertReview(form_review)
                 await seeAlbumReviews(id)
             }else{
                 alert_review_missing_data.classList.remove("d-none")
@@ -1460,22 +1459,22 @@ async function seeAlbumReviews(id){
             }
             
         })
-        main_content.appendChild(section_nueva_reseña)
+        main_content.appendChild(section_new_review)
     }
     const section_reviews = document.createElement("section")
     section_reviews.classList.add("container-fluid")
     section_reviews.innerHTML="<h2 class='text-center mt-3'>Reseñas de los usuarios de Sonic Waves</h2>"
     const reviews_container = document.createElement("div")
     reviews_container.classList.add("d-flex", "flex-column", "gap-3")
-    datos_reviews.forEach(review=>{
-        let fecha = formatDate(review.fecha)
+    review_data.forEach(review=>{
+        let r_date = formatDate(review.r_date)
         const review_cont = document.createElement("div")
         review_cont.classList.add("d-flex", "flex-column", "single-review-container", "p-2","rounded")
-        review_cont.innerHTML=`<h3>${review.titulo}</h3>
-                                <p>${review.contenido}</p>
+        review_cont.innerHTML=`<h3>${review.title}</h3>
+                                <p>${review.content}</p>
                                 <div class='d-flex align-items-center gap-2'>
-                                    <img src='${review.foto}' class='rounded-circle see-album-reviews-avatar-user'>
-                                    <i>Escrita por ${review.autor} el ${fecha}</i>
+                                    <img src='${review.avatar}' class='rounded-circle see-album-reviews-avatar-user'>
+                                    <i>Escrita por ${review.author} el ${r_date}</i>
                                 </div>`
                                 
         // review_cont.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color2.r}, ${color2.g}, ${color2.b}, .5), rgba(${color5.r},${color5.g},${color5.b},.5) 70%)`
@@ -1486,65 +1485,65 @@ async function seeAlbumReviews(id){
     
 }
 
-async function insertReview(formulario_reseña){
-    const datos_formulario_reseña = new URLSearchParams(new FormData(formulario_reseña))
+async function insertReview(form_review){
+    const data_form_review = new URLSearchParams(new FormData(form_review))
     await fetch(`../api_audio/insertar_reseña.php`, {
         method: 'POST',
-        body: datos_formulario_reseña
+        body: data_form_review
     })
-    formulario_reseña.reset()
+    form_review.reset()
     
 }
 
 async function loadShufflePlayingList(){
-    cola_reproduccion.length = 0
-    const respuesta = await fetch('../api_audio/shuffle.php')
-    const datos = await respuesta.json()
-    const lista_aleatorio = datos["lista_aleatorio"]
-    lista_aleatorio.forEach(cancion=>{
-        cola_reproduccion.push(cancion)
+    playing_queue.length = 0
+    const response = await fetch('../api_audio/shuffle.php')
+    const data = await response.json()
+    const random_list = data["random_list"]
+    random_list.forEach(song=>{
+        playing_queue.push(song)
     })
-    console.log(cola_reproduccion)
-    playSong(indice)
+    console.log(playing_queue)
+    playSong(song_index)
 }
 
 async function loadPlayingList(evt, context){
-    let padre = evt.currentTarget.parentElement
+    let parent = evt.currentTarget.parentElement
     
-    for(const child of padre.children){
-        let titulo = child.children[0].children[1]
-        if(titulo.classList.contains("current-song-playing")){
-            titulo.classList.remove("current-song-playing")
+    for(const child of parent.children){
+        let title = child.children[0].children[1]
+        if(title.classList.contains("current-song-playing")){
+            title.classList.remove("current-song-playing")
         }
     }
-    let titulo_actual = evt.currentTarget.children[0].children[1]
-    titulo_actual.classList.add("current-song-playing")
+    let title_current = evt.currentTarget.children[0].children[1]
+    title_current.classList.add("current-song-playing")
     const id = evt.currentTarget.getAttribute("data-cancion")
    
     const index = evt.currentTarget.getAttribute("data-index")
-    indice = index
-    const respuesta = await fetch(`../api_audio/array_reproduccion.php?id=${id}&contexto=${context}`)
-    const datos = await respuesta.json()
-    const lista = datos["lista_canciones"]
+    song_index = index
+    const response = await fetch(`../api_audio/array_reproduccion.php?id=${id}&contexto=${context}`)
+    const data = await response.json()
+    const songlist = data["songlist"]
     
-    if(cola_reproduccion.length != 0){
-        if(cola_reproduccion.length != lista.length){
-            cola_reproduccion.length = 0
+    if(playing_queue.length != 0){
+        if(playing_queue.length != songlist.length){
+            playing_queue.length = 0
         }
         else{
-            if(lista[indice].titulo != cola_reproduccion[indice].titulo){
-                cola_reproduccion.length = 0
+            if(songlist[song_index].title != playing_queue[song_index].title){
+                playing_queue.length = 0
             }
         }
     }
 
-    if(cola_reproduccion.length == 0){
-        lista.forEach(cancion=>{
-            cola_reproduccion.push(cancion)
+    if(playing_queue.length == 0){
+        songlist.forEach(song=>{
+            playing_queue.push(song)
         })
     }
        
-    playSong(indice)
+    playSong(song_index)
     
 }
 
@@ -1555,34 +1554,34 @@ async function showGroup(id){
     loader.classList.remove("d-none")
     loader.classList.add("d-flex")
     // const id = evt.currentTarget.getAttribute("data-artist-id")
-    const respuesta = await fetch(`../api_audio/artista_peticion.php?id=${id}`)
-    const datos = await respuesta.json()
+    const response = await fetch(`../api_audio/artista_peticion.php?id=${id}`)
+    const data = await response.json()
     loader.classList.add("d-none")
     loader.classList.remove("d-flex")
-    const datos_grupo = datos["datos_grupo"]
-    const discos = datos["discos_grupo"]
+    const artist_data = data["artist_data"]
+    const albums = data["artist_albums"]
     // const tiene_discografica = datos_grupo[0].discografica
-    let publicaciones = []
+    let posts = []
     // if(tiene_discografica == 0){
-        publicaciones = datos["publicaciones_grupo"] 
-        console.log(datos)
+        posts = data["artist_posts"] 
+        console.log(data)
     // }
  
-    let disco = 'Grupo<ion-icon name="checkmark-circle-outline"></ion-icon>'
+    let album = 'Grupo<ion-icon name="checkmark-circle-outline"></ion-icon>'
     let header_extra = 'Publicaciones'
     const section_artist_head = document.createElement("section")
     section_artist_head.classList.add("mb-5")
     const div_artist_avatar = document.createElement("div")
-    section_artist_head.innerHTML=`<div class='d-flex flex-column align-items-start'><h1 class='ms-4 section-artist-title mb-0'>${datos_grupo[0].nombre}</h1>
-    <h5 class='ms-4 d-flex align-items-center grupo-esencial-badge'>${disco}</h5></div>`
+    section_artist_head.innerHTML=`<div class='d-flex flex-column align-items-start'><h1 class='ms-4 section-artist-title mb-0'>${artist_data[0].name}</h1>
+    <h5 class='ms-4 d-flex align-items-center grupo-esencial-badge'>${album}</h5></div>`
     section_artist_head.classList.add("d-flex","justify-content-end", "flex-column")
     div_artist_avatar.classList.add("position-absolute")
     div_artist_avatar.style.width='100%'
     div_artist_avatar.style.height='100%'
-    div_artist_avatar.innerHTML=`<img class='position-absolute rounded-circle section-artist-avatar' src='${datos_grupo[0].foto_avatar}'>`
+    div_artist_avatar.innerHTML=`<img class='position-absolute rounded-circle section-artist-avatar' src='${artist_data[0].avatar}'>`
     section_artist_head.appendChild(div_artist_avatar)
     section_artist_head.classList.add("w-100")
-    section_artist_head.style.backgroundImage=`url('${datos_grupo[0].foto}')`
+    section_artist_head.style.backgroundImage=`url('${artist_data[0].image}')`
     section_artist_head.style.height='55vh'
     section_artist_head.style.backgroundSize='cover'
     section_artist_head.style.backgroundPosition='center'
@@ -1601,26 +1600,26 @@ async function showGroup(id){
     const bio = document.createElement("p")
     bio.classList.add("artist-section-bio", "options-artist")
     bio.setAttribute("data-info-artist", "bio")
-    bio.innerText=`${datos_grupo[0].biografia}`
+    bio.innerText=`${artist_data[0].bio}`
     div_artist_content.appendChild(bio)
     const div_albums_container = document.createElement("div")
     div_albums_container.classList.add("d-flex", "gap-3", "d-none", "options-artist", "flex-column", "flex-lg-row", "mb-3")
     div_albums_container.setAttribute("data-info-artist", "discos")
-    if(discos.length != 0){
-        discos.forEach(disco=>{
-            const album = document.createElement("div")
-            album.classList.add("d-flex", "gap-3", "align-items-center", "album-individual-container")
-            album.setAttribute("data-album-id", disco.id)
-            album.innerHTML+=`<div class='w-50'>
-                                <img src='${disco.foto}' class='img-fluid object-fit-cover'>
+    if(albums.length != 0){
+        albums.forEach(album=>{
+            const album_detail = document.createElement("div")
+            album_detail.classList.add("d-flex", "gap-3", "align-items-center", "album-individual-container")
+            album_detail.setAttribute("data-album-id", album.id)
+            album_detail.innerHTML+=`<div class='w-50'>
+                                <img src='${album.picture}' class='img-fluid object-fit-cover'>
                             </div>
                             <div class='d-flex w-50'>
-                                <h5>${disco.titulo}</h5>
+                                <h5>${album.title}</h5>
                             </div>`
-            album.addEventListener("click", (evt)=>{
+            album_detail.addEventListener("click", (evt)=>{
                 showAlbum(evt.currentTarget)
             })
-            div_albums_container.appendChild(album)
+            div_albums_container.appendChild(album_detail)
         })
     }else{
         div_albums_container.innerHTML=`<h2 class='text-center'>Este artista no tiene álbumes por el momento</h2>`
@@ -1628,38 +1627,38 @@ async function showGroup(id){
     
     div_artist_content.appendChild(div_albums_container)
 
-    const div_publicaciones = document.createElement("div")
-    div_publicaciones.classList.add("d-flex", "d-none", "options-artist", "flex-column", "container-lg", "gap-4")
-    div_publicaciones.setAttribute("data-info-artist", "pubs")
+    const div_posts = document.createElement("div")
+    div_posts.classList.add("d-flex", "d-none", "options-artist", "flex-column", "container-lg", "gap-4")
+    div_posts.setAttribute("data-info-artist", "pubs")
     // if(tiene_discografica == 0){    
-        if(publicaciones.length != 0){
-            publicaciones.forEach(publicacion=>{
-                const div_publicacion = document.createElement("div")
-                let preview_texto = publicacion.contenido.substring(0, 400)
-                div_publicacion.classList.add("post-individual-container", "d-flex","gap-3", "p-3", "flex-column", "flex-md-row")
-                div_publicacion.innerHTML=`<div>
-                                                <img src='${publicacion.foto}' class='img-fluid'>
+        if(posts.length != 0){
+            posts.forEach(post=>{
+                const div_post = document.createElement("div")
+                let preview_text = post.content.substring(0, 400)
+                div_post.classList.add("post-individual-container", "d-flex","gap-3", "p-3", "flex-column", "flex-md-row")
+                div_post.innerHTML=`<div>
+                                                <img src='${post.image}' class='img-fluid'>
                                             </div>
                                             <div class='gap-2 d-flex flex-column align-items-start'>
-                                                <h2>${publicacion.titulo}</h2>
-                                                <p>${preview_texto}...</p>
-                                                <i>${formatDate(publicacion.fecha)}</i>
+                                                <h2>${post.title}</h2>
+                                                <p>${preview_text}...</p>
+                                                <i>${formatDate(post.p_date)}</i>
                                                 <button type="button" style='--clr:#0ce8e8' class='btn-danger-own'><span>Ver completa</span><i></i></button>
                                             </div>`
-                const ver_publicacion = div_publicacion.querySelector("button")
-                ver_publicacion.addEventListener("click", ()=>{
+                const watch_post = div_post.querySelector("button")
+                watch_post.addEventListener("click", ()=>{
                     watchFullPost(publicacion.id)
                 })
-                div_publicaciones.appendChild(div_publicacion)
+                div_posts.appendChild(div_post)
             })
         }else{
-            div_publicaciones.innerHTML="<h3 class='text-center'>No hay publicaciones</h3>"
+            div_posts.innerHTML="<h3 class='text-center'>No hay publicaciones</h3>"
         }
         
     // }else{
-    //     // await seeUpcomingEvents(datos_grupo[0].nombre, div_publicaciones)
+    //     // await seeUpcomingEvents(datos_grupo[0].nombre, div_posts)
     // }
-    div_artist_content.appendChild(div_publicaciones)
+    div_artist_content.appendChild(div_posts)
 
     section_artist_content.appendChild(div_artist_content)
     const headers = section_artist_content.querySelectorAll("h2")
@@ -1801,20 +1800,20 @@ async function watchFullPost(id){
 // }
 
 async function playSong(index){
-    audio.src=cola_reproduccion[index].archivo
-    track_info.innerHTML=`<img src='${cola_reproduccion[index].caratula}' class='rounded'>
+    audio.src=playing_queue[index].archivo
+    track_info.innerHTML=`<img src='${playing_queue[index].caratula}' class='rounded'>
                             <div class='d-flex flex-column'>
-                                <span class='track-info-title'>${cola_reproduccion[index].titulo}</span>
-                                <span class='track-info-artist'>${cola_reproduccion[index].autor}</span>
+                                <span class='track-info-title'>${playing_queue[index].titulo}</span>
+                                <span class='track-info-artist'>${playing_queue[index].autor}</span>
                             </div>`
-    console.log(cola_reproduccion[index])
+    console.log(playing_queue[index])
     bar2.style.width='0%'
     dot.style.left='0'
     current_time.innerText='0:00'
     audio.play()
     play_pause.setAttribute("name", "pause-outline")
     player_logo.classList.add("active")
-    await fetch(`../api_audio/update_times_played.php?id=${cola_reproduccion[index].cancion_id}`)
+    await fetch(`../api_audio/update_times_played.php?id=${playing_queue[index].cancion_id}`)
 }
 
 
