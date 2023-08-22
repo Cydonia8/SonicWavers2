@@ -7,9 +7,9 @@
     $id_recommended_artist = $con->query("SELECT id from artist where id <> 0 and image is not null and active = 1 order by rand() limit 1");
     $row = $id_recommended_artist->fetch_array(MYSQLI_ASSOC);
     $id = $row["id"];
-    $query_recommended_group = $con->prepare("SELECT enlace, grupo, nombre from foto_grupo f, grupo g where f.grupo = g.id and grupo = ? order by rand() limit 1");
+    $query_recommended_group = $con->prepare("SELECT link, artist, name from artist_photos f, artist g where f.artist = g.id and artist = ? order by rand() limit 1");
     $query_recommended_group->bind_param('i', $id);
-    $query_recommended_group->bind_result($recomendado, $grupo, $nombre);
+    $query_recommended_group->bind_result($recommended, $artist, $name);
     $query_recommended_group->execute();
     $query_recommended_group->store_result();
     $query_recommended_group->fetch();
@@ -17,20 +17,20 @@
     
     if($query_recommended_group->num_rows != 0){
         $query_recommended_group->close();
-        $datos["grupo_recomendado"] = $recomendado;
-        $datos["id_recommended_artist"] = $grupo;
-        $datos["nombre_grupo_recomendado"] = $nombre;
+        $datos["grupo_recomendado"] = $recommended;
+        $datos["id_recommended_artist"] = $artist;
+        $datos["nombre_grupo_recomendado"] = $name;
     }else{
         $query_recommended_group->close();
-        $query_recommended_group_v2 = $con->prepare("SELECT nombre, foto, id from grupo where id = ? and foto is not null");
+        $query_recommended_group_v2 = $con->prepare("SELECT name, image, id from artist where id = ? and image is not null");
         $query_recommended_group_v2->bind_param('i', $id);
-        $query_recommended_group_v2->bind_result($nombre, $recomendado, $grupo);
+        $query_recommended_group_v2->bind_result($name, $recommended, $artist);
         $query_recommended_group_v2->execute();
         $query_recommended_group_v2->fetch();
         $query_recommended_group_v2->close();
-        $datos["grupo_recomendado"] = $recomendado;
-        $datos["id_recommended_artist"] = $grupo;
-        $datos["nombre_grupo_recomendado"] = $nombre;
+        $datos["grupo_recomendado"] = $recommended;
+        $datos["id_recommended_artist"] = $artist;
+        $datos["nombre_grupo_recomendado"] = $name;
     }
     
 
@@ -45,48 +45,48 @@
     
     // $datos["grupo_recomendado"] = $recomendado;
     
-    $datos_recogidos = [];
-    $sentencia_albumes = $con->query("select a.id id, titulo, a.foto foto, nombre autor, g.id grupo_id from album a, grupo g where a.grupo = g.id and a.activo = 1 order by rand() limit 8");
-    while($row = $sentencia_albumes->fetch_array(MYSQLI_ASSOC)){
-        $datos_recogidos[] = $row;
+    $retrieved_data = [];
+    $query_albums = $con->query("select a.id id, title, a.picture picture, name author, g.id artist_id from album a, artist g where a.artist = g.id and a.active = 1 order by rand() limit 8");
+    while($row = $query_albums->fetch_array(MYSQLI_ASSOC)){
+        $retrieved_data[] = $row;
     }
-    $datos['datos'] = $datos_recogidos;
+    $data['data'] = $retrieved_data;
 
-    $artistas_recogidos = [];
-    $sentencia_artistas = $con->query("SELECT nombre, foto_avatar, id from grupo where activo = 1 and id <> 0 order by rand() limit 8");
-    while($row = $sentencia_artistas->fetch_array(MYSQLI_ASSOC)){
-        $artistas_recogidos[] = $row;
+    $retrieved_artists = [];
+    $query_artists = $con->query("SELECT name, avatar, id from artist where active = 1 and id <> 0 order by rand() limit 8");
+    while($row = $query_artists->fetch_array(MYSQLI_ASSOC)){
+        $retrieved_artists[] = $row;
     }
 
-    $datos["artistas"] = $artistas_recogidos;
+    $data["artists"] = $retrieved_artists;
 
-    $select_estilo = $con->query("SELECT nombre from estilo where id <> 0 order by rand() limit 1");
-    $row = $select_estilo->fetch_array(MYSQLI_ASSOC);
-    $estilo_rand1 = $row["nombre"];
+    $query_style = $con->query("SELECT name from styles where id <> 0 order by rand() limit 1");
+    $row = $query_style->fetch_array(MYSQLI_ASSOC);
+    $random_style1 = $row["name"];
 
-    $datos["estilo_random1"] = $estilo_rand1;
+    $data["random_style1"] = $random_style1;
 
-    $consulta_albums_estilo_r1 = $con->prepare("SELECT a.id id, a.titulo titulo, a.foto foto, g.nombre autor, g.id grupo_id FROM album a, cancion c, estilo e, incluye i, grupo g where a.id = i.album and c.id = i.cancion and e.id = c.estilo and a.grupo = g.id and e.nombre = ? and a.activo = 1 GROUP BY a.id, a.titulo HAVING COUNT(*) >= 4 limit 8");
-    $consulta_albums_estilo_r1->bind_param('s', $estilo_rand1);
+    $query_albums_style_r1 = $con->prepare("SELECT a.id id, a.title title, a.picture picture, g.name author, g.id artist_id FROM album a, songs c, styles e, album_contains i, artist g where a.id = i.album and c.id = i.song and e.id = c.style and a.artist = g.id and e.name = ? and a.active = 1 GROUP BY a.id, a.title HAVING COUNT(*) >= 4 limit 8");
+    $query_albums_style_r1->bind_param('s', $random_style1);
 
-    $consulta_albums_estilo_r1->execute();
-    $resultado = $consulta_albums_estilo_r1->get_result();
-    $albums_estilo_r1 = [];
+    $query_albums_style_r1->execute();
+    $result = $query_albums_style_r1->get_result();
+    $albums_style_r1 = [];
 
-    while($row = $resultado->fetch_assoc()){
-        $albums_estilo_r1[] = $row;
+    while($row = $result->fetch_assoc()){
+        $albums_style_r1[] = $row;
     }   
 
-    $datos["albums_estilo_r1"] = $albums_estilo_r1;
-    $consulta_albums_estilo_r1->close();
+    $data["albums_style_r1"] = $albums_style_r1;
+    $query_albums_style_r1->close();
 
-    $fecha_actual = date('Y-m-d');
+    $current_date = date('Y-m-d');
     $pubs_random = [];
-    $consulta_publicaciones_random = $con->query("SELECT p.id , contenido, titulo, p.foto foto, fecha, g.nombre grupo from publicacion p, grupo g where g.id = p.grupo and g.activo = 1 and p.fecha <= '$fecha_actual' order by rand () limit 4");
-    while($row = $consulta_publicaciones_random->fetch_array(MYSQLI_ASSOC)){
+    $query_random_posts = $con->query("SELECT p.id , content, title, p.image image, p_date, g.name artist from posts p, artist g where g.id = p.artist and g.active = 1 and p.p_date <= '$current_date' order by rand () limit 4");
+    while($row = $query_random_posts->fetch_array(MYSQLI_ASSOC)){
         $pubs_random[] = $row;
     }
-    $datos["publicaciones_random"] = $pubs_random;
+    $data["random_posts"] = $pubs_random;
 
-    echo json_encode($datos);
+    echo json_encode($data);
     $con->close();
