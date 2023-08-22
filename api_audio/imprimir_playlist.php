@@ -2,34 +2,34 @@
     session_start();
     header("Content-Type: application/json");
     header("Access-Control-Allow-Origin: *");
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
     $id = $_GET["id"];
 
-    $consulta_lista_datos = $conexion->prepare("SELECT l.nombre nombre, foto, fecha_creacion, u.usuario autor, foto_avatar from lista l, usuario u where u.id = l.usuario and l.id = ?");
-    $consulta_lista_datos->bind_param('i', $id);
-    $consulta_lista_datos->execute();
-    $resultado_datos = $consulta_lista_datos->get_result();
+    $query_playlist_data = $con->prepare("SELECT l.title title, image, pl_date, u.username author, avatar from playlists l, user u where u.id = l.user and l.id = ?");
+    $query_playlist_data->bind_param('i', $id);
+    $query_playlist_data->execute();
+    $data_results = $query_playlist_data->get_result();
 
-    $datos_lista = [];
+    $playlist_data = [];
 
-    while($fila = $resultado_datos->fetch_assoc()){
-        $datos_lista[] = $fila;
+    while($row = $data_results->fetch_assoc()){
+        $playlist_data[] = $row;
     }
 
-    $datos["datos_lista"] = $datos_lista;
-    $consulta_lista_datos->close();
+    $data["playlist_data"] = $playlist_data;
+    $query_playlist_data->close();
 
-    $consulta_canciones_lista = $conexion->prepare("SELECT distinct a.id album, c.titulo titulo, duracion, c.id id, archivo, g.nombre autor from grupo g, cancion c, contiene co, album a, incluye i where c.id = co.cancion and a.id = i.album and i.cancion = co.cancion and a.activo = 1 and g.id = a.grupo and co.lista = ? group by c.id order by orden asc");
-    $consulta_canciones_lista->bind_param('i', $id);
-    $consulta_canciones_lista->execute();
-    $resultado_lista_canciones = $consulta_canciones_lista->get_result();
+    $query_playlist_songs = $con->prepare("SELECT distinct a.id album, c.title title, length, c.id id, file, g.name author from artist g, songs c, playlist_includes co, album a, album_contains i where c.id = co.song and a.id = i.album and i.song = co.song and a.active = 1 and g.id = a.artist and co.playlist = ? group by c.id order by order asc");
+    $query_playlist_songs->bind_param('i', $id);
+    $query_playlist_songs->execute();
+    $playlist_songs_results = $query_playlist_songs->get_result();
 
-    $datos_canciones = [];
+    $songs_data = [];
     
-    while($fila = $resultado_lista_canciones->fetch_assoc()){
-        $datos_canciones[] = $fila;
+    while($row = $playlist_songs_results->fetch_assoc()){
+        $songs_data[] = $row;
     }
 
-    $datos["datos_canciones"] = $datos_canciones;
+    $data["songs_data"] = $songs_data;
 
-    echo json_encode($datos);
+    echo json_encode($data);

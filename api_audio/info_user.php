@@ -7,27 +7,27 @@
     $decoded = decodeToken($_SESSION["token"]);
     $decoded = json_decode(json_encode($decoded), true);
 
-    $usuario = $decoded["data"]["user"];
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $perfil_completo = $conexion->prepare("SELECT estilo from usuario where id <> 0 and usuario = ?");
-    $perfil_completo->bind_param('s', $usuario);
-    $perfil_completo->bind_result($comprobante_perfil);
-    $perfil_completo->execute();
-    $perfil_completo->fetch();
-    $perfil_completo->close();
+    $user = $decoded["data"]["user"];
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $query_profile = $con->prepare("SELECT style from user where id <> 0 and username = ?");
+    $query_profile->bind_param('s', $user);
+    $query_profile->bind_result($check_profile);
+    $query_profile->execute();
+    $query_profile->fetch();
+    $query_profile->close();
 
-    $datos["perfil_completado"] = $comprobante_perfil;
+    $data["profile_completed"] = $check_profile;
 
-    $sentencia = $conexion->prepare("select u.pass contraseña, u.foto_avatar foto_avatar, u.nombre nombre, apellidos, usuario, u.correo correo, e.nombre estilo, g.nombre grupo from usuario u, estilo e, grupo g where u.estilo = e.id and u.grupo = g.id and u.usuario = ?");
-    $datos_user = [];
-    $sentencia->bind_param('s', $usuario);
-    $sentencia->execute();
-    $resultado = $sentencia->get_result();
+    $query = $con->prepare("select u.pass pass, u.avatar avatar, u.name name, surname, username, u.mail mail, e.name style, g.name artist from user u, styles e, artist g where u.style = e.id and u.artist = g.id and u.username = ?");
+    $user_data = [];
+    $query->bind_param('s', $user);
+    $query->execute();
+    $result = $query->get_result();
     
-    while($fila = $resultado->fetch_assoc()){
-        $datos_user[] = $fila;
+    while($row = $result->fetch_assoc()){
+        $user_data[] = $row;
     }
-    $datos['datos'] = $datos_user;
+    $data['data'] = $user_data;
     
 
-    echo json_encode($datos);
+    echo json_encode($data);
