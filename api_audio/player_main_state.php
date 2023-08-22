@@ -4,67 +4,65 @@
     $con = createConnection();
     sleep(1.5);
 
-    $id_grupo_recomendado = $con->query("SELECT id from grupo where id <> 0 and foto is not null and activo = 1 order by rand() limit 1");
-    $fila = $id_grupo_recomendado->fetch_array(MYSQLI_ASSOC);
-    $id = $fila["id"];
-    $sentencia_grupo_recomendado = $con->prepare("SELECT enlace, grupo, nombre, discografica from foto_grupo f, grupo g where f.grupo = g.id and grupo = ? order by rand() limit 1");
-    $sentencia_grupo_recomendado->bind_param('i', $id);
-    $sentencia_grupo_recomendado->bind_result($recomendado, $grupo, $nombre, $disc);
-    $sentencia_grupo_recomendado->execute();
-    $sentencia_grupo_recomendado->store_result();
-    $sentencia_grupo_recomendado->fetch();
+    $id_recommended_artist = $con->query("SELECT id from artist where id <> 0 and image is not null and active = 1 order by rand() limit 1");
+    $row = $id_recommended_artist->fetch_array(MYSQLI_ASSOC);
+    $id = $row["id"];
+    $query_recommended_group = $con->prepare("SELECT enlace, grupo, nombre from foto_grupo f, grupo g where f.grupo = g.id and grupo = ? order by rand() limit 1");
+    $query_recommended_group->bind_param('i', $id);
+    $query_recommended_group->bind_result($recomendado, $grupo, $nombre);
+    $query_recommended_group->execute();
+    $query_recommended_group->store_result();
+    $query_recommended_group->fetch();
     
     
-    if($sentencia_grupo_recomendado->num_rows != 0){
-        $sentencia_grupo_recomendado->close();
+    if($query_recommended_group->num_rows != 0){
+        $query_recommended_group->close();
         $datos["grupo_recomendado"] = $recomendado;
-        $datos["id_grupo_recomendado"] = $grupo;
+        $datos["id_recommended_artist"] = $grupo;
         $datos["nombre_grupo_recomendado"] = $nombre;
-        $datos["discografica"] = $disc;
     }else{
-        $sentencia_grupo_recomendado->close();
-        $sentencia_grupo_recomendado_v2 = $con->prepare("SELECT nombre, foto, id, discografica from grupo where id = ? and foto is not null");
-        $sentencia_grupo_recomendado_v2->bind_param('i', $id);
-        $sentencia_grupo_recomendado_v2->bind_result($nombre, $recomendado, $grupo, $disc);
-        $sentencia_grupo_recomendado_v2->execute();
-        $sentencia_grupo_recomendado_v2->fetch();
-        $sentencia_grupo_recomendado_v2->close();
+        $query_recommended_group->close();
+        $query_recommended_group_v2 = $con->prepare("SELECT nombre, foto, id from grupo where id = ? and foto is not null");
+        $query_recommended_group_v2->bind_param('i', $id);
+        $query_recommended_group_v2->bind_result($nombre, $recomendado, $grupo);
+        $query_recommended_group_v2->execute();
+        $query_recommended_group_v2->fetch();
+        $query_recommended_group_v2->close();
         $datos["grupo_recomendado"] = $recomendado;
-        $datos["id_grupo_recomendado"] = $grupo;
+        $datos["id_recommended_artist"] = $grupo;
         $datos["nombre_grupo_recomendado"] = $nombre;
-        $datos["discografica"] = $disc;
     }
     
 
     // $recomendado=$sentencia_grupo_recomendado->get_result()->fetch_row()[0];
     
 
-    // $sentencia_grupo_recomendado_v2 = $con->prepare("SELECT foto from grupo where id = '19' and foto <> null");
-    // // $sentencia_grupo_recomendado_v2->bind_param('i', $id);
-    // $sentencia_grupo_recomendado_v2->execute();
-    // $recomendado = $sentencia_grupo_recomendado_v2->get_result()->fetch_row()[0];
-    // $sentencia_grupo_recomendado_v2->close();
+    // $query_recommended_group_v2 = $con->prepare("SELECT foto from grupo where id = '19' and foto <> null");
+    // // $query_recommended_group_v2->bind_param('i', $id);
+    // $query_recommended_group_v2->execute();
+    // $recomendado = $query_recommended_group_v2->get_result()->fetch_row()[0];
+    // $query_recommended_group_v2->close();
     
     // $datos["grupo_recomendado"] = $recomendado;
     
     $datos_recogidos = [];
     $sentencia_albumes = $con->query("select a.id id, titulo, a.foto foto, nombre autor, g.id grupo_id from album a, grupo g where a.grupo = g.id and a.activo = 1 order by rand() limit 8");
-    while($fila = $sentencia_albumes->fetch_array(MYSQLI_ASSOC)){
-        $datos_recogidos[] = $fila;
+    while($row = $sentencia_albumes->fetch_array(MYSQLI_ASSOC)){
+        $datos_recogidos[] = $row;
     }
     $datos['datos'] = $datos_recogidos;
 
     $artistas_recogidos = [];
     $sentencia_artistas = $con->query("SELECT nombre, foto_avatar, id from grupo where activo = 1 and id <> 0 order by rand() limit 8");
-    while($fila = $sentencia_artistas->fetch_array(MYSQLI_ASSOC)){
-        $artistas_recogidos[] = $fila;
+    while($row = $sentencia_artistas->fetch_array(MYSQLI_ASSOC)){
+        $artistas_recogidos[] = $row;
     }
 
     $datos["artistas"] = $artistas_recogidos;
 
     $select_estilo = $con->query("SELECT nombre from estilo where id <> 0 order by rand() limit 1");
-    $fila = $select_estilo->fetch_array(MYSQLI_ASSOC);
-    $estilo_rand1 = $fila["nombre"];
+    $row = $select_estilo->fetch_array(MYSQLI_ASSOC);
+    $estilo_rand1 = $row["nombre"];
 
     $datos["estilo_random1"] = $estilo_rand1;
 
@@ -75,8 +73,8 @@
     $resultado = $consulta_albums_estilo_r1->get_result();
     $albums_estilo_r1 = [];
 
-    while($fila = $resultado->fetch_assoc()){
-        $albums_estilo_r1[] = $fila;
+    while($row = $resultado->fetch_assoc()){
+        $albums_estilo_r1[] = $row;
     }   
 
     $datos["albums_estilo_r1"] = $albums_estilo_r1;
@@ -85,8 +83,8 @@
     $fecha_actual = date('Y-m-d');
     $pubs_random = [];
     $consulta_publicaciones_random = $con->query("SELECT p.id , contenido, titulo, p.foto foto, fecha, g.nombre grupo from publicacion p, grupo g where g.id = p.grupo and g.activo = 1 and p.fecha <= '$fecha_actual' order by rand () limit 4");
-    while($fila = $consulta_publicaciones_random->fetch_array(MYSQLI_ASSOC)){
-        $pubs_random[] = $fila;
+    while($row = $consulta_publicaciones_random->fetch_array(MYSQLI_ASSOC)){
+        $pubs_random[] = $row;
     }
     $datos["publicaciones_random"] = $pubs_random;
 
