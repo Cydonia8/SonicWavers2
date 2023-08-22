@@ -10,57 +10,57 @@
     $decoded = json_decode(json_encode($decoded), true);
     $user = $decoded["data"]["user"];
 
-    $fecha = date('Y-m-d');
-    $conexion = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $id_user = $conexion->prepare("SELECT id from usuario where usuario = ?");
+    $date = date('Y-m-d');
+    $con = new mysqli('localhost', 'root', '', 'sonicwaves');
+    $id_user = $con->prepare("SELECT id from user where username = ?");
     $id_user->bind_param('s', $user);
     $id_user->bind_result($id);
     $id_user->execute();
     $id_user->fetch();
     $id_user->close();
-    $nuevo_id = getAutoID("lista");
+    $new_id = getAutoID("lista");
 
-    $consulta_num_lista = $conexion->prepare("SELECT count(*) total from lista l, usuario u where u.id = l.usuario and u.usuario = ?");
-    $consulta_num_lista->bind_param('s', $user);
-    $consulta_num_lista->bind_result($numero_lista);
-    $consulta_num_lista->execute();
-    $consulta_num_lista->fetch();
-    $consulta_num_lista->close();
+    $query_list_number = $con->prepare("SELECT count(*) total from playlists l, user u where u.id = l.user and u.username = ?");
+    $query_list_number->bind_param('s', $user);
+    $query_list_number->bind_result($num_playlist);
+    $query_list_number->execute();
+    $query_list_number->fetch();
+    $query_list_number->close();
 
-    $numero_lista = ++$numero_lista;
+    $num_playlist = ++$num_playlist;
 
-        $nombre = $_POST["nombre"] != "" ? $_POST["nombre"] : "Lista".$numero_lista;
+        $name = $_POST["nombre"] != "" ? $_POST["nombre"] : "Lista".$num_playlist;
         if(isset($_FILES["foto"]["type"])){
             $foto_type = $_FILES["foto"]["type"];
-            $nuevo_nombre;
+            $new_name;
             switch($foto_type){
                 case "image/jpeg":
-                    $nuevo_nombre = $user.'lista'.$numero_lista.'.jpeg';
+                    $new_name = $user.'lista'.$num_playlist.'.jpeg';
                     break;
                 case "image/webp":
-                    $nuevo_nombre = $user.'lista'.$numero_lista.'.webp';
+                    $new_name = $user.'lista'.$num_playlist.'.webp';
                     break;
                 case "image/png":
-                    $nuevo_nombre = $user.'lista'.$numero_lista.'.png';
+                    $new_name = $user.'lista'.$num_playlist.'.png';
                     break;
             }
             if(!file_exists('../media/img_users/'.$user)){
                 mkdir('../media/img_users/'.$user);
             }
-            $nueva_ruta = '../media/img_users/'.$user.'/'.$nuevo_nombre;
-            move_uploaded_file($_FILES["foto"]["tmp_name"], $nueva_ruta);
+            $new_path = '../media/img_users/'.$user.'/'.$new_name;
+            move_uploaded_file($_FILES["foto"]["tmp_name"], $new_path);
         }else{
-            $ruta_default = '../media/assets/no_cover.jpg';
+            $default_path = '../media/assets/no_cover.jpg';
             if(!file_exists('../media/img_users/'.$user)){
                 mkdir('../media/img_users/'.$user);
             }
-            copy($ruta_default, '../media/img_users/'.$user.'/no_cover.jpg');
-            rename('../media/img_users/'.$user.'/no_cover.jpg', '../media/img_users/'.$user.'/'.$user.'lista'.$numero_lista.'.jpg');
-            $nueva_ruta = '../media/img_users/'.$user.'/'.$user.'lista'.$numero_lista.'.jpg';
+            copy($default_path, '../media/img_users/'.$user.'/no_cover.jpg');
+            rename('../media/img_users/'.$user.'/no_cover.jpg', '../media/img_users/'.$user.'/'.$user.'lista'.$num_playlist.'.jpg');
+            $new_path = '../media/img_users/'.$user.'/'.$user.'lista'.$num_playlist.'.jpg';
         }  
         
 
-        $crear = $conexion->prepare("INSERT INTO lista (nombre, foto, fecha_creacion, usuario) values (?,?,?,?)");
-        $crear->bind_param('sssi', $nombre, $nueva_ruta, $fecha, $id);
+        $crear = $con->prepare("INSERT INTO playlists (title, image, pl_date, user) values (?,?,?,?)");
+        $crear->bind_param('sssi', $name, $new_path, $date, $id);
         $crear->execute();
-        $conexion->close();
+        $con->close();

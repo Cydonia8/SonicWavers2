@@ -13,14 +13,14 @@
 
     $id_msg = $_GET["id"];
 
-    $query_id_user = $con->prepare("SELECT id from usuario where usuario = ?");
+    $query_id_user = $con->prepare("SELECT id from user where username = ?");
     $query_id_user->bind_param('s', $user);
     $query_id_user->bind_result($id_user);
     $query_id_user->execute();
     $query_id_user->fetch();
     $query_id_user->close();
 
-    $query = $con->prepare("UPDATE member_receives_message set estado = 1 where mensaje = ? and usuario  = ?");
+    $query = $con->prepare("UPDATE member_receives_message set state = 1 where message = ? and user  = ?");
     $query->bind_param('ii', $id_msg, $id_user);
     $query->execute();
     $query->close();

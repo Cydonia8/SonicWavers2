@@ -10,30 +10,30 @@
     $user = $decoded["data"]["user"];
 
     $con = new mysqli('localhost', 'root', '', 'sonicwaves');
-    $consulta_correo_actual = $con->prepare("SELECT correo from usuario where usuario = ?");
-    $consulta_correo_actual->bind_param('s', $user);
-    $consulta_correo_actual->bind_result($correo_actual);
-    $consulta_correo_actual->execute();
-    $consulta_correo_actual->fetch();
-    $consulta_correo_actual->close();
+    $query_current_mail = $con->prepare("SELECT mail from user where username = ?");
+    $query_current_mail->bind_param('s', $user);
+    $query_current_mail->bind_result($current_mail);
+    $query_current_mail->execute();
+    $query_current_mail->fetch();
+    $query_current_mail->close();
 
     if(isset($_REQUEST["nombre"]) and isset($_REQUEST["apellidos"]) and isset($_REQUEST["correo"]) and isset($_REQUEST["pass"]) and isset($_REQUEST["estilo"])){
-        $nombre = $_REQUEST["nombre"];
-        $apellidos = $_REQUEST["apellidos"];
-        $correo = $_REQUEST["correo"];
+        $name = $_REQUEST["nombre"];
+        $surname = $_REQUEST["apellidos"];
+        $mail = $_REQUEST["correo"];
         $pass = $_REQUEST["pass"];
-        $estilo = $_REQUEST["estilo"];
+        $style = $_REQUEST["estilo"];
 
-        $correo_repetido = $con->prepare("SELECT count(*) from usuario where correo = ? and ?<>?");
-        $correo_repetido->bind_param('sss', $correo, $correo_actual, $correo);
-        $correo_repetido->bind_result($repetido);
-        $correo_repetido->execute();
-        $correo_repetido->fetch();
-        $correo_repetido->close();
+        $mail_repeated = $con->prepare("SELECT count(*) from user where mail = ? and ?<>?");
+        $mail_repeated->bind_param('sss', $mail, $current_mail, $mail);
+        $mail_repeated->bind_result($is_repeated);
+        $mail_repeated->execute();
+        $mail_repeated->fetch();
+        $mail_repeated->close();
 
-        if($repetido == 0){
-            $update = $con->prepare("UPDATE usuario set nombre = ?, apellidos = ?, correo = ?, pass = ?, estilo = ? where usuario = ?");
-            $update->bind_param('ssssis', $nombre, $apellidos, $correo, $pass, $estilo, $user);
+        if($is_repeated == 0){
+            $update = $con->prepare("UPDATE user set name = ?, surname = ?, mail = ?, pass = ?, style = ? where username = ?");
+            $update->bind_param('ssssis', $name, $surname, $mail, $pass, $style, $user);
             $update->execute();
             $update->close();
         }else{
