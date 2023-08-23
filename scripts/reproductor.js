@@ -197,61 +197,61 @@ function activateShuffle(){
 
 
 //Listener para visualizar la letra de la canción actual
-letra.addEventListener("click", async()=>{
-    const titulo = track_info.children[1].children[0].innerText
-    const artista = track_info.children[1].children[1].innerText
-    const foto = track_info.children[0].src
+// letra.addEventListener("click", async()=>{
+//     const titulo = track_info.children[1].children[0].innerText
+//     const artista = track_info.children[1].children[1].innerText
+//     const foto = track_info.children[0].src
 
-    const respuesta = await fetch(`http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?q_artist=${artista}&q_track=${titulo}&apikey=${MXMATCH_API_KEY}`)
-    const datos = await respuesta.json()
+//     const respuesta = await fetch(`http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?q_artist=${artista}&q_track=${titulo}&apikey=${MXMATCH_API_KEY}`)
+//     const datos = await respuesta.json()
   
-    let letra
-    let copyright
-    if("lyrics" in datos.message.body){
-        letra = datos.message.body.lyrics.lyrics_body
-        copyright = datos.message.body.lyrics.lyrics_copyright
-        //Eliminamos la advertencia de uso comercial
-        letra = letra.replace("******* This Lyrics is NOT for Commercial use *******", "Pronto, letras completas en Sonic Waves")
-    }
+//     let letra
+//     let copyright
+//     if("lyrics" in datos.message.body){
+//         letra = datos.message.body.lyrics.lyrics_body
+//         copyright = datos.message.body.lyrics.lyrics_copyright
+//         //Eliminamos la advertencia de uso comercial
+//         letra = letra.replace("******* This Lyrics is NOT for Commercial use *******", "Pronto, letras completas en Sonic Waves")
+//     }
     
-    //Manejamos cada uno de los supuestos
-    if(letra == "" && copyright == ""){
-        letra = "Instrumental. Disfruta de la música"
-    }else if(letra == "" && copyright == "Unfortunately we're not authorized to show these lyrics."){
-        letra = "No nos dejan mostrar esta letra por copyright. Capitalismo."
-    }else if(datos.message.header.status_code == "404"){
-        letra = "Actualmente no disponemos de esta letra, lo sentimos."
-    }
+//     //Manejamos cada uno de los supuestos
+//     if(letra == "" && copyright == ""){
+//         letra = "Instrumental. Disfruta de la música"
+//     }else if(letra == "" && copyright == "Unfortunately we're not authorized to show these lyrics."){
+//         letra = "No nos dejan mostrar esta letra por copyright. Capitalismo."
+//     }else if(datos.message.header.status_code == "404"){
+//         letra = "Actualmente no disponemos de esta letra, lo sentimos."
+//     }
 
-    main_content.innerHTML=`<section class="container-fluid rounded h-100 mx-auto d-flex flex-column justify-content-center align-items-center lyrics-container">
-                            <h1 class='text-center mt-3 mb-3'>${titulo}</h1>
-                            <h2 class='text-center mb-3'>${artista}</h2>
-                            <canvas></canvas>
-                            <pre class="text-center" id="song-lyric">${letra}</pre>
-                        </section>`
-    const canvas = main_content.querySelector("canvas")
-    const lyrcs_container = main_content.querySelector(".lyrics-container")
-    const img = document.createElement("img")
-    canvas.width='300'
-    canvas.height='300'
-    img.src=`${foto}`
-    img.width='300px'
-    img.height='300px'
-    let ctxt = canvas.getContext("2d")
-    canvas.style.display="none"
-    ctxt.drawImage(img, 0, 0, 300, 3000)
-    const image_data = ctxt.getImageData(0,0,canvas.width, canvas.height)
-    let rgb_array = buildRGBArray(image_data.data)
-    const quantColors = quantization(rgb_array, 0)
-    quantColors.sort((a,b) => a-b)
-    let color1 = quantColors[quantColors.length-1]
-    let color2 = quantColors[quantColors.length-8]
-    let color3 = quantColors[quantColors.length-4]
-    let color4 = quantColors[quantColors.length-11]
-    let color5 = quantColors[quantColors.length-14]
-    lyrcs_container.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
+//     main_content.innerHTML=`<section class="container-fluid rounded h-100 mx-auto d-flex flex-column justify-content-center align-items-center lyrics-container">
+//                             <h1 class='text-center mt-3 mb-3'>${titulo}</h1>
+//                             <h2 class='text-center mb-3'>${artista}</h2>
+//                             <canvas></canvas>
+//                             <pre class="text-center" id="song-lyric">${letra}</pre>
+//                         </section>`
+//     const canvas = main_content.querySelector("canvas")
+//     const lyrcs_container = main_content.querySelector(".lyrics-container")
+//     const img = document.createElement("img")
+//     canvas.width='300'
+//     canvas.height='300'
+//     img.src=`${foto}`
+//     img.width='300px'
+//     img.height='300px'
+//     let ctxt = canvas.getContext("2d")
+//     canvas.style.display="none"
+//     ctxt.drawImage(img, 0, 0, 300, 3000)
+//     const image_data = ctxt.getImageData(0,0,canvas.width, canvas.height)
+//     let rgb_array = buildRGBArray(image_data.data)
+//     const quantColors = quantization(rgb_array, 0)
+//     quantColors.sort((a,b) => a-b)
+//     let color1 = quantColors[quantColors.length-1]
+//     let color2 = quantColors[quantColors.length-8]
+//     let color3 = quantColors[quantColors.length-4]
+//     let color4 = quantColors[quantColors.length-11]
+//     let color5 = quantColors[quantColors.length-14]
+//     lyrcs_container.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
 
-})
+// })
 
 profile_menu_avatar.addEventListener("click", async (evt)=>{
     evt.preventDefault()
