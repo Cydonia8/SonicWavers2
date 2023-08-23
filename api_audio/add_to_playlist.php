@@ -15,7 +15,7 @@
     $query->fetch();
     $query->close();
 
-    $last_song = $con->prepare("SELECT order from playlist_includes where playlist = ? order by order desc limit 1");
+    $last_song = $con->prepare("SELECT p.order from playlist_includes p where playlist = ? order by p.order desc limit 1");
     $last_song->bind_param('i', $playlist);
     $last_song->bind_result($last);
     $last_song->execute();
@@ -26,7 +26,7 @@
 
 
     if($check == 0){
-        $insert = $con->prepare("INSERT INTO playlist_includes (playlist, song, order) values (?,?,?)");
+        $insert = $con->prepare("INSERT INTO playlist_includes values (?,?,?)");
         $insert->bind_param('iii', $playlist, $song, $order);
         $insert->execute();
         $insert->close();

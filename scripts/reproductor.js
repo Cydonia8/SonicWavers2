@@ -427,7 +427,7 @@ search_bar.addEventListener("keyup", async ()=>{
             div_artist.addEventListener("click", ()=>{
                 showGroup(artist.id)
             })
-            artists_results.appendChild(artist)
+            artists_results.appendChild(div_artist)
         })
     }else{
         artists_results.innerHTML+="<h4 class='text-center'>Sin resultados</h4>"
@@ -563,12 +563,13 @@ async function getAllPlaylists(parent_dom, context, song){
     const response = await fetch('../api_audio/playlists.php')
     const data = await response.json()
     const playlists = data["playlists"]
+    console.log(playlists)
     playlists.forEach(list=>{
         let div
         if(context === "header"){
-            div = createPlaylistsLinks(list.id, list.title, list.image, list.username)
+            div = createPlaylistsLinks(list.id, list.title, list.image, list.user)
         }else{
-            div = createPlaylistsLinksModal(list.id, list.title, list.username, song)
+            div = createPlaylistsLinksModal(list.id, list.title, list.user, song)
         }
         
         parent_dom.appendChild(div)
@@ -717,7 +718,7 @@ async function printPlaylist(id){
     section_playlist_head.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
     main_content.appendChild(section_playlist_head)
 
-    const songs_list = datos["songs_data"]
+    const songs_list = data["songs_data"]
 
     const section_songs_list = document.createElement("section")
     section_songs_list.classList.add("p-4", "d-flex", "flex-column", "gap-3")
@@ -1645,7 +1646,7 @@ async function showGroup(id){
                                             </div>`
                 const watch_post = div_post.querySelector("button")
                 watch_post.addEventListener("click", ()=>{
-                    watchFullPost(publicacion.id)
+                    watchFullPost(post.id)
                 })
                 div_posts.appendChild(div_post)
             })
@@ -1695,43 +1696,43 @@ async function watchFullPost(id){
     main_content.innerHTML=""
     main_content.style.height="100vh"
     // main_content.classList.remove("position-absolute")
-    const respuesta = await fetch(`../api_audio/publicacion_completa.php?id=${id}`)
-    const datos = await respuesta.json()
-    const datos_publicacion = datos["datos_publicacion"]
-    const fotos_extra = datos["fotos_extra"]
+    const response = await fetch(`../api_audio/publicacion_completa.php?id=${id}`)
+    const data = await response.json()
+    const post_data = data["post_data"]
+    const extra_photos = data["extra_photos"]
   
     
     // main_content.innerHTML=`<button type="button" style='--clr:#0ce8e8' class='ms-3 btn-danger-own'><span>Volver al grupo</span><i></i></button>`
    
-    const publicacion_container = document.createElement("section")
-    publicacion_container.classList.add("container-fluid", "d-flex", "flex-column", "gap-3", "p-3", "full-post-container")
-    publicacion_container.innerHTML=`   <div class='d-flex w-100 gap-3 flex-column flex-lg-row align-items-center align-items-md-start'><canvas></canvas>
-                                        <img src='${datos_publicacion[0].foto}' class='rounded object-fit-cover main-photo'>
+    const post_container = document.createElement("section")
+    post_container.classList.add("container-fluid", "d-flex", "flex-column", "gap-3", "p-3", "full-post-container")
+    post_container.innerHTML=`   <div class='d-flex w-100 gap-3 flex-column flex-lg-row align-items-center align-items-md-start'><canvas></canvas>
+                                        <img src='${post_data[0].image}' class='rounded object-fit-cover main-photo'>
                                 
                                     <div class='d-flex flex-column gap-3 align-items-start'>
-                                        <h1>${datos_publicacion[0].titulo}</h1>
-                                        <pre class='full-post-content'>${datos_publicacion[0].contenido}</pre>
-                                        <i>Publicado el ${formatDate(datos_publicacion[0].fecha)}</i>
+                                        <h1>${post_data[0].title}</h1>
+                                        <pre class='full-post-content'>${post_data[0].content}</pre>
+                                        <i>Publicado el ${formatDate(post_data[0].p_date)}</i>
                                         <button type="button" style='--clr:#0ce8e8' class='btn-danger-own'><span>Volver al grupo</span><i></i></button>
                                     </div></div>`
-    if(fotos_extra != undefined){
-        const div_fotos_extra = document.createElement("div")
-        div_fotos_extra.classList.add("d-flex", "flex-column", "flex-md-row", "gap-3")
+    if(extra_photos != undefined){
+        const div_extra_photos = document.createElement("div")
+        div_extra_photos.classList.add("d-flex", "flex-column", "flex-md-row", "gap-3")
         
-        fotos_extra.forEach(foto=>{
+        extra_photos.forEach(photo=>{
             const img = document.createElement("img")
             img.classList.add("rounded", "extra-photo-post", "object-fit-cover")
-            img.src=`${foto.enlace}`
-            div_fotos_extra.appendChild(img)
+            img.src=`${photo.link}`
+            div_extra_photos.appendChild(img)
         })
-        publicacion_container.appendChild(div_fotos_extra)
+        post_container.appendChild(div_extra_photos)
     }
-    const btn = publicacion_container.querySelector("button")
+    const btn = post_container.querySelector("button")
     btn.addEventListener("click", ()=>{
-        showGroup(datos_publicacion[0].grupo)
+        showGroup(post_data[0].artist)
     })
-    const canvas = publicacion_container.querySelector("canvas")
-    const img = publicacion_container.querySelector(".main-photo")
+    const canvas = post_container.querySelector("canvas")
+    const img = post_container.querySelector(".main-photo")
     canvas.width='300'
     canvas.height='300'
     let ctxt = canvas.getContext("2d")
@@ -1747,8 +1748,8 @@ async function watchFullPost(id){
     let color4 = quantColors[quantColors.length-11]
     let color5 = quantColors[quantColors.length-13]
 
-    publicacion_container.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
-    main_content.appendChild(publicacion_container)
+    post_container.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
+    main_content.appendChild(post_container)
 }
 
 // async function seeUpcomingEvents(artist, dom){
@@ -1798,11 +1799,11 @@ async function watchFullPost(id){
 // }
 
 async function playSong(index){
-    audio.src=playing_queue[index].archivo
-    track_info.innerHTML=`<img src='${playing_queue[index].caratula}' class='rounded'>
+    audio.src=playing_queue[index].file
+    track_info.innerHTML=`<img src='${playing_queue[index].picture}' class='rounded'>
                             <div class='d-flex flex-column'>
-                                <span class='track-info-title'>${playing_queue[index].titulo}</span>
-                                <span class='track-info-artist'>${playing_queue[index].autor}</span>
+                                <span class='track-info-title'>${playing_queue[index].title}</span>
+                                <span class='track-info-artist'>${playing_queue[index].author}</span>
                             </div>`
     console.log(playing_queue[index])
     bar2.style.width='0%'
@@ -1811,7 +1812,7 @@ async function playSong(index){
     audio.play()
     play_pause.setAttribute("name", "pause-outline")
     player_logo.classList.add("active")
-    await fetch(`../api_audio/update_times_played.php?id=${playing_queue[index].cancion_id}`)
+    await fetch(`../api_audio/update_times_played.php?id=${playing_queue[index].song_id}`)
 }
 
 

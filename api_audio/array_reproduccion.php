@@ -16,7 +16,7 @@
         }
         $data['songlist'] = $playlist_data;
     }else{
-        $query_playlist = $con->query("select a.id album_id, file, g.name author, a.picture picture, c.title title, c.id song_id from songs c, playlist_includes co, album a, artist g, album_contains i where co.song = c.id and a.id = i.album and a.artist = g.id and i.song = c.id and co.playlist = $id and a.active = 1 group by c.id order by order asc");
+        $query_playlist = $con->query("select a.id album_id, file, g.name author, a.picture picture, c.title title, c.id song_id from songs c, playlist_includes co, album a, artist g, album_contains i where co.song = c.id and a.id = i.album and a.artist = g.id and i.song = c.id and co.playlist = $id and a.active = 1 group by c.id order by co.order asc");
         $playlist_data = [];
 
         while($row = $query_playlist->fetch_array(MYSQLI_ASSOC)){

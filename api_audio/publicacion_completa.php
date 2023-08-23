@@ -14,7 +14,7 @@ require_once "../php_functions/general.php";
     $data["post_data"] = $post_data;
 
     //Revisar foto_publicacion tabla
-    $query_extra_photos = $con->query("SELECT link from post_photos where posts = $id");
+    $query_extra_photos = $con->query("SELECT link from post_photos where post = $id");
     $extra_photos = [];
     if($query_extra_photos->num_rows > 0){
         while($row = $query_extra_photos->fetch_array(MYSQLI_ASSOC)){

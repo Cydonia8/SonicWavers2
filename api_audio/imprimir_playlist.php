@@ -20,7 +20,7 @@ require_once "../php_functions/general.php";
     $data["playlist_data"] = $playlist_data;
     $query_playlist_data->close();
 
-    $query_playlist_songs = $con->prepare("SELECT distinct a.id album, c.title title, length, c.id id, file, g.name author from artist g, songs c, playlist_includes co, album a, album_contains i where c.id = co.song and a.id = i.album and i.song = co.song and a.active = 1 and g.id = a.artist and co.playlist = ? group by c.id order by order asc");
+    $query_playlist_songs = $con->prepare("SELECT distinct a.id album, c.title title, length, c.id id, file, g.name author from artist g, songs c, playlist_includes co, album a, album_contains i where c.id = co.song and a.id = i.album and i.song = co.song and a.active = 1 and g.id = a.artist and co.playlist = ? group by c.id order by co.order asc");
     $query_playlist_songs->bind_param('i', $id);
     $query_playlist_songs->execute();
     $playlist_songs_results = $query_playlist_songs->get_result();

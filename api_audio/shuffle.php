@@ -17,7 +17,7 @@
     $query_style->fetch();
     $query_style->close();
 
-    $query_random = $con->query("select a.id album_id, archivo, g.nombre autor, a.foto caratula, c.titulo titulo, c.id cancion_id from cancion c, incluye i, album a, grupo g where i.cancion = c.id and a.id = i.album and a.grupo = g.id and c.estilo = $style and a.activo = 1 order by rand()");
+    $query_random = $con->query("select a.id album_id, file, g.name author, a.picture picture, c.title title, c.id song_id from songs c, album_contains i, album a, artist g where i.song = c.id and a.id = i.album and a.artist = g.id and c.style = $style and a.active = 1 order by rand()");
     $list_data = [];
 
     while($row = $query_random->fetch_array(MYSQLI_ASSOC)){
