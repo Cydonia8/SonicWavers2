@@ -8,7 +8,7 @@
     $id_recommended_artist = $con->query("SELECT id from artist where id <> 0 and image is not null and active = 1 order by rand() limit 1");
     $row = $id_recommended_artist->fetch_array(MYSQLI_ASSOC);
     $id = $row["id"];
-    $query_recommended_group = $con->prepare("SELECT link, artist, g.id name from artist_photos f, artist g where f.artist = g.id and artist = ? order by rand() limit 1");
+    $query_recommended_group = $con->prepare("SELECT link, name, g.id from artist_photos f, artist g where f.artist = g.id and artist = ? order by rand() limit 1");
     $query_recommended_group->bind_param('i', $id);
     $query_recommended_group->bind_result($image, $name, $id);
     $query_recommended_group->execute();
