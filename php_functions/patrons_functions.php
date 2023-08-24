@@ -20,14 +20,14 @@
 
     function getPatronInformation($mail){
         $con = createConnection();
-        $query = $con->prepare("SELECT name, mail, pass, foto_avatar from patrons where mail = ?");
+        $query = $con->prepare("SELECT name, mail, pass, avatar from patrons where mail = ?");
         $query->bind_param('s', $mail);
-        $query->bind_result($name, $mail, $pass, $foto);
+        $query->bind_result($name, $mail, $pass, $avatar);
         $query->execute();
         $query->fetch();
         echo "<div class='d-flex flex-column flex-md-row justify-content-evenly gap-5 align-items-center'>
                 <a class='avatar-discografica-editable position-relative w-25' href=''>
-                    <img src='$foto' class='rounded-circle img-fluid avatar-discografica-editable'>
+                    <img src='$avatar' class='rounded-circle img-fluid avatar-discografica-editable'>
                     <ion-icon class='icon-edit-avatar-discografica d-none' name=\"pencil-outline\"></ion-icon>
                 </a>
                 <form class='d-flex flex-column gap-3 form-editar-datos-discografica' action='#' method='post'>
@@ -59,7 +59,7 @@
               </div>
               <section class=\"update-avatar-photo d-none flex-column justify-content-center align-items-center\">
                     <ion-icon class='close-modal-update-avatar position-absolute' name=\"close-outline\"></ion-icon>
-                    <img class='rounded-circle w-25' src=\"$foto\" alt=\"\">
+                    <img class='rounded-circle w-25' src=\"$avatar\" alt=\"\">
                     <form class='text-center' action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
                         <div class=\"input-field  mb-3 gap-2\">
                             <div class=\" justify-content-between\">
@@ -75,34 +75,34 @@
         $con->close();
     }
 
-    function newPhotoPathAvatarPatron($nombre, $tipo, $discografica){
-        $nuevo_nombre;
+    function newPhotoPathAvatarPatron($nombre, $type, $patron){
+        $new_name = "";
         switch($_FILES[$nombre]["type"]){
             case "image/jpeg":
-                $nuevo_nombre = $discografica.'_'.$tipo.'.jpg';
+                $new_name = $patron.'_'.$type.'.jpg';
                 break;
             case "image/png":
-                $nuevo_nombre = $discografica.'_'.$tipo.'.png';
+                $new_name = $patron.'_'.$type.'.png';
                 break;
             case "image/gif":
-                $nuevo_nombre = $discografica.'_'.$tipo.'.gif';
+                $new_name = $patron.'_'.$type.'.gif';
                 break;
             case "image/webp":
-                $nuevo_nombre = $discografica.'_'.$tipo.'.webp';
+                $new_name = $patron.'_'.$type.'.webp';
                 break;
         }
-        if(!file_exists("../media/image_patrons/".$discografica)){
-            mkdir("../media/image_patrons/".$discografica, 0777, true);
+        if(!file_exists("../media/image_patrons/".$patron)){
+            mkdir("../media/image_patrons/".$patron, 0777, true);
         }
-        $nueva_ruta = "../media/image_patrons/".$discografica.'/'.$nuevo_nombre;
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $nueva_ruta);
-        return $nueva_ruta;
+        $new_path = "../media/image_patrons/".$patron.'/'.$new_name;
+        move_uploaded_file($_FILES[$nombre]["tmp_name"], $new_path);
+        return $new_path;
     }
 
-    function updatePatronAvatarPhoto($mail, $foto_avatar){
+    function updatePatronAvatarPhoto($mail, $avatar){
         $con = createConnection();
-        $update = $con->prepare("UPDATE patrons set foto_avatar = ? where mail = ?");
-        $update->bind_param('ss', $foto_avatar, $mail);
+        $update = $con->prepare("UPDATE patrons set avatar = ? where mail = ?");
+        $update->bind_param('ss', $avatar, $mail);
         $update->execute();
         $update->close();
         $con->close();
@@ -136,19 +136,19 @@
 
     function getPatronsGroupsFiltered($filter, $user){
         $con = createConnection();
-        $filtro = $filter."%";
-        $query = $con->prepare("SELECT id, nombre, foto_avatar from grupo where activo = 1 and nombre like ? order by nombre asc");
-        $query->bind_param('s', $filtro);
-        $query->bind_result($id, $nombre, $foto_avatar);
+        $filter = $filter."%";
+        $query = $con->prepare("SELECT id, name, avatar from artist where active = 1 and name like ? order by name asc");
+        $query->bind_param('s', $filter);
+        $query->bind_result($id, $name, $avatar);
         $query->execute();
         $query->store_result();
         if($query->num_rows > 0){
             while($query->fetch()){
                 $previous_messages = checkPreviousMessages($user, $id);
-                echo "<div data-name=\"$nombre\" class=\"disc-grupo-detalle border rounded d-flex justify-content-around p-3 gap-3 col-12 col-lg-3\">
+                echo "<div data-name=\"$name\" class=\"disc-grupo-detalle border rounded d-flex justify-content-around p-3 gap-3 col-12 col-lg-3\">
                         <div class='w-50 justify-content-center d-flex flex-column'>
-                            <img class=\"img-fluid rounded-circle mb-2\" src=\"$foto_avatar\" alt=\"\">
-                            <p class=\"text-center font-weight-bold\">$nombre</p>";
+                            <img class=\"img-fluid rounded-circle mb-2\" src=\"$avatar\" alt=\"\">
+                            <p class=\"text-center font-weight-bold\">$name</p>";
                             if($previous_messages == 0){
                                 echo "<button data-id-group='$id' style='--clr:#2ce329' class='btn-danger-own open-message-modal'><span>Enviar mensaje</span><i></i></button>";
                             }else{
@@ -203,19 +203,19 @@
 
     function getMessagesWithArtists($mail){
         $con = createConnection();
-        $query = $con->prepare("SELECT DISTINCT g.foto_avatar foto, g.nombre nombre, g.id id from grupo g, patrons_messages pm, patrons p where g.id = pm.artist and 
+        $query = $con->prepare("SELECT DISTINCT g.avatar avatar, g.name name, g.id id from artist g, patrons_messages pm, patrons p where g.id = pm.artist and 
         p.mail = ? and pm.patron = p.id");
         $query->bind_param('s', $mail);
-        $query->bind_result($foto, $nombre, $id);
+        $query->bind_result($avatar, $name, $id);
         $query->execute();
         while($query->fetch()){
             echo "<div class='d-flex gap-3 align-items-center rounded album-review-group-container'>
                     <div class='album-review-container-img'>
-                        <img src='$foto' class='img-fluid'>
+                        <img src='$avatar' class='img-fluid'>
                         <canvas></canvas>
                     </div>
                     <div class='d-flex flex-column gap-1'>
-                        <h4 class='mt-0'>$nombre</h4>
+                        <h4 class='mt-0'>$name</h4>
                     ";
                 echo "<form action='patrons_message.php' method='get'>
                         <input hidden name='artist' value='$id'>
@@ -228,7 +228,7 @@
 
     function retrieveMesagesWithArtist($mail, $id_artist){
         $con = createConnection();
-        $query = $con->prepare("SELECT content, receiver, sender, m_date, p.name patron, g.nombre group_name from patrons_messages pm, patrons p, grupo g where g.id = pm.artist and 
+        $query = $con->prepare("SELECT content, receiver, sender, m_date, p.name patron, g.name group_name from patrons_messages pm, patrons p, artist g where g.id = pm.artist and 
         pm.patron = p.id and p.mail = ? and pm.artist = ? order by m_date desc");
         $query->bind_param('si', $mail, $id_artist);
         $query->bind_result($content, $receiver, $sender, $date, $patron_name, $group_name);
