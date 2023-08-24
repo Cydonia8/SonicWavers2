@@ -239,10 +239,10 @@
                     </button>
                     <ul class=\"dropdown-menu\">
                         <li><a class=\"dropdown-item\" href=\"grupo_main.php\">Portada</a></li>
-                        <li><a class=\"dropdown-item\" href=\"grupo_nuevo_album.php\">Subir nuevo álbum</a></li>
-                        <li><a class=\"dropdown-item\" href=\"grupo_anadir_publicacion.php\">Añadir publicación</a></li>
-                        <li><a class=\"dropdown-item\" href=\"grupo_mis_resenas.php\">Reseñas de mis álbumes</a></li>
-                        <li><a class=\"dropdown-item\" href=\"grupo_miembros.php\">Miembros de grupo</a></li>
+                        <li><a class=\"dropdown-item\" href=\"artist_new_album.php\">Subir nuevo álbum</a></li>
+                        <li><a class=\"dropdown-item\" href=\"artist_new_post.php\">Añadir publicación</a></li>
+                        <li><a class=\"dropdown-item\" href=\"artist_reviews.php\">Reseñas de mis álbumes</a></li>
+                        <li><a class=\"dropdown-item\" href=\"artist_members.php\">Miembros de grupo</a></li>
                         <li><a class=\"dropdown-item\" href=\"group_messages.php\">Mis mensajes</a></li>
                         <li><form action=\"#\" method=\"post\"><input class='dropdown-item' id=\"cerrar-user\" type=\"submit\" name=\"cerrar-sesion\" value=\"Cerrar sesión\"></form></li>
                     </ul>
@@ -701,7 +701,7 @@
                         <h4>Reseñas totales: $total_reviews</h4>
                     ";
             if($total_reviews != 0){
-                echo "<form action='grupo_resenas_album.php' method='get'>
+                echo "<form action='artist_album_reviews.php' method='get'>
                         <input hidden name='id' value='$id'>
                         <button style='--clr:#e80c0c' class='btn-danger-own' name='ver-reseñas'><span>Ver reseñas</span><i></i></button></div></div>
                     </form>";
@@ -885,7 +885,7 @@
                     ";
                 echo "<form action='group_message.php' method='get'>
                         <input hidden name='patron' value='$id'>
-                        <button style='--clr:#e80c0c' class='btn-danger-own' name='ver-reseñas'><span>Abrir mensajes</span><i></i></button></div></div>
+                        <button style='--clr:#e80c0c' class='btn-danger-own'><span>Abrir mensajes</span><i></i></button></div></div>
                     </form>";          
         }
         $query->close();

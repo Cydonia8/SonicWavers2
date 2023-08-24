@@ -5,7 +5,7 @@
     forbidAccess("admin");
     closeSession($_POST);
     if(isset($_POST["borrar"])){
-        deleteReview($_POST["id"]);
+        deletePost($_POST["id"]);
     }
 ?>
 <!DOCTYPE html>
@@ -19,25 +19,28 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
-    <script src="" defer></script>
+    <script src="../scripts/admin_artists.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title>Reseñas</title>
+    <title>Document</title>
 </head>
 <body id="admin-body">
     <?php
         menuAdminDropdown();
     ?>
-    <h1 class="text-center mt-5">Reseñas de Sonic Waves</h1>
+    <h1 class="text-center mt-5">Publicaciones de Sonic Waves</h1>
     <?php
-        printFilterForm("por autor de reseña");
+        printFilterForm("por autor de publicación");
     ?>
-    <section class="d-flex flex-column flex-md-row container-fluid gap-5 flex-wrap justify-content-center">
+    <section class="container-fluid gap-3 row mx-auto albumes-container">
         <?php
-            if(isset($_POST["filtro"])){
-                getAllReviews($_POST["filtro"]);
+            if(isset($_POST["filter"])){
+                echo "<div class=\"d-flex justify-content-center align-items-center gap-3 mb-4\">
+                        <label>Búsqueda dinámica</label>
+                        <input type=\"text\" class=\"busqueda-dinamica-admin\">
+                    </div>";
+                getAllPostsFiltered($_POST["filter"]);
             }
-            
         ?>
     </section>
 </body>

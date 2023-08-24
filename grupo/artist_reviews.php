@@ -1,12 +1,19 @@
 <?php
     session_start();
-    require_once "../php_functions/admin_functions.php";
+    require_once "../square_image_creator/create_square_image.php";
     require_once "../php_functions/general.php";
-    forbidAccess("admin");
+    require_once "../php_functions/group_functions.php";
+    require_once "../php_functions/login_register_functions.php";
+
+    forbidAccess("group");
     closeSession($_POST);
-    if(isset($_POST["borrar"])){
-        deletePost($_POST["id"]);
-    }
+
+    $decoded = decodeToken($_SESSION["token"]);
+    $decoded = json_decode(json_encode($decoded), true);
+
+    $user = $decoded["data"]["user"];
+
+    $artist_name = getGroupNameByMail($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,29 +26,21 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
-    <script src="../scripts/admin_grupos.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
+    <script src="../scripts/artist_reviews.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title>Document</title>
+    <title><?php echo $artist_name; ?> | Mis reseñas</title>
 </head>
-<body id="admin-body">
+<body id="grupo-mis-reseñas">
     <?php
-        menuAdminDropdown();
+        menuGrupoDropdown("position-static");
     ?>
-    <h1 class="text-center mt-5">Publicaciones de Sonic Waves</h1>
-    <?php
-        printFilterForm("por autor de publicación");
-    ?>
-    <section class="container-fluid gap-3 row mx-auto albumes-container">
+    <h1 class="text-center">Reseñas de mis álbumes</h1>
+    <section class="container-xl d-flex flex-column gap-5 mt-5">
         <?php
-            if(isset($_POST["filtro"])){
-                echo "<div class=\"d-flex justify-content-center align-items-center gap-3 mb-4\">
-                        <label>Búsqueda dinámica</label>
-                        <input type=\"text\" class=\"busqueda-dinamica-admin\">
-                    </div>";
-                getAllPostsFiltered($_POST["filtro"]);
-            }
+            getAlbumsWithReviews($user);
         ?>
     </section>
+    
 </body>
 </html>

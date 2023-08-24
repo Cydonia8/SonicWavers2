@@ -61,7 +61,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
-    <script src="../scripts/grupo_add_post.js" defer></script>
+    <script src="../scripts/artist_add_post.js" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
     <title><?php echo $artist_name; ?> | Añadir publicación</title>

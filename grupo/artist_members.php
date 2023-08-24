@@ -44,7 +44,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="../estilos.css">
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
-    <script src="../scripts/grupo_miembros.js" defer></script>
+    <script src="../scripts/artist_members.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
     <title>Miembros</title>
 </head>
@@ -102,7 +102,7 @@
                         echo "<div class=\"alert alert-danger text-center mt-3 w-50 mx-auto\" role=\"alert\">
                                 Usuario eliminado correctamente.
                             </div>";
-                            echo "<meta http-equiv='refresh' content='2;url=grupo_miembros.php'>";
+                            echo "<meta http-equiv='refresh' content='2;url=artist_members.php'>";
                     }
                 ?>
             </div>

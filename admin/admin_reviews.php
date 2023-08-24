@@ -1,19 +1,12 @@
 <?php
     session_start();
-    require_once "../square_image_creator/create_square_image.php";
+    require_once "../php_functions/admin_functions.php";
     require_once "../php_functions/general.php";
-    require_once "../php_functions/group_functions.php";
-    require_once "../php_functions/login_register_functions.php";
-
-    forbidAccess("group");
+    forbidAccess("admin");
     closeSession($_POST);
-
-    $decoded = decodeToken($_SESSION["token"]);
-    $decoded = json_decode(json_encode($decoded), true);
-
-    $user = $decoded["data"]["user"];
-
-    $artist_name = getGroupNameByMail($user);
+    if(isset($_POST["borrar"])){
+        deleteReview($_POST["id"]);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,21 +19,26 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
+    <script src="" defer></script>
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
-    <script src="../scripts/grupo_mis_resenas.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
-    <title><?php echo $artist_name; ?> | Mis reseñas</title>
+    <title>Reseñas</title>
 </head>
-<body id="grupo-mis-reseñas">
+<body id="admin-body">
     <?php
-        menuGrupoDropdown("position-static");
+        menuAdminDropdown();
     ?>
-    <h1 class="text-center">Reseñas de mis álbumes</h1>
-    <section class="container-xl d-flex flex-column gap-5 mt-5">
+    <h1 class="text-center mt-5">Reseñas de Sonic Waves</h1>
+    <?php
+        printFilterForm("por autor de reseña");
+    ?>
+    <section class="d-flex flex-column flex-md-row container-fluid gap-5 flex-wrap justify-content-center">
         <?php
-            getAlbumsWithReviews($user);
+            if(isset($_POST["filter"])){
+                getAllReviews($_POST["filter"]);
+            }
+            
         ?>
     </section>
-    
 </body>
 </html>

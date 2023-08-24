@@ -31,7 +31,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="../estilos.css">
     <script src="../scripts/jquery-3.2.1.min.js" defer></script>
-    <script src="../scripts/grupo_mis_resenas.js" defer></script>
+    <script src="../scripts/artist_reviews.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32" />
     <title>Mis mensajes</title>
 </head>

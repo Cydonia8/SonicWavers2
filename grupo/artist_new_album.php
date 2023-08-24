@@ -27,10 +27,10 @@
             $image = newPhotoPathAlbum("foto", $_POST["nombre"], $user);
             $_SESSION["foto_album"] = $image;
             // addAlbum($artist_id, $_POST["nombre"], $foto, $_POST["fecha"], 1);
-            echo "<meta http-equiv='refresh' content='0;url=grupo_anadir_canciones.php'>";
+            echo "<meta http-equiv='refresh' content='0;url=artist_add_songs.php'>";
         }else{
             echo "<h2>Hay algún dato incorrecto. Por favor, vuelva a intentarlo</h2>";
-            echo "<meta http-equiv='refresh' content='3;url=grupo_nuevo_album.php'>";
+            echo "<meta http-equiv='refresh' content='3;url=artist_new_album.php'>";
         }
         
     }

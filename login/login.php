@@ -17,7 +17,7 @@
                 $jwt = generateToken($_POST["usuario"], true, "admin");
                 $_SESSION["token"] = $jwt;
                 keepSessionOpen();
-                // echo "<meta http-equiv='refresh' content='0;url=../admin/admin_main.php'>";
+                echo "<meta http-equiv='refresh' content='0;url=../admin/admin_main.php'>";
             }else{
                 // $_SESSION["user-type"] = "standard";
                 $jwt = generateToken($_POST["usuario"], false, "user");

@@ -306,7 +306,7 @@ profile_menu_avatar.addEventListener("click", async (evt)=>{
     section_profile_head.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color3.r},${color3.g},${color3.b},0.6500175070028011) 50% , rgba(${color2.r}, ${color2.g}, ${color2.b}, .85), rgba(${color5.r},${color5.g},${color5.b},1) 100%)`
     main_content.appendChild(section_profile_head)
 
-    const response_styles = await fetch(`../api_audio/estilos.php`)
+    const response_styles = await fetch(`../api_audio/styles.php`)
     const data_styles = await response_styles.json()
     const styles = data_styles["styles"]
 
@@ -374,7 +374,7 @@ profile_menu_avatar.addEventListener("click", async (evt)=>{
         // if(correo_input.value.trim() !== "" && pass_input.value.trim() !== ""){
             const data_form = new URLSearchParams(new FormData(form))    
   
-            const response = await fetch('../api_audio/modificar_datos_usuario.php',{
+            const response = await fetch('../api_audio/update_user_data.php',{
                 method: 'POST',
                 body: data_form
             })
@@ -550,7 +550,7 @@ new_playlist.addEventListener("click", async()=>{
     const data_form = new FormData(form_new_list)
     data_form.append("foto", new_playlist_image.files[0])
     data_form.append("nombre", new_playlist_name.value)
-    await fetch('../api_audio/nueva_playlist.php',{
+    await fetch('../api_audio/new_playlist.php',{
         method: "post",
         body: data_form
     })
@@ -667,14 +667,14 @@ function createPlaylistsLinksModal(id, name, usuario, song){
 
 async function deletePlaylist(id){
     playlists_container.innerHTML=""
-    await fetch(`../api_audio/borrar_playlist.php?id=${id}`) 
+    await fetch(`../api_audio/delete_playlist.php?id=${id}`) 
     await getAllPlaylists(playlists_container, "header")
 
 }
 
 async function printPlaylist(id){
     main_content.innerHTML=""
-    const response = await fetch(`../api_audio/imprimir_playlist.php?id=${id}`)
+    const response = await fetch(`../api_audio/print_playlist.php?id=${id}`)
     const data = await response.json()
     const playlist_data = data["playlist_data"] 
     main_content.classList.add("position-absolute", "w-100", "top-0")
@@ -994,7 +994,7 @@ next.addEventListener("click", ()=>{
                 item.children[0].children[1].classList.remove("current-song-playing")
             })
 
-            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].titulo){
+            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].title){
                 filter[0].children[0].children[1].classList.add("current-song-playing")
             }
             
@@ -1024,7 +1024,7 @@ previous.addEventListener("click", ()=>{
             arr.forEach(item=>{
                 item.children[0].children[1].classList.remove("current-song-playing")
             })
-            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].titulo){
+            if(filter[0].children[0].children[1].children[0].innerText == playing_queue[song_index].title){
                 filter[0].children[0].children[1].classList.add("current-song-playing")
             }
         }
@@ -1074,7 +1074,7 @@ async function initializeUser(){
     console.log(user_data)
     let completed = data["profile_completed"]
     if(completed == 0){
-        const response_styles = await fetch('../api_audio/estilos.php');
+        const response_styles = await fetch('../api_audio/styles.php');
         const data_styles = await response_styles.json()
         const styles = data_styles["styles"]
 
@@ -1225,7 +1225,7 @@ async function updateProfile(input_avatar, input_style, input_date, profile_form
     formData.append("f_nac", input_date.value)
 
     
-    await fetch(`../api_audio/actualizar_perfil.php`, {
+    await fetch(`../api_audio/update_profile.php`, {
         method: 'POST',
         body: formData
     })
@@ -1240,7 +1240,7 @@ async function showAlbum(target){
     loader.classList.add("d-flex")
     const id = target.getAttribute("data-album-id")
 
-    const response = await fetch(`../api_audio/album_peticion.php?id=${id}`)
+    const response = await fetch(`../api_audio/album_request.php?id=${id}`)
     const data = await response.json()
     loader.classList.add("d-none")
     loader.classList.remove("d-flex")
@@ -1368,7 +1368,7 @@ async function showAlbum(target){
 }
 
 async function addFavoriteAlbum(id){
-    await fetch(`../api_audio/add_album_favorito.php?id=${id}`)
+    await fetch(`../api_audio/add_favorite_album.php?id=${id}`)
 }
 
 async function deleteFavoriteAlbum(id){
@@ -1486,7 +1486,7 @@ async function seeAlbumReviews(id){
 
 async function insertReview(form_review){
     const data_form_review = new URLSearchParams(new FormData(form_review))
-    await fetch(`../api_audio/insertar_reseña.php`, {
+    await fetch(`../api_audio/insert_review.php`, {
         method: 'POST',
         body: data_form_review
     })
@@ -1521,7 +1521,7 @@ async function loadPlayingList(evt, context){
    
     const index = evt.currentTarget.getAttribute("data-index")
     song_index = index
-    const response = await fetch(`../api_audio/array_reproduccion.php?id=${id}&contexto=${context}`)
+    const response = await fetch(`../api_audio/playing_array.php?id=${id}&contexto=${context}`)
     const data = await response.json()
     const songlist = data["songlist"]
     
@@ -1553,7 +1553,7 @@ async function showGroup(id){
     loader.classList.remove("d-none")
     loader.classList.add("d-flex")
     // const id = evt.currentTarget.getAttribute("data-artist-id")
-    const response = await fetch(`../api_audio/artista_peticion.php?id=${id}`)
+    const response = await fetch(`../api_audio/artist_request.php?id=${id}`)
     const data = await response.json()
     loader.classList.add("d-none")
     loader.classList.remove("d-flex")
@@ -1696,7 +1696,7 @@ async function watchFullPost(id){
     main_content.innerHTML=""
     main_content.style.height="100vh"
     // main_content.classList.remove("position-absolute")
-    const response = await fetch(`../api_audio/publicacion_completa.php?id=${id}`)
+    const response = await fetch(`../api_audio/full_post.php?id=${id}`)
     const data = await response.json()
     const post_data = data["post_data"]
     const extra_photos = data["extra_photos"]
@@ -1911,14 +1911,14 @@ function findBiggestColorRange(rgb_array){
   }
 
   //Función que recibe una fecha y la devuelve en formato español
-  function formatDate(fecha){
-    let date_object = new Date(fecha)
+  function formatDate(date){
+    let date_object = new Date(date)
     return `${addZeroToDate(date_object.getDate())}-${addZeroToDate(date_object.getMonth()+1)}-${date_object.getFullYear()}`
   }
 
-  //Función que añade ceros a la izquierda a una fecha si fuera necesario (ej. 2 => 02)
-  function addZeroToDate(fecha){
-    return fecha < 10 ? `0${fecha}` : fecha
+  //Función que añade ceros a la izquierda a una date si fuera necesario (ej. 2 => 02)
+  function addZeroToDate(date){
+    return date < 10 ? `0${date}` : date
   }
 
   function activateAudioFilters(btn_guardar, canvas){

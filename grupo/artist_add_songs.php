@@ -81,7 +81,7 @@
                     generateInputs($_SESSION["num_canciones"]);
                 }else{
                     $artist_id = getGroupID($user);
-                    echo "<script src=\"../scripts/anadir_canciones_recopilatorios.js\" defer></script>";
+                    echo "<script src=\"../scripts/add_greatest_hits.js\" defer></script>";
                     echo "<button style='--clr:#0A90DD' class='btn-danger-own reset-form-recopilatorio'><span>Reiniciar selección</span><i></i></button>";
                     echo "<form class='d-flex flex-column align-items-center gap-3' action=\"#\" method=\"post\">";
                     generateSelects($_SESSION["num_canciones"], $artist_id);

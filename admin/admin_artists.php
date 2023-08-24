@@ -1,15 +1,24 @@
 <?php
+    
     session_start();
     // echo $_SESSION["user"]
     require_once "../php_functions/admin_functions.php";
     require_once "../php_functions/general.php";
     forbidAccess("admin");
     if(isset($_POST["activar"])){
-        activateAlbum($_POST["id"]);
+        activateGroup($_POST["id"]);
+        // echo "<meta http-equiv='refresh' content='0;url=admin_discografica.php'>";
     }elseif(isset($_POST["desactivar"])){
-        deactivateAlbum($_POST["id"]);
+        deactivateGroup($_POST["id"]);
+        // echo "<meta http-equiv='refresh' content='0;url=admin_discografica.php'>";
+    }
+    if(isset($_POST["aprobar"])){
+        approveGroupCreation($_POST["id"]);
+    }elseif(isset($_POST["denegar"])){
+        denyGroupCreation($_POST["id"]);
     }
     closeSession($_POST);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +31,7 @@
     <link rel="stylesheet" href="../estilos.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
-    <script src="../scripts/admin_grupos.js" defer></script>
+    <script src="../scripts/admin_artists.js" defer></script>
     <link rel="icon" type="image/png" href="../media/assets/favicon-32x32-modified.png" sizes="32x32"/>
     <title>Panel de administración</title>
 </head>
@@ -30,28 +39,25 @@
     <?php
         menuAdminDropdown();
     ?>
-    <h1 class="text-center mt-5">Álbumes de Sonic Waves</h1>
-    <section class="filter-abc-admin">
+    <h1 class="text-center mt-5">Grupos de Sonic Waves</h1>
+       
+    <section class="filter-abc-admin mb-3">
         <?php
-            printFilterForm("por nombre de álbum");
+            printFilterForm("por nombre de grupo");
         ?>
     </section>
-    <!-- <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
-        <label>Búsqueda dinámica</label>
-        <input type="text" class="busqueda-dinamica-admin">
-    </div> -->
-    <section class="albumes-container container-fluid mx-auto row gap-3">
+    <section class="grupos-container container-activo container-fluid mx-auto row gap-3">
+       
        <?php
-            if(isset($_POST["filtro"])){
+            if(isset($_POST["filter"])){
                 echo "<div class=\"d-flex justify-content-center align-items-center gap-3 mb-4\">
                         <label>Búsqueda dinámica</label>
                         <input type=\"text\" class=\"busqueda-dinamica-admin\">
                     </div>";
-                getAlbumsFiltered($_POST["filtro"]);
+                getGroupsFiltered($_POST["filter"]);
             }
             
        ?>
     </section>
-
 </body>
 </html>

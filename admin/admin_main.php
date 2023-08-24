@@ -8,13 +8,7 @@
     closeSession($_POST);
     $decoded = decodeToken($_SESSION["token"]);
     $decoded = json_decode(json_encode($decoded), true);
-    echo $_SESSION["token"];
-    echo "<br>";
-    // $array = (array) $decoded;
-    // print_r($array);
-    // echo "<br>";
-    // $arr = (array) $array["data"];
-    // echo $arr["user"];
+    $user = $decoded["data"]["user"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
