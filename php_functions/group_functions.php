@@ -272,7 +272,7 @@
     }
 
     function newPhotoPath($name, $type, $user){
-        $new_name;
+        $new_name = "";
         switch($_FILES[$name]["type"]){
             case "image/jpeg":
                 $new_name = $user.$type.".jpg";
@@ -291,7 +291,7 @@
             mkdir("../media/img_grupos/".$user, 0777, true);
         }
         $new_path = "../media/img_grupos/".$user."/".$new_name;
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $new_path);
+        move_uploaded_file($_FILES[$name]["tmp_name"], $new_path);
         return $new_path;
     }
     
@@ -301,11 +301,11 @@
         return $fixed;
     }
     function newPhotoPathAlbum($name, $album, $user){
-        $new_name;
+        $new_name = "";
         $remove = ["/", ".", "*","'",":", "?", "(", ")"];
         $album = strtolower(str_replace($remove, "", $album));
 
-        switch($_FILES[$nombre]["type"]){
+        switch($_FILES[$name]["type"]){
             case "image/jpg":
                 $new_name = $album.".jpg";
                 break;
@@ -327,14 +327,14 @@
         }
 
         $new_path = "../media/img_grupos/".$user."/".$new_name;
-        move_uploaded_file($_FILES[$nombre]["tmp_name"], $new_path);
+        move_uploaded_file($_FILES[$name]["tmp_name"], $new_path);
         return $new_path;
     }
 
     function addAlbum($artist, $name, $picture, $release_date, $active){
         $con = createConnection();
         $insercion = $con->prepare("INSERT INTO album (title,picture,active,artist,release_date) values (?, ?, ?, ?, ?)");
-        $insercion->bind_param('ssiis', $name, $picture, $active, $grupo, $release_date);
+        $insercion->bind_param('ssiis', $name, $picture, $active, $artist, $release_date);
         $insercion->execute();
         $insercion->close();
         $con->close();
@@ -522,7 +522,7 @@
     }
 
     function newPhotoPathPost($type, $index_image, $id_post, $original_path, $user){
-        $new_name;
+        $new_name = "";
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
 
@@ -549,7 +549,7 @@
     }
 
     function newMainPhotoPathPost($id_post, $user){
-        $new_name;
+        $new_name = "";
         // $quitar = ["/", ".", "*","'"];
         // $album = strtolower(str_replace($quitar, "", $album));
 
@@ -583,7 +583,7 @@
     }
 
     function newGroupPhotoPath($num, $type, $tmp, $user){
-        $new_name;
+        $new_name = "";
         switch($type){
             case "image/jpeg":
                 $new_name = $user."fotoextra".$num.".jpg";

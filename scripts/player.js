@@ -1181,28 +1181,34 @@ async function loadUserMessages(){
 
     const section_msgs = document.createElement("section")
     section_msgs.classList.add("container-xl", "d-flex", "flex-column", "gap-3")
-    data.messages.forEach(msg=>{
-        let date_split = msg.m_date.split(" ")
-
-        const div_msg = document.createElement("div")
-        if(msg.state == 0){
-            div_msg.classList.add("message-not-readed")
-        }else{
-            div_msg.classList.add("message-readed")
-        }
-        div_msg.classList.add("container-message", 'p-3', "rounded")
-        div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${formatDate(date_split[0])} a las ${date_split[1]}</h3>
-                            <p>${msg.content}</p>`
-        if(msg.state == 0){
-            div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`
-            const mark_msg = div_msg.querySelector(".mark-msg-as-readed")
-            mark_msg.addEventListener("click", async ()=>{
-                await fetch(`../api_audio/mark_message_as_read.php?id=${msg.id_msg}`)
-                loadUserMessages()
-            })
-        }
-        section_msgs.appendChild(div_msg)
-    })
+    console.log(data)
+    if(data.messages.length != 0){
+        data.messages.forEach(msg=>{
+            let date_split = msg.m_date.split(" ")
+    
+            const div_msg = document.createElement("div")
+            if(msg.state == 0){
+                div_msg.classList.add("message-not-readed")
+            }else{
+                div_msg.classList.add("message-readed")
+            }
+            div_msg.classList.add("container-message", 'p-3', "rounded")
+            div_msg.innerHTML=`<h3>Mensaje de ${msg.name_group} del ${formatDate(date_split[0])} a las ${date_split[1]}</h3>
+                                <p>${msg.content}</p>`
+            if(msg.state == 0){
+                div_msg.innerHTML+=`<span class="mark-msg-as-readed"><ion-icon name="checkmark-done-outline"></ion-icon>Marcar como leído</span>`
+                const mark_msg = div_msg.querySelector(".mark-msg-as-readed")
+                mark_msg.addEventListener("click", async ()=>{
+                    await fetch(`../api_audio/mark_message_as_read.php?id=${msg.id_msg}`)
+                    loadUserMessages()
+                })
+            }
+            section_msgs.appendChild(div_msg)
+        })
+    }else{
+        section_msgs.innerHTML="<h2 class='text-center mt-3'>Actualmente no has recibido ningún mensaje.</h2>"
+    }
+    
     main_content.appendChild(section_msgs)
 }
 
