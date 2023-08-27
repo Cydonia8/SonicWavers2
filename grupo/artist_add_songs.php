@@ -13,42 +13,47 @@
     $artist_name = getGroupNameByMail($user);
     
     if(isset($_POST["cargar"])){
-        $artist_id = getGroupID($user);
-        addAlbum($artist_id, $_SESSION["titulo_album"], $_SESSION["foto_album"], $_SESSION["lanzamiento"], 1);
-        for($i = 1; $i <= $_SESSION["num_canciones"]; $i++){
+        $artist_id = getGroupID($user); 
+        $size_array = [];
+        $cont = 0;
+        for($i = 1; $i <= $_SESSION["num_canciones"]; $i++){       
             if($_SESSION["recopilatorio"] == "no" or $_SESSION["recopilatorio"] == NULL){
-                $title = $_POST["titulo".$i];
-                $duration = getDuration($_FILES["archivo".$i]["tmp_name"]);
-                $style = $_POST["estilo".$i];
-                $path = moveUploadedSong("archivo".$i, $user, $_SESSION["titulo_album"]);
-                $rows = addSong($title, $path, $duration, $style);
-                $song_id = getLastSongID();
-                linkSongToAlbum($_SESSION["id_album"], $song_id);
-            }else{
-                $rows = linkSongToAlbum($_SESSION["id_album"], $_POST["cancion".$i]);
+                $size = $_FILES["archivo".$i]["size"] / pow(1024, 2);
+                $size_array[$cont] =$size;
+                $cont++;
             }
-            // echo $_FILES["archivo".$i]["name"];
-            // echo "<br>";
-            // echo $_POST["titulo".$i];
-            // $titulo = $_POST["titulo".$i];
-            // echo "<br>";
-            // echo $_SESSION["id_album"];
-            // echo "<br>";
-            // $minutos = getDuration($_FILES["archivo".$i]["tmp_name"]);
-            // echo $minutos;
-            // echo "<br>";
-            // echo $_POST["estilo".$i];
-            // $estilo = $_POST["estilo".$i];
-            // echo "<br>";
-            // $ruta = moveUploadedSong("archivo".$i, $_SESSION["user"], $_SESSION["titulo_album"]);
-            // echo $ruta;
-            // addSong($titulo, $ruta, $minutos, $estilo);
-            // $song_id = getLastSongID();
-            // echo $song_id;
-            // linkSongToAlbum($_SESSION["id_album"], $song_id);
         }
-        unsetSessionVariable(array('titulo_album', 'lanzamiento', 'num_canciones', 'recopilatorio', 'foto_album'));
+   
+        $filtered = array_filter($size_array, function ($exceeded){
+            return $exceeded > 6;
+        });
+
+        if(empty($filtered)){
+            $correct_sizes = true;
+        }else{
+            $correct_sizes = false;
+        }
+
+        if($correct_sizes){
+            addAlbum($artist_id, $_SESSION["titulo_album"], $_SESSION["foto_album"], $_SESSION["lanzamiento"], 1);
+            for($i = 1; $i <= $_SESSION["num_canciones"]; $i++){
+                if($_SESSION["recopilatorio"] == "no" or $_SESSION["recopilatorio"] == NULL){
+                    $title = $_POST["titulo".$i];
+                    $duration = getDuration($_FILES["archivo".$i]["tmp_name"]);
+                    $style = $_POST["estilo".$i];
+                    $path = moveUploadedSong("archivo".$i, $user, $_SESSION["titulo_album"]);
+                    $rows = addSong($title, $path, $duration, $style);
+                    $song_id = getLastSongID();
+                    linkSongToAlbum($_SESSION["id_album"], $song_id);
+                }else{
+                    $rows = linkSongToAlbum($_SESSION["id_album"], $_POST["cancion".$i]);
+                }
+            }
+            unsetSessionVariable(array('titulo_album', 'lanzamiento', 'num_canciones', 'recopilatorio', 'foto_album'));
+        }
     }
+
+        
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,10 +102,19 @@
         }else{
             echo "<h2>Faltan datos</h2>";
         }
+
     ?>
     </section>
     <div class="alert alert-danger d-none repeated w-50 text-center mt-5 mx-auto" role="alert">
         Has repetido canciones. Vuelve a añadirlas.
     </div>
+    <?php
+         if(isset ($correct_sizes) and !$correct_sizes){
+            echo "<div class=\"alert alert-danger repeated w-50 text-center mt-5 mx-auto\" role=\"alert\">
+            Alguna de las canciones superan el límite. Vuelve a añadirlas por favor.
+        </div>";
+        echo "mal";
+        }
+    ?>
 </body>
 </html>

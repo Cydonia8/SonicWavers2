@@ -685,14 +685,14 @@ async function seeAlbumReviews(id){
     const reviews_container = document.createElement("div")
     reviews_container.classList.add("d-flex", "flex-column", "gap-3")
     review_data.forEach(review=>{
-        let r_data = formatDate(review.r_data)
+        let r_date = formatDate(review.r_date)
         const review_cont = document.createElement("div")
         review_cont.classList.add("d-flex", "flex-column", "single-review-container", "p-2","rounded")
         review_cont.innerHTML=`<h3>${review.title}</h3>
                                 <p>${review.content}</p>
                                 <div class='d-flex align-items-center gap-2'>
                                     <img src='${review.avatar}' class='rounded-circle see-album-reviews-avatar-user'>
-                                    <i>Escrita por ${review.auhtor} el ${r_data}</i>
+                                    <i>Escrita por ${review.auhtor} el ${r_date}</i>
                                 </div>`
                                 
         // review_cont.style.background=`linear-gradient(250deg, rgba(${color1.r},${color1.g},${color1.b},.5) 40%, rgba(${color2.r}, ${color2.g}, ${color2.b}, .5), rgba(${color5.r},${color5.g},${color5.b},.5) 70%)`

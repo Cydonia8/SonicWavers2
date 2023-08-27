@@ -271,6 +271,7 @@
         return $correct;
     }
 
+
     function newPhotoPath($name, $type, $user){
         $new_name = "";
         switch($_FILES[$name]["type"]){
