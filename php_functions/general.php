@@ -318,7 +318,7 @@ function printFooter($ruta){
                     <div class=\"use-links\">
                         <li><a href=\"$ruta/index.php\"><i class=\"fa-solid fa-angles-right\"></i> Home</a></li>
                         <li><a href=\"$ruta/proximamente/proximamente.php\"><i class=\"fa-solid fa-angles-right\"></i>Próximamante: Dolby Atmos</a></li>
-                        <li><a href=\"$ruta/reproductor/reproductor.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
+                        <li><a href=\"$ruta/reproductor/user_controller.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
                         <li><a href=\"$ruta/contacto/contacto.php\"><i class=\"fa-solid fa-angles-right\"></i> Contacto</a></li>
                     </div>
                 </div>

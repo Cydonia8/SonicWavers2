@@ -22,7 +22,7 @@ close_modal.addEventListener("click", ()=>{
 })
 
 function addZerosToDate(date){
-    return date < 10 ? `0${fecha}` : date
+    return date < 10 ? `0${date}` : date
 }
 
 setTimeout(()=> {

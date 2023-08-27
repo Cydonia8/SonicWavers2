@@ -826,7 +826,7 @@ async function showGroup(id){
     bio.innerText=`${artist_data[0].bio}`
     div_artist_content.appendChild(bio)
     const div_albums_container = document.createElement("div")
-    div_albums_container.classList.add("d-flex", "gap-3", "d-none", "options-artist", "flex-column", "flex-lg-row", "mb-3")
+    div_albums_container.classList.add("d-flex", "gap-3", "d-none", "options-artist", "flex-column", "flex-lg-row", "mb-3", "flex-wrap")
     div_albums_container.setAttribute("data-info-artist", "discos")
     if(albums.length != 0){
         albums.forEach(album=>{
@@ -920,7 +920,7 @@ async function showGroup(id){
         main_content.innerHTML=""
         main_content.style.height="100vh"
         // main_content.classList.remove("position-absolute")
-        const response = await fetch(`../api_audio/publicacion_completa.php?id=${id}`)
+        const response = await fetch(`../api_audio/full_post.php?id=${id}`)
         const data = await response.json()
         const post_data = data["post_data"]
         const extra_photos = data["extra_photos"]

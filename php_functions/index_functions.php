@@ -299,7 +299,7 @@ use Firebase\JWT\JWT;
                         <div class=\"use-links\">
                             <li><a href=\"$path/index.php\"><i class=\"fa-solid fa-angles-right\"></i> Home</a></li>
                             <li><a href=\"$path/proximamente/proximamente.php\"><i class=\"fa-solid fa-angles-right\"></i>Próximamante: Dolby Atmos</a></li>
-                            <li><a href=\"$path/reproductor/reproductor.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
+                            <li><a href=\"$path/reproductor/user_controller.php\"><i class=\"fa-solid fa-angles-right\"></i>Reproductor</a></li>
                             <li><a href=\"$path/contacto/contacto.php\"><i class=\"fa-solid fa-angles-right\"></i> Contacto</a></li>
                         </div>
                     </div>

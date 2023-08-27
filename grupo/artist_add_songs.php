@@ -70,6 +70,7 @@
 
     <section class="container-añadir-canciones container-xl mt-4">
         <h1 class='text-center mb-4'>Añade las canciones del nuevo álbum</h1>
+        <p class="text-center mb-4"><strong>Formato MP3, máximo 100mb por archivo</strong></p>
     <?php
         if(isset($_SESSION["foto_album"])){
             if($_SESSION["recopilatorio"]  == NULL){

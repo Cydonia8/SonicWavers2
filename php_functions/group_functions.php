@@ -354,7 +354,7 @@
     
     function getAllGroupSongs($id){
         $con = createConnection();
-        $query = $con->prepare("SELECT distinct c.id song_id, c.title title from artist g, album a, song c, album_contains i where a.artist = g.id and i.song = c.id and i.album = a.id and g.id = ?");
+        $query = $con->prepare("SELECT distinct c.id song_id, c.title title from artist g, album a, songs c, album_contains i where a.artist = g.id and i.song = c.id and i.album = a.id and g.id = ?");
         $query->bind_param('i', $id);
         $query->bind_result($id, $song);
         $query->execute();

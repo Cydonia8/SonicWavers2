@@ -623,7 +623,7 @@
     }
 
     function deletePostExtraPhotosLinks($id, $con){
-        $query = $con->prepare("SELECT link from post_photoss where post = ?");
+        $query = $con->prepare("SELECT link from post_photos where post = ?");
         $query->bind_param('i', $id);
         $query->bind_result($link);
         $query->execute();

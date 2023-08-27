@@ -18,7 +18,7 @@
       $content = strip_tags($_POST["contenido"]);
       $image_ok = checkPhoto("foto");
       $date = $_POST["fecha"];
-      $new_id = getAutoID("publicacion");
+      $new_id = getAutoID("posts");
     
       if($image_ok){
         $main_path = newMainPhotoPathPost($new_id, $user);

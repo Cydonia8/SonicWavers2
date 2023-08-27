@@ -685,7 +685,7 @@ async function printPlaylist(id){
                                         <span>Playlist</span>
                                         <h1 class='text-sm-center'>${playlist_data[0].title}</h1>
                                         <div class='d-flex align-items-center gap-2'>
-                                            <img src='${playlist_data[0].image}' class='avatar-lista-page'>
+                                            <img src='${playlist_data[0].avatar}' class='avatar-lista-page'>
                                             <h3 class='m-0'>Playlist de ${playlist_data[0].author}</h3>
                                         </div>
                                         <h4>Creada el ${formatDate(playlist_data[0].pl_date)}</h4>
@@ -1608,7 +1608,7 @@ async function showGroup(id){
     bio.innerText=`${artist_data[0].bio}`
     div_artist_content.appendChild(bio)
     const div_albums_container = document.createElement("div")
-    div_albums_container.classList.add("d-flex", "gap-3", "d-none", "options-artist", "flex-column", "flex-lg-row", "mb-3")
+    div_albums_container.classList.add("d-flex", "gap-3", "d-none", "options-artist", "flex-column", "flex-lg-row", "mb-3", "flex-wrap")
     div_albums_container.setAttribute("data-info-artist", "discos")
     if(albums.length != 0){
         albums.forEach(album=>{

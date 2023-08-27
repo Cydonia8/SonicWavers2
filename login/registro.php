@@ -153,10 +153,9 @@ session_start();
                     $pass = $_POST["pass"];
                     $mail = $_POST["mail"];
                     $user_exists = userNameRepeated($_POST["user"]);
-                    $mail_exists = mailRepeated($mail, "usuario");
+                    $mail_exists = mailRepeated($mail, "user");
                     // echo "<meta http-equiv='refresh' content='0;url=../index.php'>";
                     if(!$user_exists and !$mail_exists){
-                        $pass = md5(md5($pass));
                         insertNewUser($user, $name, $surname, $pass, $mail, 0, 0);
                         echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Usuario creado correctamente.</div>";
                     }else{
@@ -167,10 +166,9 @@ session_start();
                     $pass = $_POST["pass"];
                     $mail = $_POST["mail"];
                     // echo "<meta http-equiv='refresh' content='0;url=../index.php'>";
-                    $mail_exists = mailRepeated($mail, "grupo");
+                    $mail_exists = mailRepeated($mail, "artist");
 
                     if(!$mail_exists){
-                        $pass = md5(md5($pass));
                         insertNewGroup($name, $pass, $mail, 0);
                         echo "<div class=\"alert text-center mt-3 alert-success alert-dismissible fade show\" role=\"alert\">Solicitud de grupo registrada y a la espera de ser aprobada.</div>";
                     }else{
